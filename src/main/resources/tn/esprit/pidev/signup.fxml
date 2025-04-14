@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="tn.esprit.pidev.SignupController"
+           prefHeight="600.0" prefWidth="700.0">
+
+    <!-- Main Signup Form -->
+    <VBox fx:id="signupFormVBox" alignment="CENTER" spacing="10">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <Text styleClass="title-text" text="Create New Account" />
+
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+            <GridPane vgap="10" hgap="10" alignment="CENTER">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+
+                <Label text="First Name:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                <TextField fx:id="firstNameField" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                <Label text="Last Name:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                <TextField fx:id="lastNameField" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+                <Label text="Email:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                <TextField fx:id="emailField" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+                <Label text="Password:" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                <PasswordField fx:id="passwordField" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+
+                <Label text="Confirm Password:" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+                <PasswordField fx:id="confirmPasswordField" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+
+                <Label text="Role:" GridPane.rowIndex="5" GridPane.columnIndex="0" />
+                <ComboBox fx:id="roleComboBox" GridPane.rowIndex="5" GridPane.columnIndex="1">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="patient" />
+                            <String fx:value="medecin" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+
+                <!-- Speciality field (initially hidden, appears when medecin role is selected) -->
+                <Label fx:id="specialityLabel" text="Speciality:" visible="false"
+                       GridPane.rowIndex="6" GridPane.columnIndex="0" />
+                <TextField fx:id="specialityField" visible="false"
+                           GridPane.rowIndex="6" GridPane.columnIndex="1" />
+
+                <Label text="Address:" GridPane.rowIndex="7" GridPane.columnIndex="0" />
+                <TextField fx:id="addressField" GridPane.rowIndex="7" GridPane.columnIndex="1" />
+
+                <Label text="Birth Date:" GridPane.rowIndex="8" GridPane.columnIndex="0" />
+                <DatePicker fx:id="birthDatePicker" GridPane.rowIndex="8" GridPane.columnIndex="1" />
+
+                <Label text="Phone Number:" GridPane.rowIndex="9" GridPane.columnIndex="0" />
+                <TextField fx:id="phoneField" GridPane.rowIndex="9" GridPane.columnIndex="1" />
+            </GridPane>
+        </ScrollPane>
+
+        <HBox spacing="10" alignment="CENTER">
+            <Button text="Sign Up" onAction="#handleSignup" styleClass="primary-button" />
+            <Button text="Back to Login" onAction="#goToLogin" styleClass="secondary-button" />
+        </HBox>
+
+        <Label fx:id="messageLabel" styleClass="message-label" />
+    </VBox>
+
+    <!-- Verification Form -->
+    <VBox fx:id="verificationVBox" alignment="CENTER" spacing="20" visible="false">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <Text styleClass="title-text" text="Email Verification" />
+
+        <Text styleClass="info-text" wrappingWidth="500" textAlignment="CENTER"
+              text="We've sent a verification code to your email. Please enter it below to complete your registration." />
+
+        <VBox spacing="10" alignment="CENTER" maxWidth="300">
+            <Label text="Verification Code:" />
+            <TextField fx:id="verificationCodeField" />
+        </VBox>
+
+        <HBox spacing="10" alignment="CENTER">
+            <Button text="Verify" onAction="#handleVerification" styleClass="primary-button" />
+            <Button text="Resend Code" onAction="#resendVerificationCode" styleClass="secondary-button" />
+            <Button text="Back" onAction="#backToSignup" styleClass="secondary-button" />
+        </HBox>
+
+        <Label fx:id="verificationMessageLabel" styleClass="message-label" />
+    </VBox>
+</StackPane>

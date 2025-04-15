@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pii.gui.ListeCategoriesController"
+      spacing="10">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Titre -->
+    <Label text="Liste des Catégories" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+    <!-- TableView -->
+    <TableView fx:id="tableCategories" prefHeight="400" prefWidth="600">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="100"/>
+            <TableColumn fx:id="colNom" text="Nom de la Catégorie" prefWidth="300"/>
+        </columns>
+    </TableView>
+
+    <!-- Boutons -->
+    <HBox spacing="15" alignment="CENTER">
+        <Button fx:id="ajouterBtn" text="Ajouter" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+
+        <Button fx:id="supprimerBtn" text="Supprimer" style="-fx-background-color: #F44336; -fx-text-fill: white;"/>
+    </HBox>
+    <Button text="Modifier" onAction="#handleModifierCategorie" />
+
+</VBox>

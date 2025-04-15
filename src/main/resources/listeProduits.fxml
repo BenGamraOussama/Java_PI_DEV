@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="pii.gui.ListeProduitsController">
+
+    <center>
+        <VBox spacing="10" alignment="CENTER">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <TableView fx:id="tableProduits" prefHeight="400" prefWidth="600">
+                <columns>
+                    <TableColumn fx:id="colNom" text="Nom"/>
+                    <TableColumn fx:id="colDescription" text="Description"/>
+                    <TableColumn fx:id="colQuantite" text="Quantité"/>
+                    <TableColumn fx:id="colDisponible" text="Disponible"/>
+                    <TableColumn fx:id="colModifier" text=""/>
+                    <TableColumn fx:id="colSupprimer" text=""/>
+                </columns>
+            </TableView>
+
+            <Button text="Rafraîchir" onAction="#rafraichirListeProduits" />
+        </VBox>
+    </center>
+
+</BorderPane>

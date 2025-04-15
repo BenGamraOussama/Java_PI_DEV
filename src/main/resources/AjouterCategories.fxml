@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8"
+      xmlns:fx="http://javafx.com/fxml/1"
+
+      fx:controller="pii.gui.Ajout_CategorieController"
+      spacing="10" alignment="CENTER"
+      style="-fx-padding: 20; -fx-background-color: #f5f5f5;">
+
+    <Label text="Ajouter une nouvelle catégorie"
+           style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+    <TextField fx:id="nomCategorie"
+               promptText="Entrez le nom de la catégorie"
+               style="-fx-pref-width: 250px;"/>
+
+    <HBox spacing="10" alignment="CENTER">
+        <Button text="Annuler"
+                onAction="#annulerAction"
+                style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+
+        <Button text="Ajouter"
+                onAction="#ajouterCategorie"
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+    </HBox>
+</VBox>

@@ -50,6 +50,16 @@ public class MainFX extends Application {
         listeCategoriesStage.setTitle("Liste des Catégories");
         listeCategoriesStage.setScene(listeCategoriesScene);
         listeCategoriesStage.show();
+
+        // -------------------- Fenêtre 5 : Modifier Produit --------------------
+        Stage modifierProduitStage = new Stage();
+        Parent rootModifierProduit = FXMLLoader.load(
+                Objects.requireNonNull(getClass().getResource("/ModifierProduit.fxml"))
+        );
+        Scene modifierProduitScene = new Scene(rootModifierProduit, 800, 600);
+        modifierProduitStage.setTitle("Modifier Produit");
+        modifierProduitStage.setScene(modifierProduitScene);
+        modifierProduitStage.show();
     }
 
     public static void main(String[] args) {

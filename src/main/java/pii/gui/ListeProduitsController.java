@@ -3,12 +3,17 @@ package pii.gui;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import pii.entities.Produit;
 import pii.services.ProduitServices;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -39,22 +44,17 @@ public class ListeProduitsController {
 
     @FXML
     public void initialize() {
-        // Initialisation des colonnes
+        // Initialiser les colonnes de la TableView
         colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
         colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         colQuantite.setCellValueFactory(new PropertyValueFactory<>("quantite"));
         colDisponible.setCellValueFactory(new PropertyValueFactory<>("disponible"));
-        produits.addAll(
-                new Produit("Produit A", "Description A", true, 10, 4.5),
-                new Produit("Produit B", "Description B", false, 5, 3.8)
-        );
-        tableProduits.setItems(produits);
 
-        // Ajouter les boutons
+        // Ajouter les colonnes avec boutons Modifier et Supprimer
         ajouterBoutonsModifier();
         ajouterBoutonsSupprimer();
 
-        // Charger les produits à partir de la base de données
+        // Charger les produits depuis la base
         rafraichirListeProduits();
     }
 
@@ -65,8 +65,7 @@ public class ListeProduitsController {
             {
                 btn.setOnAction(event -> {
                     Produit produit = getTableView().getItems().get(getIndex());
-                    System.out.println("Modifier : " + produit.getNom());
-                    // Implémenter ici la logique de modification (par exemple, ouvrir un formulaire de modification)
+                    showModifierProduitWindow(produit);
                 });
             }
 
@@ -86,9 +85,7 @@ public class ListeProduitsController {
             {
                 btn.setOnAction(event -> {
                     Produit produit = getTableView().getItems().get(getIndex());
-                    System.out.println("Supprimer : " + produit.getNom());
-                    // Supprimer de la liste observable (il faudrait aussi supprimer de la base de données si nécessaire)
-                    produits.remove(produit);
+                    supprimerProduit(produit);
                 });
             }
 
@@ -101,17 +98,25 @@ public class ListeProduitsController {
         colSupprimer.setCellFactory(cellFactory);
     }
 
+    private void supprimerProduit(Produit produit) {
+        try {
+            ProduitServices service = new ProduitServices();
+            service.deleteProduit(produit.getId()); // ⚠️ Assure-toi que cette méthode supprime bien de la BD
+            produits.remove(produit); // supprime de la table
+        } catch (SQLException e) {
+            afficherErreur("Erreur", "Échec de la suppression", e);
+        }
+    }
+
     @FXML
     private void rafraichirListeProduits() {
         try {
             ProduitServices produitService = new ProduitServices();
             List<Produit> produitsBD = produitService.afficher();
-
-            produits.setAll(produitsBD); // Met à jour la liste observable
-            tableProduits.setItems(produits); // Applique la liste observable à la TableView
-
+            produits.setAll(produitsBD);
+            tableProduits.setItems(produits);
         } catch (SQLException e) {
-            afficherErreur("Erreur", "Erreur lors du chargement des produits", e);
+            afficherErreur("Erreur SQL", "Erreur lors du chargement des produits", e);
         }
     }
 
@@ -121,5 +126,27 @@ public class ListeProduitsController {
         alert.setHeaderText(message);
         alert.setContentText(e.getMessage());
         alert.showAndWait();
+    }
+
+    public void showModifierProduitWindow(Produit produit) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierProduit.fxml"));
+            Parent root = loader.load();
+
+            ModifierProduitController controller = loader.getController();
+            controller.setProduit(produit); // Passe le produit au contrôleur de modification
+
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setTitle("Modifier le produit");
+            stage.setScene(scene);
+
+            // Rafraîchir la liste quand la fenêtre est fermée
+            stage.setOnHiding(event -> rafraichirListeProduits());
+
+            stage.show();
+        } catch (IOException e) {
+            afficherErreur("Erreur FXML", "Impossible d’ouvrir la fenêtre de modification", e);
+        }
     }
 }

@@ -75,15 +75,7 @@ public class ProduitServices {
 
     // Mise à jour d'un produit
     public void updateProduit(Produit p) throws SQLException {
-        String sql = "UPDATE produits SET nom = ?, description = ?, quantite = ?, average_rating = ? WHERE id = ?";
-        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
-            ps.setString(1, p.getNom());
-            ps.setString(2, p.getDescription());
-            ps.setInt(3, p.getQuantite());
-            ps.setDouble(4, p.getAverageRating());
-            ps.setInt(5, p.getId());
-            ps.executeUpdate();
-        }
+
     }
 
     // Suppression d'un produit
@@ -149,5 +141,8 @@ public class ProduitServices {
     }
 
     public void delete(int id) {
+    }
+
+    public void supprimer(int id) {
     }
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="pii.gui.ModifierProduitController">
+    <Label text="Modifier le produit" />
+
+    <Label text="Nom" />
+    <TextField fx:id="nomTextField" />
+
+    <Label text="Description" />
+    <TextField fx:id="descriptionTextField" />
+
+    <Label text="Quantité" />
+    <TextField fx:id="quantiteTextField" />
+
+    <Label text="Prix" />
+    <TextField fx:id="prixTextField" />
+
+    <Label text="Catégorie" />
+    <ComboBox fx:id="categorieComboBox" />
+
+    <Button text="Modifier" onAction="#modifierProduit" />
+</VBox>

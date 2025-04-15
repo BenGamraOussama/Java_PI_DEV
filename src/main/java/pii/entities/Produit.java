@@ -123,4 +123,11 @@ public class Produit {
     public double getAverageRating() {
         return 0;
     }
+
+    public void setPrix(double prix) {
+    }
+
+    public int getPrix() {
+        return 0;
+    }
 }

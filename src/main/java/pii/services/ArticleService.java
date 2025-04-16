@@ -8,7 +8,7 @@ import java.util.List;
 public class ArticleService implements IService<Article> {
     @Override
     public void ajouter(Article p) throws SQLException {
-        
+
     }
 
     @Override

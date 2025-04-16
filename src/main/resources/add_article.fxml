@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" prefWidth="600" prefHeight="500">
+    <children>
+        <VBox spacing="15" alignment="CENTER" layoutX="50" layoutY="30" prefWidth="500">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <Label text="Add New Article" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+
+            <TextField fx:id="titleField" promptText="Title" prefWidth="400"/>
+            <TextArea fx:id="contentField" promptText="Content" prefWidth="400" prefHeight="100"/>
+            <TextField fx:id="mediaPathField" promptText="Media Path (optional)" prefWidth="400"/>
+            <DatePicker fx:id="publishedAtPicker" promptText="Published Date" prefWidth="400"/>
+            <ComboBox fx:id="categoryComboBox" promptText="Select Category" prefWidth="400"/>
+            <ComboBox fx:id="userComboBox" promptText="Select User (optional)" prefWidth="400"/>
+
+            <HBox spacing="20" alignment="CENTER">
+                <Button text="Save" fx:id="saveButton" prefWidth="100" />
+                <Button text="Cancel" fx:id="cancelButton" prefWidth="100" />
+            </HBox>
+        </VBox>
+    </children>
+</AnchorPane>

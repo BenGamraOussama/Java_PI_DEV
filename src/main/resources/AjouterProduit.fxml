@@ -7,60 +7,53 @@
 <AnchorPane xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="pii.gui.AjouterProduitController"
-            prefHeight="400.0" prefWidth="600.0">
+            prefHeight="500.0" prefWidth="600.0">
 
-    <VBox layoutX="63.0" prefHeight="400.0" prefWidth="442.0">
+    <VBox layoutX="50.0" layoutY="20.0" spacing="20.0" prefWidth="500.0">
+        <!-- Titre -->
         <Label text="Ajouter un produit" textAlignment="CENTER">
             <font>
-                <Font size="36.0" />
+                <Font size="28.0" />
             </font>
         </Label>
 
-        <GridPane>
+        <!-- Formulaire -->
+        <GridPane hgap="10" vgap="10">
             <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" />
+                <ColumnConstraints minWidth="100.0" />
+                <ColumnConstraints minWidth="300.0" />
             </columnConstraints>
 
-            <rowConstraints>
-                <RowConstraints minHeight="30.0" />
-                <RowConstraints minHeight="30.0" />
-                <RowConstraints minHeight="30.0" />
-                <RowConstraints minHeight="30.0" />
-                <RowConstraints minHeight="30.0" />
-                <RowConstraints minHeight="30.0" />
-                <RowConstraints minHeight="30.0" />
-            </rowConstraints>
-
-            <!-- Contenu du formulaire -->
-            <Label text="Catégorie" GridPane.rowIndex="0"/>
+            <!-- Champs -->
+            <Label text="Catégorie :" GridPane.rowIndex="0"/>
             <ComboBox fx:id="categorieCombo" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-            <Label text="Nom" GridPane.rowIndex="1"/>
+            <Label text="Nom :" GridPane.rowIndex="1"/>
             <TextField fx:id="nomField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-            <Label text="Description" GridPane.rowIndex="2"/>
+            <Label text="Description :" GridPane.rowIndex="2"/>
             <TextArea fx:id="descField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-            <Label text="Disponible" GridPane.rowIndex="3"/>
+            <Label text="Disponible :" GridPane.rowIndex="3"/>
             <CheckBox fx:id="dispoCheck" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-            <Label text="Quantité" GridPane.rowIndex="4"/>
+            <Label text="Quantité :" GridPane.rowIndex="4"/>
             <TextField fx:id="quantiteField" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
-            <Label text="Note" GridPane.rowIndex="5"/>
-            <TextField fx:id="noteField" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+            <Label text="Prix :" GridPane.rowIndex="5"/>
+            <TextField fx:id="prixField" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 
-            <Label text="Image" GridPane.rowIndex="6"/>
-            <TextField fx:id="productImageField" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
-            <Button text="Parcourir" onAction="#handleBrowseImage" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+            <Label text="Image :" GridPane.rowIndex="6"/>
+            <HBox spacing="10" GridPane.rowIndex="6" GridPane.columnIndex="1">
+                <TextField fx:id="productImageField" HBox.hgrow="ALWAYS"/>
+                <Button text="Parcourir" onAction="#handleBrowseImage"/>
+            </HBox>
         </GridPane>
 
-        <HBox alignment="CENTER_RIGHT" spacing="40.0">
-            <Button fx:id="annulerButton" text="Annuler" onAction="#handleAnnuler"/>
+        <!-- Boutons -->
+        <HBox spacing="20.0" alignment="CENTER_RIGHT">
+            <Button fx:id="annulerButton" text="Annuler" onAction="#handleAnnuler" style="-fx-background-color: red; -fx-text-fill: white;"/>
             <Button fx:id="ajouterButton" text="Ajouter" onAction="#handleAjouterProduit"/>
         </HBox>
     </VBox>
-
-
 </AnchorPane>

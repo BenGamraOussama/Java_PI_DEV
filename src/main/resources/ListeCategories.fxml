@@ -26,10 +26,17 @@
 
     <!-- Boutons -->
     <HBox spacing="15" alignment="CENTER">
-        <Button fx:id="ajouterBtn" text="Ajouter" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        <Button fx:id="ajouterBtn" text="Ajouter"
+                onAction="#ajouterCategorie"
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
 
-        <Button fx:id="supprimerBtn" text="Supprimer" style="-fx-background-color: #F44336; -fx-text-fill: white;"/>
+        <Button fx:id="supprimerBtn" text="Supprimer"
+                onAction="#supprimerCategorie"
+                style="-fx-background-color: #F44336; -fx-text-fill: white;" />
+
+
     </HBox>
+
     <Button text="Modifier" onAction="#handleModifierCategorie" />
 
 </VBox>

@@ -16,6 +16,11 @@
                promptText="Entrez le nom de la catégorie"
                style="-fx-pref-width: 250px;"/>
 
+    <!-- Label d'alerte pour afficher les messages de validation -->
+    <Label fx:id="alertLabel"
+           text=""
+           style="-fx-text-fill: red; -fx-font-size: 12px;"/>
+
     <HBox spacing="10" alignment="CENTER">
         <Button text="Annuler"
                 onAction="#annulerAction"

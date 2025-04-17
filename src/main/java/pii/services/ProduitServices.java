@@ -2,112 +2,79 @@ package pii.services;
 
 import pii.entities.Produit;
 import pii.entities.Produit_categorie;
-import pii.utils.MyDatabase;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProduitServices {
-    private Connection cnx = MyDatabase.getInstance().getConnection();
-    private Produit_CategoriesServices categorieService = new Produit_CategoriesServices();
 
-    // Ajouter un produit à la base de données
-    public void ajouter(Produit produit) throws SQLException {
-        if (produit.getCategorie() == null || produit.getCategorie().getId() == 0) {
-            throw new SQLException("La catégorie du produit doit être spécifiée");
-        }
+    private Connection connection;
 
-        String req = "INSERT INTO produits(id_categorie, nom, description, disponible, image, quantite, average_rating) " +
-                "VALUES(?, ?, ?, ?, ?, ?, ?)";
-
-        try (PreparedStatement ps = cnx.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setInt(1, produit.getCategorie().getId());
-            ps.setString(2, produit.getNom());
-            ps.setString(3, produit.getDescription());
-            ps.setBoolean(4, produit.isDisponible());
-            ps.setString(5, produit.getImage());
-            ps.setInt(6, produit.getQuantite());
-            ps.setDouble(7, produit.getAverageRating());
-
-            ps.executeUpdate();
-
-            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    produit.setId(generatedKeys.getInt(1));
-                }
-            }
+    public ProduitServices() {
+        try {
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/pi", "root", "");
         } catch (SQLException e) {
-            throw new SQLException("Erreur lors de l'ajout du produit : " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Échec de la connexion à la base de données", e);
         }
     }
 
-    // Lire la liste des produits
+    // Ajouter un produit
+    public void ajouter(Produit produit) throws SQLException {
+        String query = "INSERT INTO produits (nom, description, quantite, prix, id_categorie, image, disponible) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, produit.getNom());
+            statement.setString(2, produit.getDescription());
+            statement.setInt(3, produit.getQuantite());
+            statement.setFloat(4, (float) produit.getPrix());
+            statement.setInt(5, produit.getCategorie().getId()); // Utilisation de `id_categorie`
+            statement.setString(6, produit.getImage());
+            statement.setBoolean(7, produit.isDisponible());
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new SQLException("Échec de l'ajout du produit.");
+            }
+        }
+    }
+
+    // Lire tous les produits
     public List<Produit> readList() throws SQLException {
         List<Produit> produits = new ArrayList<>();
-        String req = "SELECT p.*, pc.nom as categorie_nom FROM produits p " +
-                "JOIN produit_categories pc ON p.id_categorie = pc.id";
-
-        try (Statement st = cnx.createStatement();
-             ResultSet rs = st.executeQuery(req)) {
+        String query = "SELECT * FROM produits";
+        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
             while (rs.next()) {
-                Produit_categorie categorie = new Produit_categorie(
-                        rs.getInt("id_categorie"),
-                        rs.getString("categorie_nom")
-                );
-
                 Produit produit = new Produit(
                         rs.getInt("id"),
-                        categorie,
+                        new Produit_categorie(rs.getInt("id_categorie"), ""), // Utilisation de `id_categorie`
                         rs.getString("nom"),
                         rs.getString("description"),
                         rs.getBoolean("disponible"),
                         rs.getString("image"),
                         rs.getInt("quantite"),
-                        rs.getDouble("average_rating")
+                        rs.getFloat("prix")
                 );
-
                 produits.add(produit);
             }
         }
         return produits;
     }
 
-    // Mise à jour d'un produit
-    public void updateProduit(Produit p) throws SQLException {
-
-    }
-
-    // Suppression d'un produit
-    public void deleteProduit(int id) throws SQLException {
-        String sql = "DELETE FROM produits WHERE id = ?";
-        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            ps.executeUpdate();
-        }
-    }
-
     // Trouver un produit par ID
     public Produit findById(int id) throws SQLException {
-        String req = "SELECT p.*, pc.nom as categorie_nom FROM produits p " +
-                "JOIN produit_categories pc ON p.id_categorie = pc.id WHERE p.id = ?";
-        try (PreparedStatement ps = cnx.prepareStatement(req)) {
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
+        String query = "SELECT * FROM produits WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    Produit_categorie categorie = new Produit_categorie(
-                            rs.getInt("id_categorie"),
-                            rs.getString("categorie_nom")
-                    );
                     return new Produit(
                             rs.getInt("id"),
-                            categorie,
+                            new Produit_categorie(rs.getInt("id_categorie"), ""), // Utilisation de `id_categorie`
                             rs.getString("nom"),
                             rs.getString("description"),
                             rs.getBoolean("disponible"),
                             rs.getString("image"),
                             rs.getInt("quantite"),
-                            rs.getDouble("average_rating")
+                            rs.getFloat("prix")
                     );
                 }
             }
@@ -115,34 +82,45 @@ public class ProduitServices {
         return null;
     }
 
-    // Afficher tous les produits avec jointure correcte
-    public List<Produit> afficher() throws SQLException {
-        List<Produit> produits = new ArrayList<>();
-        String req = "SELECT p.*, pc.nom as categorie_nom FROM produits p " +
-                "JOIN produit_categories pc ON p.id_categorie = pc.id";
-
-        try (Statement st = cnx.createStatement();
-             ResultSet rs = st.executeQuery(req)) {
-            while (rs.next()) {
-                Produit produit = new Produit(
-                        rs.getInt("id"),
-                        new Produit_categorie(rs.getInt("id_categorie"), rs.getString("categorie_nom")),
-                        rs.getString("nom"),
-                        rs.getString("description"),
-                        rs.getBoolean("disponible"),
-                        rs.getString("image"),
-                        rs.getInt("quantite"),
-                        rs.getDouble("average_rating")
-                );
-                produits.add(produit);
+    // Modifier un produit
+    public void updateProduit(Produit produit) throws SQLException {
+        String query = "UPDATE produits SET nom = ?, description = ?, quantite = ?, prix = ?, image = ?, disponible = ?, id_categorie = ? WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, produit.getNom());
+            stmt.setString(2, produit.getDescription());
+            stmt.setInt(3, produit.getQuantite());
+            stmt.setFloat(4, (float) produit.getPrix());
+            stmt.setString(5, produit.getImage());
+            stmt.setBoolean(6, produit.isDisponible());
+            stmt.setInt(7, produit.getCategorie().getId()); // Utilisation de `id_categorie`
+            stmt.setInt(8, produit.getId());
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new SQLException("Échec de la mise à jour du produit.");
             }
         }
-        return produits;
     }
 
-    public void delete(int id) {
+    // Supprimer un produit
+    public void supprimerProduit(int id) throws SQLException {
+        String query = "DELETE FROM produits WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new SQLException("Échec de la suppression du produit.");
+            }
+        }
     }
 
-    public void supprimer(int id) {
+    // Méthode pour fermer la connexion proprement
+    public void closeConnection() {
+        try {
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

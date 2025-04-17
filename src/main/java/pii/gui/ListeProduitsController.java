@@ -24,19 +24,14 @@ public class ListeProduitsController {
 
     @FXML
     private TableColumn<Produit, String> colNom;
-
     @FXML
     private TableColumn<Produit, String> colDescription;
-
     @FXML
     private TableColumn<Produit, Integer> colQuantite;
-
     @FXML
     private TableColumn<Produit, Boolean> colDisponible;
-
     @FXML
     private TableColumn<Produit, Void> colModifier;
-
     @FXML
     private TableColumn<Produit, Void> colSupprimer;
 
@@ -44,17 +39,17 @@ public class ListeProduitsController {
 
     @FXML
     public void initialize() {
-        // Initialiser les colonnes de la TableView
-        colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
-        colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
-        colQuantite.setCellValueFactory(new PropertyValueFactory<>("quantite"));
-        colDisponible.setCellValueFactory(new PropertyValueFactory<>("disponible"));
+        // Pour 'disponible', vous pouvez essayer avec 'isDisponible' si ça ne fonctionne pas avec 'disponible'
+        colNom.setCellValueFactory(new PropertyValueFactory<Produit, String>("nom"));
+        colDescription.setCellValueFactory(new PropertyValueFactory<Produit, String>("description"));
+        colQuantite.setCellValueFactory(new PropertyValueFactory<Produit, Integer>("quantite"));
+        colDisponible.setCellValueFactory(new PropertyValueFactory<Produit, Boolean>("disponible"));
 
-        // Ajouter les colonnes avec boutons Modifier et Supprimer
+
+
         ajouterBoutonsModifier();
         ajouterBoutonsSupprimer();
 
-        // Charger les produits depuis la base
         rafraichirListeProduits();
     }
 
@@ -85,7 +80,7 @@ public class ListeProduitsController {
             {
                 btn.setOnAction(event -> {
                     Produit produit = getTableView().getItems().get(getIndex());
-                    supprimerProduit(produit);
+                    showConfirmationBeforeDelete(produit);
                 });
             }
 
@@ -98,11 +93,25 @@ public class ListeProduitsController {
         colSupprimer.setCellFactory(cellFactory);
     }
 
+    private void showConfirmationBeforeDelete(Produit produit) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation de suppression");
+        alert.setHeaderText("Êtes-vous sûr de vouloir supprimer ce produit ?");
+        alert.setContentText("Cette action est irréversible.");
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                supprimerProduit(produit);
+            }
+        });
+    }
+
     private void supprimerProduit(Produit produit) {
         try {
             ProduitServices service = new ProduitServices();
-            service.deleteProduit(produit.getId()); // ⚠️ Assure-toi que cette méthode supprime bien de la BD
-            produits.remove(produit); // supprime de la table
+            service.supprimerProduit(produit.getId());
+            produits.remove(produit);
+            afficherConfirmation("Produit supprimé", "Le produit a été supprimé avec succès.");
         } catch (SQLException e) {
             afficherErreur("Erreur", "Échec de la suppression", e);
         }
@@ -112,7 +121,7 @@ public class ListeProduitsController {
     private void rafraichirListeProduits() {
         try {
             ProduitServices produitService = new ProduitServices();
-            List<Produit> produitsBD = produitService.afficher();
+            List<Produit> produitsBD = produitService.readList();
             produits.setAll(produitsBD);
             tableProduits.setItems(produits);
         } catch (SQLException e) {
@@ -128,20 +137,27 @@ public class ListeProduitsController {
         alert.showAndWait();
     }
 
+    private void afficherConfirmation(String titre, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titre);
+        alert.setHeaderText(message);
+        alert.setContentText(null);
+        alert.showAndWait();
+    }
+
     public void showModifierProduitWindow(Produit produit) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierProduit.fxml"));
             Parent root = loader.load();
 
             ModifierProduitController controller = loader.getController();
-            controller.setProduit(produit); // Passe le produit au contrôleur de modification
+            controller.setProduit(produit);
 
             Scene scene = new Scene(root);
             Stage stage = new Stage();
             stage.setTitle("Modifier le produit");
             stage.setScene(scene);
 
-            // Rafraîchir la liste quand la fenêtre est fermée
             stage.setOnHiding(event -> rafraichirListeProduits());
 
             stage.show();

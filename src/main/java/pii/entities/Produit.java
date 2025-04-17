@@ -8,10 +8,10 @@ public class Produit {
     private boolean disponible;
     private String image;
     private int quantite;
-    private double average_rating;
+    private double prix;
 
-    // 🔨 Constructeur complet
-    public Produit(int id, Produit_categorie categorie, String nom, String description, boolean disponible, String image, int quantite, double average_rating) {
+    // Constructeur avec tous les attributs
+    public Produit(int id, Produit_categorie categorie, String nom, String description, boolean disponible, String image, int quantite, double prix) {
         this.id = id;
         this.categorie = categorie;
         this.nom = nom;
@@ -19,30 +19,14 @@ public class Produit {
         this.disponible = disponible;
         this.image = image;
         this.quantite = quantite;
-        this.average_rating = average_rating;
+        this.prix = prix;
     }
 
-    // 🔨 Constructeur sans ID (utile pour l'ajout où l'ID est auto-généré)
-    public Produit(Produit_categorie categorie, String nom, String description, boolean disponible, String image, int quantite, double average_rating) {
-        this.categorie = categorie;
-        this.nom = nom;
-        this.description = description;
-        this.disponible = disponible;
-        this.image = image;
-        this.quantite = quantite;
-        this.average_rating = average_rating;
+    // Constructeur sans paramètres (par défaut)
+    public Produit() {
     }
 
-    // 🔨 Autre constructeur simple (utilisable pour des tests ou affichages)
-    public Produit(String nom, String description, boolean disponible, int quantite, double average_rating) {
-        this.nom = nom;
-        this.description = description;
-        this.disponible = disponible;
-        this.quantite = quantite;
-        this.average_rating = average_rating;
-    }
-
-    // ✅ Getters et Setters
+    // Getters et Setters
     public int getId() {
         return id;
     }
@@ -99,35 +83,22 @@ public class Produit {
         this.quantite = quantite;
     }
 
-    public double getAverage_rating() {
-        return average_rating;
-    }
-
-    public void setAverage_rating(double average_rating) {
-        this.average_rating = average_rating;
-    }
-
-    // 🧾 toString() utile pour le debug ou les ComboBox
-    @Override
-    public String toString() {
-        return nom + " (" + quantite + " en stock)";
-    }
-
-    public Object getNote() {
-        return null;
-    }
-
-    public void setNote(double note) {
-    }
-
-    public double getAverageRating() {
-        return 0;
+    public double getPrix() {
+        return prix;
     }
 
     public void setPrix(double prix) {
+        this.prix = prix;
     }
 
-    public int getPrix() {
-        return 0;
+    // Méthode pour afficher un résumé du produit
+    @Override
+    public String toString() {
+        return "Produit [id=" + id + ", nom=" + nom + ", description=" + description + ", prix=" + prix + "]";
+    }
+
+    // Méthode pour vérifier si le produit est disponible en stock
+    public boolean isEnStock() {
+        return quantite > 0 && disponible;
     }
 }

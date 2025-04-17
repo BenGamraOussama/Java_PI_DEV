@@ -1,16 +1,18 @@
 package pii.entities;
-import pii.entities.Produit_categorie;
 
 public class Produit_categorie {
+
     private int id;
     private String nom;
 
-    // Constructeurs
-    public Produit_categorie() {}
-
+    // Constructeur
     public Produit_categorie(int id, String nom) {
         this.id = id;
         this.nom = nom;
+    }
+
+    public Produit_categorie() {
+
     }
 
     // Getters et Setters
@@ -32,6 +34,9 @@ public class Produit_categorie {
 
     @Override
     public String toString() {
-        return nom; // nom est l’attribut de la catégorie
+        return "Produit_categorie{" +
+                "id=" + id +
+                ", nom='" + nom + '\'' +
+                '}';
     }
 }

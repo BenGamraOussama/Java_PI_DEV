@@ -2,11 +2,6 @@ package org.example.pi__dev_.dao;
 
 
 
-
-
-
-
-
 import org.example.pi__dev_.enteties.Consultation;
 import org.example.pi__dev_.enteties.Etat;
 import org.example.pi__dev_.enteties.Patient;
@@ -26,7 +21,7 @@ public class ConsultationDAO {
         String query = "INSERT INTO consultations(date, heure, prix, modeconsultation, etatenum, p) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setDate(1, new java.sql.Date(consultation.getDate().getTime()));
+            stmt.setDate(1, consultation.getDate());
             stmt.setTime(2, consultation.getHeure());
             stmt.setDouble(3, consultation.getPrix());
             stmt.setString(4, consultation.getModeconsultation());
@@ -70,10 +65,7 @@ public class ConsultationDAO {
 
                     // Get patient ID (can't be null due to foreign key constraint)
                     int patientId = rs.getInt("patient_id");
-                    if (rs.wasNull()) { // Check if SQL NULL was converted to 0
-                        System.err.println("Warning: Null patient_id found for consultation ID " + rs.getInt("id"));
-                        continue;
-                    }
+
 
                     Consultation consultation = new Consultation(
                             sqlDate,

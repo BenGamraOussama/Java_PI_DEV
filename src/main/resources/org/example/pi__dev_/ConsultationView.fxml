@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.geometry.Insets?>
+
+<VBox stylesheets="@consultation.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.pi__dev_.ConsultationController">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+    <spacing>10</spacing>
+
+    <Label text="Gestion des Consultations" styleClass="header-label"/>
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="ID:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <TextField fx:id="idField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+        <Label text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <DatePicker fx:id="datePicker" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+        <Label text="Heure:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <TextField fx:id="heureField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+        <Label text="Prix:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <TextField fx:id="prixField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+        <Label text="Mode de consultation:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+        <TextField fx:id="modeConsultationField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+        <Label text="État:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+        <ComboBox fx:id="etatComboBox" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+        <Label text="Patient ID:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+        <TextField fx:id="patientIdField" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+    </GridPane>
+
+    <HBox spacing="10">
+        <Button text="Nouveau" onAction="#handleNewConsultation"/>
+        <Button text="Ajouter" onAction="#handleAddConsultation"/>
+        <Button text="Modifier" onAction="#handleUpdateConsultation"/>
+        <Button text="Supprimer" onAction="#handleDeleteConsultation"/>
+    </HBox>
+
+    <TabPane>
+        <Tab text="Vue Tableau">
+            <TableView fx:id="consultationTable">
+                <columns>
+                    <TableColumn text="ID" prefWidth="50">
+                        <cellValueFactory><PropertyValueFactory property="id"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Date" prefWidth="100">
+                        <cellValueFactory><PropertyValueFactory property="date"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Heure" prefWidth="100">
+                        <cellValueFactory><PropertyValueFactory property="heure"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Prix" prefWidth="80">
+                        <cellValueFactory><PropertyValueFactory property="prix"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Mode" prefWidth="120">
+                        <cellValueFactory><PropertyValueFactory property="modeconsultation"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="État" prefWidth="100">
+                        <cellValueFactory><PropertyValueFactory property="etatenum"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Patient ID" prefWidth="80">
+                        <cellValueFactory><PropertyValueFactory property="patient_id"/></cellValueFactory>
+                    </TableColumn>
+                </columns>
+            </TableView>
+        </Tab>
+
+        <Tab text="Vue Cartes">
+            <ScrollPane fitToWidth="true">
+                <FlowPane fx:id="consultationCardsContainer" hgap="10" vgap="10">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+                </FlowPane>
+            </ScrollPane>
+        </Tab>
+    </TabPane>
+
+    <Label text="Traitements associés:" styleClass="subheader-label"/>
+    <TableView fx:id="traitementTable">
+        <columns>
+            <TableColumn text="ID" prefWidth="50">
+                <cellValueFactory><PropertyValueFactory property="id"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn text="Type" prefWidth="100">
+                <cellValueFactory><PropertyValueFactory property="type"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn text="Médicament" prefWidth="150">
+                <cellValueFactory><PropertyValueFactory property="medicament"/></cellValueFactory>
+            </TableColumn>
+            <TableColumn text="Suivi" prefWidth="200">
+                <cellValueFactory><PropertyValueFactory property="suivi"/></cellValueFactory>
+            </TableColumn>
+        </columns>
+    </TableView>
+</VBox>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.pi__dev_.HelloController"
+      spacing="20"
+      alignment="CENTER"
+      style="-fx-padding: 20;">
+
+  <Label fx:id="welcomeText" text="NovaTeam Space!"/>
+
+  <Button text="Acceder A L'espace" onAction="#navigateToMain"
+          style="-fx-background-color: #337fcb; -fx-text-fill: white;"/>
+</VBox>

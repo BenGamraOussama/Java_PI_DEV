@@ -1,0 +1,83 @@
+/* Styles généraux */
+.root {
+    -fx-font-family: "Arial";
+    -fx-base: #ecf0f1;
+    -fx-background: #dfe6e9;
+}
+
+/* Cartes RDV */
+.rdv-card {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1);
+    -fx-padding: 12px;
+    -fx-min-width: 280px;
+    -fx-max-width: 280px;
+}
+
+.rdv-card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 8, 0, 0, 2);
+}
+
+/* Éléments de carte */
+.card-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.card-date {
+    -fx-font-size: 14px;
+    -fx-text-fill: #3498db;
+    -fx-font-weight: bold;
+}
+
+.card-detail {
+    -fx-font-size: 13px;
+    -fx-text-fill: #34495e;
+}
+
+/* Boutons */
+.button {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5px;
+    -fx-padding: 5 10 5 10;
+    -fx-min-width: 80px;
+}
+
+.button-add {
+    -fx-background-color: #2ecc71;
+}
+
+.button-edit {
+    -fx-background-color: #3498db;
+}
+
+.button-delete {
+    -fx-background-color: #e74c3c;
+}
+
+/* Labels */
+.header-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.subheader-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 5 0 5 0;
+    -fx-text-fill: #34495e;
+}
+
+/* Champs de formulaire */
+.text-field, .date-picker {
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-color: #bdc3c7;
+    -fx-min-height: 30px;
+}

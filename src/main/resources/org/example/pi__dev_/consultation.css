@@ -1,0 +1,52 @@
+/* Styles de base */
+.header-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.subheader-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 5 0 5 0;
+}
+
+/* Styles des cartes */
+.consultation-card {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1);
+    -fx-padding: 10px;
+}
+
+.card-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.card-detail {
+    -fx-font-size: 14px;
+}
+
+/* Styles des boutons */
+.button {
+    -fx-padding: 5 10 5 10;
+    -fx-font-size: 12px;
+}
+
+.button-edit {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+}
+
+.button-delete {
+    -fx-background-color: #f44336;
+    -fx-text-fill: white;
+}
+
+/* Style du FlowPane */
+FlowPane {
+    -fx-background-color: #f5f5f5;
+}

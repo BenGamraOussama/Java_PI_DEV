@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<HBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.exemple.controllers.CommandeCardController"
+      spacing="10" style="-fx-padding: 10; -fx-border-color: gray;">
+
+    <!-- Infos Commande ici (label id, date, etc.) -->
+
+    <Button fx:id="btnModifier" text="Modifier" />
+    <Button fx:id="btnSupprimer" text="Supprimer" />
+</HBox>

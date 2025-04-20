@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.exemple.controllers.ListViewCommande"
+      prefHeight="622.0" prefWidth="1084.0">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Title -->
+    <Label text="Liste des Commandes" style="-fx-font-size: 24px; -fx-font-weight: bold;">
+        <VBox.margin>
+            <Insets bottom="20"/>
+        </VBox.margin>
+        <font>
+            <Font name="System Bold" size="24.0"/>
+        </font>
+    </Label>
+
+    <!-- Commands Grid -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-background: transparent;">
+        <content>
+            <FlowPane fx:id="commandesContainer" hgap="30" vgap="30" prefWrapLength="1044">
+                <!-- Les cartes de commande seront ajoutées ici dynamiquement -->
+            </FlowPane>
+        </content>
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+    </ScrollPane>
+</VBox>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/8"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.exemple.controllers.LigneCommandeController"
+      spacing="10" alignment="CENTER">
+
+    <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+
+    <Label text="Gestion des Lignes de Commande" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="Produit ID :" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="produitField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Quantité :" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="quantiteField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Prix Unitaire :" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="prixField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Commande ID :" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextField fx:id="commandeIdField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <HBox spacing="10">
+        <Button text="Ajouter" onAction="#handleAjouter"/>
+        <Button text="Modifier" onAction="#handleModifier"/>
+        <Button text="Supprimer" onAction="#handleSupprimer"/>
+    </HBox>
+
+    <TableView fx:id="tableLignes" prefHeight="300" prefWidth="600">
+        <columns>
+            <TableColumn fx:id="idCol" text="ID"/>
+            <TableColumn fx:id="produitCol" text="Produit"/>
+            <TableColumn fx:id="quantiteCol" text="Quantité"/>
+            <TableColumn fx:id="prixCol" text="Prix"/>
+            <TableColumn fx:id="totalCol" text="Total"/>
+            <TableColumn fx:id="commandeIdCol" text="Commande ID"/>
+        </columns>
+    </TableView>
+</VBox>

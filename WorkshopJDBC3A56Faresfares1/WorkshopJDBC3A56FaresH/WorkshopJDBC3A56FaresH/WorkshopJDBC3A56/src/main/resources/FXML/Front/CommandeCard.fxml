@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.exemple.controllers.CommandCardController"
+            prefHeight="150.0" prefWidth="250.0"
+            style="-fx-background-color: #ffffff; -fx-border-color: #dddddd; -fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5,0,0,1);">
+
+    <children>
+        <VBox alignment="CENTER" spacing="10.0">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <children>
+                <Label fx:id="dateLabel" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                <Label fx:id="montantLabel"/>
+                <Label fx:id="userLabel"/>
+                <HBox alignment="CENTER" spacing="5.0">
+                    <Button text="-" fx:id="decrementButton"/>
+                    <TextField fx:id="quantityField" text="1" prefWidth="50" alignment="CENTER"/>
+                    <Button text="+" fx:id="incrementButton"/>
+                </HBox>
+
+                <Button text="Confimer" fx:id="detailButton" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

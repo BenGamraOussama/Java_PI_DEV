@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.exemple.controllers.PassercommandeController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <children>
+        <ScrollPane fitToWidth="true" prefHeight="400.0" prefWidth="600.0">
+            <content>
+                <FlowPane fx:id="cardsContainer" hgap="15.0" vgap="15.0">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+                </FlowPane>
+            </content>
+        </ScrollPane>
+    </children>
+</AnchorPane>

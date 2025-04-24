@@ -1,15 +1,8 @@
 package com.exemple.controllers;
 
-import com.exemple.entities.Commande;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import com.exemple.services.CommandeService;
-
-import java.time.LocalDate;
-import java.util.List;
+import javafx.event.ActionEvent;
 
 public class AddCommandeController {
 
@@ -20,114 +13,100 @@ public class AddCommandeController {
     private TextField userIdField;
 
     @FXML
-    private TableView<Commande> commandeTable;
+    private TableView<?> commandeTable;
 
     @FXML
-    private TableColumn<Commande, Integer> idCol;
+    private TableColumn<?, ?> idCol;
 
     @FXML
-    private TableColumn<Commande, Double> montantCol;
+    private TableColumn<?, ?> montantCol;
 
     @FXML
-    private TableColumn<Commande, Integer> userIdCol;
+    private TableColumn<?, ?> userIdCol;
 
-    private final CommandeService commandeService = new CommandeService();
-    private final ObservableList<Commande> commandes = FXCollections.observableArrayList();
+    // Méthode de contrôle de saisie
+    private boolean validateFields() {
+        boolean isValid = true;
+        StringBuilder errorMessage = new StringBuilder();
 
-    private Commande selectedCommande = null;
+        // Reset styles
+        montantField.setStyle("");
+        userIdField.setStyle("");
 
-    @FXML
-    public void initialize() {
-        idCol.setCellValueFactory(cell -> new javafx.beans.property.SimpleIntegerProperty(cell.getValue().getId()).asObject());
-        montantCol.setCellValueFactory(cell -> new javafx.beans.property.SimpleDoubleProperty(cell.getValue().getMontantTotal()).asObject());
-        userIdCol.setCellValueFactory(cell -> new javafx.beans.property.SimpleIntegerProperty(cell.getValue().getUserId()).asObject());
-
-        refreshTable();
-
-        commandeTable.setOnMouseClicked(this::handleRowSelection);
-    }
-
-    @FXML
-    private void handleAddCommande() {
-        try {
-            if (montantField.getText().isEmpty() || userIdField.getText().isEmpty()) {
-                System.out.println("Veuillez remplir tous les champs !");
-                return;
-            }
-
-            double montant = Double.parseDouble(montantField.getText());
-            int userId = Integer.parseInt(userIdField.getText());
-
-            Commande c = new Commande();
-            c.setMontantTotal(montant);
-            c.setUserId(userId);
-            c.setDateCommande(LocalDate.now());
-
-            commandeService.ajouter(c);
-            clearFields();
-            refreshTable();
-        } catch (NumberFormatException e) {
-            System.out.println("Format invalide pour le montant ou l'ID utilisateur.");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    @FXML
-    private void handleUpdateCommande() {
-        if (selectedCommande == null) {
-            System.err.println("Aucune commande sélectionnée.");
-            return;
-        }
-
-        try {
-            selectedCommande.setMontantTotal(Double.parseDouble(montantField.getText()));
-            selectedCommande.setUserId(Integer.parseInt(userIdField.getText()));
-            selectedCommande.setDateCommande(LocalDate.now());
-
-            commandeService.modifier(selectedCommande);
-            clearFields();
-            refreshTable();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void handleDeleteCommande() {
-        if (selectedCommande != null) {
+        // Validation du champ Montant
+        if (montantField.getText().isEmpty()) {
+            errorMessage.append("- Le champ 'Montant' est requis.\n");
+            montantField.setStyle("-fx-border-color: red;");
+            isValid = false;
+        } else {
             try {
-                commandeService.supprimer(selectedCommande.getId());
-                clearFields();
-                refreshTable();
-            } catch (Exception e) {
-                e.printStackTrace();
+                double montant = Double.parseDouble(montantField.getText());
+                if (montant <= 0) {
+                    errorMessage.append("- Le 'Montant' doit être positif.\n");
+                    montantField.setStyle("-fx-border-color: red;");
+                    isValid = false;
+                }
+            } catch (NumberFormatException e) {
+                errorMessage.append("- Le 'Montant' doit être un nombre valide.\n");
+                montantField.setStyle("-fx-border-color: red;");
+                isValid = false;
             }
         }
+
+        // Validation du champ User ID
+        if (userIdField.getText().isEmpty()) {
+            errorMessage.append("- Le champ 'User ID' est requis.\n");
+            userIdField.setStyle("-fx-border-color: red;");
+            isValid = false;
+        } else {
+            try {
+                int userId = Integer.parseInt(userIdField.getText());
+                if (userId <= 0) {
+                    errorMessage.append("- Le 'User ID' doit être positif.\n");
+                    userIdField.setStyle("-fx-border-color: red;");
+                    isValid = false;
+                }
+            } catch (NumberFormatException e) {
+                errorMessage.append("- Le 'User ID' doit être un entier valide.\n");
+                userIdField.setStyle("-fx-border-color: red;");
+                isValid = false;
+            }
+        }
+
+        // Si y a erreurs, afficher une alerte
+        if (!isValid) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur de saisie");
+            alert.setHeaderText("Veuillez corriger les erreurs suivantes:");
+            alert.setContentText(errorMessage.toString());
+            alert.showAndWait();
+        }
+
+        return isValid;
     }
 
-    private void refreshTable() {
-        try {
-            List<Commande> list = commandeService.afficher();
-            commandes.setAll(list);
-            commandeTable.setItems(commandes);
-        } catch (Exception e) {
-            e.printStackTrace();
+    // Bouton Ajouter
+    @FXML
+    private void handleAddCommande(ActionEvent event) {
+        if (validateFields()) {
+            System.out.println("Commande ajoutée avec succès !");
+            // ➔ Ici tu ajoutes ta commande à la base ou à ta TableView
         }
     }
 
-    private void clearFields() {
-        montantField.clear();
-        userIdField.clear();
-        selectedCommande = null;
+    // Bouton Modifier
+    @FXML
+    private void handleUpdateCommande(ActionEvent event) {
+        if (validateFields()) {
+            System.out.println("Commande modifiée avec succès !");
+            // ➔ Ici tu modifies ta commande
+        }
     }
 
-    private void handleRowSelection(MouseEvent event) {
-        selectedCommande = commandeTable.getSelectionModel().getSelectedItem();
-        if (selectedCommande != null) {
-            montantField.setText(String.valueOf(selectedCommande.getMontantTotal()));
-            userIdField.setText(String.valueOf(selectedCommande.getUserId()));
-        }
+    // Bouton Supprimer
+    @FXML
+    private void handleDeleteCommande(ActionEvent event) {
+        System.out.println("Commande supprimée !");
+        // ➔ Ici tu supprimes ta commande
     }
 }

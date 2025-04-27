@@ -7,17 +7,20 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="pii.gui.ListeCategoriesController"
-      spacing="10">
+      spacing="15"
+      style="-fx-background-color: #f5f6fa;">
 
     <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
+        <Insets top="25" right="25" bottom="25" left="25"/>
     </padding>
 
     <!-- Titre -->
-    <Label text="Liste des Catégories" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+    <Label text="Liste des Catégories"
+           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
 
     <!-- TableView -->
-    <TableView fx:id="tableCategories" prefHeight="400" prefWidth="600">
+    <TableView fx:id="tableCategories" prefHeight="400" prefWidth="600"
+               style="-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 5px;">
         <columns>
             <TableColumn fx:id="colId" text="ID" prefWidth="100"/>
             <TableColumn fx:id="colNom" text="Nom de la Catégorie" prefWidth="300"/>
@@ -28,15 +31,14 @@
     <HBox spacing="15" alignment="CENTER">
         <Button fx:id="ajouterBtn" text="Ajouter"
                 onAction="#ajouterCategorie"
-                style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
+                style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 100;" />
 
         <Button fx:id="supprimerBtn" text="Supprimer"
                 onAction="#supprimerCategorie"
-                style="-fx-background-color: #F44336; -fx-text-fill: white;" />
+                style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 100;" />
 
-
+        <Button text="Modifier"
+                onAction="#handleModifierCategorie"
+                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 100;" />
     </HBox>
-
-    <Button text="Modifier" onAction="#handleModifierCategorie" />
-
 </VBox>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Button?>
+
+<VBox spacing="10" alignment="TOP_CENTER" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml" fx:controller="pii.gui.VitrineProduitsController"
+      prefWidth="600" prefHeight="800" style="-fx-padding: 20;">
+
+    <!-- Section d'accueil avec logo et texte -->
+    <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10;">
+        <ImageView fx:id="logoImage" fitWidth="100" fitHeight="100" preserveRatio="true"/>
+        <VBox>
+            <Label text="Bienvenue dans notre boutique !" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+            <Label text="10% de réduction sur tous les produits de plus de 100 TND" style="-fx-font-size: 16px;"/>
+        </VBox>
+    </HBox>
+
+    <!-- Liste des produits -->
+    <Label text="Liste des Produits" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+    <ScrollPane fitToWidth="true" prefHeight="750">
+        <VBox fx:id="produitsContainer" spacing="15"/>
+    </ScrollPane>
+
+    <!-- Panier dans la barre de navigation -->
+    <HBox alignment="CENTER_RIGHT" style="-fx-padding: 10;">
+        <Button text="Panier (0)" onAction="#handleOpenPanier"/>
+    </HBox>
+</VBox>

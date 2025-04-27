@@ -4,26 +4,34 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="pii.gui.ListeProduitsController">
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="pii.gui.ListeProduitsController"
+            style="-fx-background-color: #f5f6fa;">
 
     <center>
-        <VBox spacing="10" alignment="CENTER">
+        <VBox spacing="15" alignment="CENTER">
             <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
+                <Insets top="20" right="20" bottom="20" left="20"/>
             </padding>
 
-            <TableView fx:id="tableProduits" prefHeight="400" prefWidth="600">
+            <Label text="Liste des Produits"
+                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+            <TableView fx:id="tableProduits" prefHeight="400" prefWidth="700"
+                       style="-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 5px;">
                 <columns>
-                    <TableColumn fx:id="colNom" text="Nom"/>
-                    <TableColumn fx:id="colDescription" text="Description"/>
-                    <TableColumn fx:id="colQuantite" text="Quantité"/>
-                    <TableColumn fx:id="colDisponible" text="Disponible"/>
-                    <TableColumn fx:id="colModifier" text=""/>
-                    <TableColumn fx:id="colSupprimer" text=""/>
+                    <TableColumn fx:id="colNom" text="Nom" prefWidth="150"/>
+                    <TableColumn fx:id="colDescription" text="Description" prefWidth="200"/>
+                    <TableColumn fx:id="colQuantite" text="Quantité" prefWidth="100"/>
+                    <TableColumn fx:id="colDisponible" text="Disponible" prefWidth="100"/>
+                    <TableColumn fx:id="colModifier" text="" prefWidth="75"/>
+                    <TableColumn fx:id="colSupprimer" text="" prefWidth="75"/>
                 </columns>
             </TableView>
 
-            <Button text="Rafraîchir" onAction="#rafraichirListeProduits" />
+            <Button text="Rafraîchir"
+                    onAction="#rafraichirListeProduits"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 120;" />
         </VBox>
     </center>
 

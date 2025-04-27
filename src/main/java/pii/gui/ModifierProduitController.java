@@ -1,5 +1,6 @@
 package pii.gui;
 
+import javafx.stage.Stage;
 import pii.entities.Produit;
 import pii.entities.Produit_categorie;
 import pii.services.ProduitServices;
@@ -39,11 +40,9 @@ public class ModifierProduitController {
         prixTextField.setText(String.valueOf(produit.getPrix()));  // Exemple de champ Prix
         categorieComboBox.setValue(produit.getCategorie());
     }
-
     @FXML
     private void modifierProduit(ActionEvent event) {
         try {
-            // Vérifier que les champs ne sont pas vides
             if (nomTextField.getText().isEmpty() || descriptionTextField.getText().isEmpty() ||
                     quantiteTextField.getText().isEmpty() || prixTextField.getText().isEmpty() ||
                     categorieComboBox.getValue() == null) {
@@ -51,7 +50,6 @@ public class ModifierProduitController {
                 return;
             }
 
-            // Récupérer les valeurs des champs
             String nom = nomTextField.getText();
             String description = descriptionTextField.getText();
             int quantite;
@@ -67,28 +65,25 @@ public class ModifierProduitController {
 
             Produit_categorie categorie = categorieComboBox.getValue();
 
-            // Modifier le produit
             produit.setNom(nom);
             produit.setDescription(description);
             produit.setQuantite(quantite);
             produit.setPrix(prix);
             produit.setCategorie(categorie);
 
-            // Appeler le service pour mettre à jour le produit dans la base de données
             produitServices.updateProduit(produit);
 
-            // Afficher un message de confirmation
             showConfirmation("Produit mis à jour avec succès.");
 
-            // Optionnel : Fermer la fenêtre ou revenir à la liste des produits
-            // Fermer l'écran actuel ou rediriger vers la liste des produits
-            // ... (ajoute ici la logique pour fermer ou rediriger vers la page d'accueil)
+            // ✅ Fermer la fenêtre actuelle
+            ((Stage) nomTextField.getScene().getWindow()).close();
 
         } catch (SQLException e) {
             e.printStackTrace();
             showError("Erreur lors de la mise à jour du produit.");
         }
     }
+
 
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

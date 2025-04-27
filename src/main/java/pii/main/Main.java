@@ -2,9 +2,10 @@ package pii.main;
 
 import pii.entities.Produit;
 import pii.entities.Produit_categorie;
+import pii.services.Produit_CategoriesService;
 import pii.services.ProduitServices;
 import pii.services.Produit_CategoriesService;
-import pii.utils.MyDatabase;
+import pii.services.utils.MyDatabase;
 
 import java.sql.SQLException;
 import java.util.List;

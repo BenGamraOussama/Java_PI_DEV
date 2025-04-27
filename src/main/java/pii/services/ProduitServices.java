@@ -18,6 +18,10 @@ public class ProduitServices {
             throw new RuntimeException("Échec de la connexion à la base de données", e);
         }
     }
+    // Méthode pour obtenir tous les produits
+    public List<Produit> getAll() throws SQLException {
+        return readList();  // Appel à la méthode readList pour récupérer tous les produits
+    }
 
     // Ajouter un produit
     public void ajouter(Produit produit) throws SQLException {

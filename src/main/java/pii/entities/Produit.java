@@ -1,104 +1,115 @@
 package pii.entities;
 
+import javafx.beans.property.*;
+
 public class Produit {
-    private int id;
-    private Produit_categorie categorie;
-    private String nom;
-    private String description;
-    private boolean disponible;
-    private String image;
-    private int quantite;
-    private double prix;
 
-    // Constructeur avec tous les attributs
-    public Produit(int id, Produit_categorie categorie, String nom, String description, boolean disponible, String image, int quantite, double prix) {
-        this.id = id;
-        this.categorie = categorie;
-        this.nom = nom;
-        this.description = description;
-        this.disponible = disponible;
-        this.image = image;
-        this.quantite = quantite;
-        this.prix = prix;
+    private final StringProperty nom = new SimpleStringProperty();
+    private final DoubleProperty prix = new SimpleDoubleProperty(); // Utilisation de DoubleProperty pour prix
+    private final IntegerProperty quantite = new SimpleIntegerProperty();
+    private final StringProperty description = new SimpleStringProperty();
+    private final BooleanProperty enStock = new SimpleBooleanProperty();
+
+    // Constructeur
+    public Produit(String nom, double prix, int quantite, String description, boolean enStock) {
+        this.nom.set(nom);
+        this.prix.set(prix);
+        this.quantite.set(quantite);
+        this.description.set(description);
+        this.enStock.set(enStock);
     }
 
-    // Constructeur sans paramètres (par défaut)
-    public Produit() {
+    public Produit(int id, Produit_categorie idCategorie, String nom, String description, boolean disponible, String image, int quantite, double prix) {
+        // Utiliser double pour prix au lieu de float
     }
 
-    // Getters et Setters
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Produit_categorie getCategorie() {
-        return categorie;
-    }
-
-    public void setCategorie(Produit_categorie categorie) {
-        this.categorie = categorie;
-    }
-
-    public String getNom() {
+    // Getters et Setters pour les propriétés
+    public StringProperty nomProperty() {
         return nom;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public boolean isDisponible() {
-        return disponible;
-    }
-
-    public void setDisponible(boolean disponible) {
-        this.disponible = disponible;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public int getQuantite() {
-        return quantite;
-    }
-
-    public void setQuantite(int quantite) {
-        this.quantite = quantite;
-    }
-
-    public double getPrix() {
+    public DoubleProperty prixProperty() {
         return prix;
     }
 
-    public void setPrix(double prix) {
-        this.prix = prix;
+    public IntegerProperty quantiteProperty() {
+        return quantite;
     }
 
-    // Méthode pour afficher un résumé du produit
-    @Override
-    public String toString() {
-        return "Produit [id=" + id + ", nom=" + nom + ", description=" + description + ", prix=" + prix + "]";
+    public StringProperty descriptionProperty() {
+        return description;
     }
 
-    // Méthode pour vérifier si le produit est disponible en stock
+    public BooleanProperty enStockProperty() {
+        return enStock;
+    }
+
+    // Getters classiques
+    public String getNom() {
+        return nom.get();
+    }
+
+    public double getPrix() {
+        return prix.get(); // Retourne un double
+    }
+
+    public int getQuantite() {
+        return quantite.get();
+    }
+
+    public String getDescription() {
+        return description.get();
+    }
+
     public boolean isEnStock() {
-        return quantite > 0 && disponible;
+        return enStock.get();
+    }
+
+    public boolean isEmpty() {
+        return false;
+    }
+
+    public void setDescription(String description) {
+        this.description.set(description);
+    }
+
+    public Produit_categorie getCategorie() {
+        return null; // Implémentation à adapter selon votre logique
+    }
+
+    public void setNom(String nom) {
+        this.nom.set(nom);
+    }
+
+    public int getId() {
+        return 0; // À compléter avec votre logique d'ID
+    }
+
+    public void setPrix(double prix) {
+        this.prix.set(prix); // Assurez-vous de passer un double
+    }
+
+    public void setQuantite(int quantite) {
+        this.quantite.set(quantite);
+    }
+
+    public void setCategorie(Produit_categorie categorie) {
+        // Implémentation à adapter selon votre logique
+    }
+
+    public String getImage() {
+        return null; // Implémentation à adapter selon votre logique d'image
+    }
+
+    public boolean isDisponible() {
+        return false; // Implémentation à adapter selon votre logique de disponibilité
+    }
+
+    public void setDisponible(boolean dispo) {
+        this.enStock.set(dispo); // Mise à jour de la disponibilité
+    }
+
+    public void setImage(String image) {
+        // Implémentation à adapter pour mettre à jour l'image
     }
 }

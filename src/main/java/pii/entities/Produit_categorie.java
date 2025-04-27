@@ -32,11 +32,10 @@ public class Produit_categorie {
         this.nom = nom;
     }
 
+
     @Override
     public String toString() {
-        return "Produit_categorie{" +
-                "id=" + id +
-                ", nom='" + nom + '\'' +
-                '}';
+        return nom; // ou getNom() si nom est privé
     }
+
 }

@@ -9,11 +9,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import tn.esprit.pidev.Model.User;
 import tn.esprit.pidev.Service.UserDAO;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class LoginController {
 
@@ -26,7 +28,15 @@ public class LoginController {
     @FXML
     private Label messageLabel;
 
+    @FXML
+    private ImageView myImageView;
+
+    @FXML
+    private ImageView BgImageView;
+
     private UserDAO userDAO = new UserDAO();
+
+
 
     @FXML
     private void handleLogin(ActionEvent event) {
@@ -48,9 +58,28 @@ public class LoginController {
 
             // Navigate to home page based on role
             try {
-                String fxmlFile = authenticatedUser.getRole().equals("medecin") ?
-                        "DoctorHome.fxml" :
-                        "PatientHome.fxml";
+                String fxmlFile;
+                User user = userDAO.authenticateUser(email, password);
+                String role = String.join(", ", user.getRole()); // Convertir en minuscules pour éviter les problèmes de casse
+
+                switch (role) {
+                    case "psychiatre":
+                        fxmlFile = "PsychiatreDashboard.fxml";
+                        break;
+                    case "fournisseur":
+                        fxmlFile = "FournisseurDashboard.fxml";
+                        break;
+                    case "admin":
+                        fxmlFile = "Dashboard.fxml"; // ou "AdminDashboard.fxml" selon votre convention
+                        break;
+                    case "patient":
+                        fxmlFile = "ClientHome.fxml"; // ou "AdminDashboard.fxml" selon votre convention
+                        break;
+                    default:
+                        // Rôle non reconnu, rediriger vers une page par défaut ou afficher une erreur
+                        fxmlFile = "DefaultDashboard.fxml";
+                        break;
+                }
 
                 Parent root = FXMLLoader.load(getClass().getResource(fxmlFile));
                 Scene scene = new Scene(root);

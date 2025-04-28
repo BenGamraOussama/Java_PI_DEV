@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Database {
-    private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/pidev";
+    private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/pi_dev";
     private static final String DATABASE_USER = "root";
     private static final String DATABASE_PASSWORD = ""; // Set your password here
     private static Connection connection;

@@ -1,0 +1,32 @@
+/* Style des boutons de navigation */
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.nav-button:hover {
+    -fx-text-fill: #c4b5fd; /* Mauve clair */
+    -fx-underline: true;
+}
+
+/* Optionnel : un petit effet d'ombre douce sur les boutons au survol */
+.nav-button:hover {
+    -fx-effect: dropshadow(gaussian, #d8b4fe, 5, 0.5, 0, 0);
+}
+
+/* Hyperliens */
+.hyperlink {
+    -fx-text-fill: #7c3aed; /* Violet profond */
+    -fx-underline: false;
+}
+
+.hyperlink:hover {
+    -fx-underline: true;
+}
+
+/* Texte général */
+.label {
+    -fx-font-family: "Segoe UI", sans-serif;
+}

@@ -1,17 +1,19 @@
 package tn.esprit.pidev.Model;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Arrays;
 
 public class User {
     private int id;
     private String email;
     private String password;
     private String name;
-    private String role;
+    private String[] role;  // Changed from String role to String[] roles
     private String specialite;
     private String firstName;
     private String lastName;
-    private String photo;
     private String address;
     private Date birthDate;
     private String phoneNumber;
@@ -28,7 +30,7 @@ public class User {
     }
 
     // Constructor for basic user creation
-    public User(String email, String password, String firstName, String lastName, String role) {
+    public User(String email, String password, String firstName, String lastName,  String[] role) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
@@ -37,8 +39,8 @@ public class User {
     }
 
     // Full constructor
-    public User(int id, String email, String password, String name, String role, String specialite,
-                String firstName, String lastName, String photo, String address, Date birthDate, String phoneNumber) {
+    public User(int id, String email, String password, String name,  String[] role, String specialite,
+                String firstName, String lastName, String address, Date birthDate, String phoneNumber) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -47,7 +49,6 @@ public class User {
         this.specialite = specialite;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.photo = photo;
         this.address = address;
         this.birthDate = birthDate;
         this.phoneNumber = phoneNumber;
@@ -86,11 +87,11 @@ public class User {
         this.name = name;
     }
 
-    public String getRole() {
+    public String[] getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(String[] role) {
         this.role = role;
     }
 
@@ -118,14 +119,6 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
-
     public String getAddress() {
         return address;
     }
@@ -149,7 +142,6 @@ public class User {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-
     @Override
     public String toString() {
         return "User{" +

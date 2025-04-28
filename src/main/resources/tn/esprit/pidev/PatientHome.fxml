@@ -36,7 +36,7 @@
 
             <Text styleClass="sidebar-header" text="Patient Menu" />
 
-            <Button text="Dashboard" onAction="#showDashboard" styleClass="menu-button" maxWidth="Infinity" />
+            <Button text="Dashboardffff" onAction="#showDashboard" styleClass="menu-button" maxWidth="Infinity" />
             <Button text="Book Appointment" onAction="#showBookAppointment" styleClass="menu-button" maxWidth="Infinity" />
             <Button text="My Appointments" onAction="#showAppointments" styleClass="menu-button" maxWidth="Infinity" />
             <Button text="Medical History" onAction="#showMedicalHistory" styleClass="menu-button" maxWidth="Infinity" />

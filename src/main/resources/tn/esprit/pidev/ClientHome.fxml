@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.pidev.ClientHomeController" prefWidth="900" prefHeight="600" style="-fx-background-color: #f9f5ff;" stylesheets="@styles/clientHome.css">
+
+    <!-- Header -->
+    <HBox spacing="20" alignment="CENTER_LEFT" prefHeight="60"
+          style="-fx-background-color: #6b21a8;
+             -fx-background-radius: 15 15 0 0;
+             -fx-padding: 0 20 0 20;"
+          AnchorPane.topAnchor="0" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
+
+        <ImageView fitHeight="30" fitWidth="30" pickOnBounds="true"/>
+
+        <Label text="HopeNest" style="-fx-text-fill: white; -fx-font-size: 20px;"/>
+
+        <Pane HBox.hgrow="ALWAYS"/>
+
+        <HBox spacing="15" alignment="CENTER">
+            <Button text="HOME" styleClass="nav-button"/>
+            <Button text="ABOUT US" styleClass="nav-button"/>
+            <Button text="SERVICES" styleClass="nav-button"/>
+            <Button text="BENEFITS" styleClass="nav-button"/>
+            <Button text="BLOG" styleClass="nav-button"/>
+            <Button text="CONTACT US"
+                    style="-fx-background-color: #a78bfa; -fx-text-fill: white; -fx-background-radius: 10;"/>
+        </HBox>
+    </HBox>
+
+    <!-- Banner Section -->
+    <VBox spacing="10" alignment="CENTER" AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <Label text="Cultivating a Healthier Future\nThrough Compassion" style="-fx-font-size: 26px; -fx-text-fill: #6b21a8; -fx-font-weight: bold;" textAlignment="CENTER"/>
+        <Label text="WELL-BEING" style="-fx-font-size: 40px; -fx-text-fill: #c4b5fd; -fx-font-weight: bold;"/>
+        <ImageView fitWidth="700" fitHeight="250" preserveRatio="true"/>
+    </VBox>
+
+    <!-- Info Cards -->
+    <HBox spacing="40" alignment="CENTER" AnchorPane.bottomAnchor="50" AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="50">
+        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15px; -fx-border-radius: 10px; -fx-background-radius: 10px;">
+            <Label text="Personalized Care Tailored To You" wrapText="true" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+            <Label text="Our patient-first approach ensures you receive optimal care and support." wrapText="true"/>
+            <Hyperlink text="LEARN MORE →"/>
+        </VBox>
+
+        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15px; -fx-border-radius: 10px; -fx-background-radius: 10px;">
+            <Label text="Modern Tools for Better Health Tracking" wrapText="true" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+            <Label text="Empower yourself with cutting-edge technology for wellness monitoring." wrapText="true"/>
+            <Hyperlink text="LEARN MORE →"/>
+        </VBox>
+    </HBox>
+</AnchorPane>

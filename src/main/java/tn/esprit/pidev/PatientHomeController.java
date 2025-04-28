@@ -120,7 +120,7 @@ public class PatientHomeController implements Initializable {
         // Fetch doctors from database and populate the combobox
         try {
             doctorComboBox.getItems().clear();
-            userDAO.getAllDoctors().forEach(doctor -> {
+            userDAO.getAllAdmin().forEach(doctor -> {
                 doctorComboBox.getItems().add(doctor.getFirstName() + " " + doctor.getLastName() + " (" + doctor.getSpecialite() + ")");
             });
         } catch (Exception e) {

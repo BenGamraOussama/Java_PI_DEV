@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class DoctorHomeController implements Initializable {
+public class FournisseurDashboard implements Initializable {
 
     @FXML
     private Label welcomeLabel;
@@ -65,8 +65,8 @@ public class DoctorHomeController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // Initialize dashboard with the logged in doctor's information
         if (User.connecte != null) {
-            welcomeLabel.setText("Welcome, Dr. " + User.connecte.getLastName());
-            specialityLabel.setText("Speciality: " + User.connecte.getSpecialite());
+            welcomeLabel.setText("Welcome, " + User.connecte.getLastName());
+
 
             // Load dashboard data
             loadDashboardData();

@@ -105,7 +105,7 @@ public class UserDAO {
         }
     }
     public boolean addUser(User user) {
-        String query = "INSERT INTO user (email, password, firstName, lastName, role, specialite, address, birthDate, phoneNumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO user (email, password, first_name, last_name, role, specialite, address, birth_date, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             // Hash the password before storing
@@ -116,7 +116,7 @@ public class UserDAO {
             pst.setString(2, hashedPassword); // Store the hashed password
             pst.setString(3, user.getFirstName());
             pst.setString(4, user.getLastName());
-            pst.setString(5, user.getRole());
+            pst.setString(5, String.join(",", user.getRole()));
             pst.setString(6, user.getSpecialite());
             pst.setString(7, user.getAddress());
             pst.setDate(8, user.getBirthDate());
@@ -151,14 +151,14 @@ public class UserDAO {
                     user.setId(rs.getInt("id"));
                     user.setEmail(rs.getString("email"));
                     user.setPassword(storedHash); // Store the hash, not the plain password
-                    user.setFirstName(rs.getString("firstName"));
-                    user.setLastName(rs.getString("lastName"));
-                    user.setRole(rs.getString("role"));
+                    user.setFirstName(rs.getString("first_name"));
+                    user.setLastName(rs.getString("last_name"));
+                    String rolesStr = rs.getString("role");
+                    user.setRole(rolesStr != null ? rolesStr.split(",") : new String[0]);
                     user.setSpecialite(rs.getString("specialite"));
                     user.setAddress(rs.getString("address"));
-                    user.setBirthDate(rs.getDate("birthDate"));
-                    user.setPhoneNumber(rs.getString("phoneNumber"));
-                    user.setPhoto(rs.getString("photo"));
+                    user.setBirthDate(rs.getDate("birth_date"));
+                    user.setPhoneNumber(rs.getString("phone_number"));
 
                     // Set the static connected user
                     User.connecte = user;
@@ -217,9 +217,9 @@ public class UserDAO {
         }
     }
 
-    public List<User> getAllDoctors() {
+    public List<User> getAllAdmin() {
         List<User> doctors = new ArrayList<>();
-        String query = "SELECT * FROM user WHERE role = 'medecin'";
+        String query = "SELECT * FROM user WHERE role = 'admin'";
 
         try {
             pst = connection.prepareStatement(query);
@@ -231,7 +231,8 @@ public class UserDAO {
                 doctor.setEmail(rs.getString("email"));
                 doctor.setFirstName(rs.getString("first_name"));
                 doctor.setLastName(rs.getString("last_name"));
-                doctor.setRole(rs.getString("role"));
+                String rolesStr = rs.getString("role");
+                doctor.setRole(rolesStr != null ? rolesStr.split(",") : new String[0]);
                 doctor.setSpecialite(rs.getString("specialite"));
 
                 doctors.add(doctor);
@@ -253,4 +254,113 @@ public class UserDAO {
             System.out.println("Error closing resources: " + ex.getMessage());
         }
     }
-}
+
+
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM user";
+
+        try {
+            pst = connection.prepareStatement(query);
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                String rolesStr = rs.getString("role");
+                User user = new User(
+                        rs.getInt("id"),
+                        rs.getString("email"),
+                        "", // On ne récupère pas le mot de passe
+                        rs.getString("first_name") + " " + rs.getString("last_name"),
+                        rolesStr != null ? rolesStr.split(",") : new String[0],
+                        rs.getString("specialite"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("address"),
+                        rs.getDate("birth_date"),
+                        rs.getString("phone_number")
+                );
+                users.add(user);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error getting users: " + ex.getMessage());
+        } finally {
+            closeResources();
+        }
+        return users;
+    }
+
+    public boolean updateUser(User user) {
+        String query = "UPDATE user SET first_name=?, last_name=?, role=?, phone_number=?, email=? WHERE id=?";
+
+        try {
+            pst = connection.prepareStatement(query);
+            pst.setString(1, user.getFirstName());
+            pst.setString(2, user.getLastName());
+            pst.setString(3, String.join(",", user.getRole()));
+            pst.setString(4, user.getPhoneNumber());
+            pst.setString(5, user.getEmail());
+            pst.setInt(6, user.getId());
+
+            int rowsAffected = pst.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException ex) {
+            System.out.println("Error updating user: " + ex.getMessage());
+            return false;
+        } finally {
+            closeResources();
+        }
+    }
+
+    public boolean deleteUser(int id) {
+        String query = "DELETE FROM user WHERE id=?";
+
+        try {
+            pst = connection.prepareStatement(query);
+            pst.setInt(1, id);
+
+            int rowsAffected = pst.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException ex) {
+            System.out.println("Error deleting user: " + ex.getMessage());
+            return false;
+        } finally {
+            closeResources();
+        }
+    }
+    public User getUserById(int userId) {
+        String query = "SELECT * FROM user WHERE id = ?";
+        User user = null;
+
+        try {
+            // Prepare the statement and set the parameter
+            pst = connection.prepareStatement(query);
+            pst.setInt(1, userId); // Bind the userId parameter
+            rs = pst.executeQuery();
+
+            if (rs.next()) {
+                user = new User();
+                user.setId(rs.getInt("id"));
+                user.setFirstName(rs.getString("first_name"));
+                user.setLastName(rs.getString("last_name"));
+                user.setEmail(rs.getString("email"));
+                user.setPhoneNumber(rs.getString("phone_number"));
+                String rolesStr = rs.getString("role");
+                user.setRole(rolesStr != null ? rolesStr.split(",") : new String[0]);
+            } else {
+                System.err.println("Aucun utilisateur trouvé avec l'ID: " + userId);
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération de l'utilisateur: " + e.getMessage());
+        } finally {
+            // Close resources properly
+            try {
+                if (rs != null) rs.close();
+                if (pst != null) pst.close();
+                // Do not close the connection here if it is reused elsewhere
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return user;
+    }}

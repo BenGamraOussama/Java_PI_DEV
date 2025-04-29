@@ -27,6 +27,9 @@ public class UserManagementController implements Initializable {
     @FXML private TextField phoneField, emailField;
     @FXML private FlowPane usersCardsContainer;
     @FXML private Label messageLabel;
+    @FXML private ComboBox<String> filterRoleCombo;
+    @FXML private TextField searchField;
+
 
     private ObservableList<User> usersList = FXCollections.observableArrayList();
     private UserDAO userDAO = new UserDAO();
@@ -36,9 +39,19 @@ public class UserManagementController implements Initializable {
         // Initialize ComboBoxes
         genderCombo.setItems(FXCollections.observableArrayList("Homme", "Femme"));
         roleCombo.setItems(FXCollections.observableArrayList("admin", "psychiatre", "fournisseur", "patient"));
+        filterRoleCombo.setItems(FXCollections.observableArrayList("Tous", "admin", "psychiatre", "fournisseur", "patient"));
+        filterRoleCombo.setValue("Tous");
 
-        // Initial users load
+        searchField.textProperty().addListener((obs, oldVal, newVal) -> filterUsers());
+        filterRoleCombo.valueProperty().addListener((obs, oldVal, newVal) -> filterUsers());
+
         loadUsers();
+    }
+    public void loadUsers() {
+        usersCardsContainer.getChildren().clear();
+        usersList.clear();
+        usersList.addAll(userDAO.getAllUsers());
+        filterUsers();
     }
 
     private String formatRoles(String[] roles) {
@@ -53,13 +66,40 @@ public class UserManagementController implements Initializable {
                 .collect(Collectors.joining(", "));
     }
 
-    public void loadUsers() {
+    // ... (autres méthodes restent les mêmes jusqu'à filterUsers)
+
+    private void filterUsers() {
         usersCardsContainer.getChildren().clear();
-        usersList.clear();
-        usersList.addAll(userDAO.getAllUsers());
-        for (User user : usersList) {
-            usersCardsContainer.getChildren().add(createUserCard(user));
-        }
+
+        String searchTerm = searchField.getText().toLowerCase();
+        String selectedRole = filterRoleCombo.getValue();
+
+        usersList.stream()
+                .filter(user -> matchesSearch(user, searchTerm))
+                .filter(user -> matchesRole(user, selectedRole))
+                .forEach(user -> usersCardsContainer.getChildren().add(createUserCard(user)));
+    }
+
+    private boolean matchesSearch(User user, String searchTerm) {
+        if (searchTerm == null || searchTerm.isEmpty()) return true;
+
+        String searchLower = searchTerm.toLowerCase();
+        return (user.getFirstName() != null && user.getFirstName().toLowerCase().contains(searchLower)) ||
+                (user.getLastName() != null && user.getLastName().toLowerCase().contains(searchLower)) ||
+                (user.getEmail() != null && user.getEmail().toLowerCase().contains(searchLower)) ||
+                (user.getPhoneNumber() != null && user.getPhoneNumber().toLowerCase().contains(searchLower)) ||
+                String.valueOf(user.getId()).contains(searchTerm);
+    }
+
+    private boolean matchesRole(User user, String selectedRole) {
+        if (selectedRole == null || "Tous".equals(selectedRole)) return true;
+
+        if (user.getRole() == null) return false;
+
+        // Vérifie si l'un des rôles de l'utilisateur correspond au rôle sélectionné
+        return Arrays.stream(user.getRole())
+                .anyMatch(role -> role != null &&
+                        role.replace("[\"ROLE_", "").replace("\"]", "").equalsIgnoreCase(selectedRole));
     }
 
     private VBox createUserCard(User user) {
@@ -89,6 +129,16 @@ public class UserManagementController implements Initializable {
         buttonsBox.getChildren().addAll(editBtn, deleteBtn);
         card.getChildren().addAll(nameLabel, emailLabel, roleLabel, phoneLabel, buttonsBox);
         return card;
+    }
+    private void refreshUserCard(User user) {
+        // Trouver l'index de l'utilisateur dans la liste
+        int index = usersList.indexOf(user);
+        if (index >= 0) {
+            // Mettre à jour l'utilisateur dans la liste
+            usersList.set(index, userDAO.getUserById(user.getId()));
+            // Recréer la carte
+            usersCardsContainer.getChildren().set(index, createUserCard(usersList.get(index)));
+        }
     }
 
     private void fillFormWithUser(User user) {

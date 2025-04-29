@@ -2,231 +2,332 @@
 
 <?import java.net.*?>
 <?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.pidev.DashboardController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="1000" minWidth="1840" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.pidev.DashboardController">
 
-    <!-- Top Navigation Bar -->
-    <top>
-        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="top-bar">
-            <padding>
-                <Insets bottom="15" left="20" right="20" top="15" />
-            </padding>
-
-            <HBox alignment="CENTER_LEFT" spacing="10">
-
-                <Text styleClass="app-title" text="HopeNest Admin Dashboard" />
+    <!-- Left Sidebar -->
+    <left>
+        <VBox fx:id="sidebar" prefWidth="240.0" styleClass="sidebar">
+            <!-- Logo -->
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="logo-container">
+                <Label styleClass="logo-text" text="HopeNest" />
+                <Button fx:id="closeSidebarBtn" onAction="#toggleSidebar" styleClass="icon-button" visible="false">
+                    <graphic>
+                        <Label styleClass="icon" text="✕" />
+                    </graphic>
+                </Button>
+                <padding>
+                    <Insets bottom="15" left="15" right="15" top="15" />
+                </padding>
             </HBox>
 
-            <HBox HBox.hgrow="ALWAYS" />
-
-            <Label fx:id="welcomeLabel" styleClass="welcome-text" text="Welcome, Admin" />
-
-            <Button onAction="#handleLogout" styleClass="logout-button" text="Logout">
-                <graphic>
-
-                </graphic>
-            </Button>
-        </HBox>
-    </top>
-
-    <!-- Left Sidebar - Modern Design -->
-    <left>
-        <VBox prefWidth="220" spacing="15" styleClass="sidebar">
-            <padding>
-                <Insets bottom="25" left="15" right="15" top="25" />
-            </padding>
-
-            <!-- Profile Section -->
-            <VBox alignment="CENTER" spacing="10" styleClass="profile-section">
+            <!-- User Profile -->
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="user-profile">
                 <StackPane>
-                    <ImageView fx:id="myImageView" fitHeight="70.0" fitWidth="100" />
+                    <Circle radius="20" styleClass="user-avatar" />
+                    <ImageView fx:id="myImageView" fitHeight="40.0" fitWidth="40.0" />
                 </StackPane>
-                <Text styleClass="doctor-name" text="Admin" />
-            </VBox>
+                <VBox>
+                    <Label fx:id="welcomeLabel" styleClass="user-name" text="Admin" />
+                    <Label styleClass="user-role" text="Administrator" />
+                </VBox>
+                <padding>
+                    <Insets bottom="15" left="15" right="15" top="15" />
+                </padding>
+            </HBox>
 
-            <!-- Menu Items -->
-            <VBox spacing="8" styleClass="menu_container" stylesheets="@styles/dashboard.css">
-                <Button onAction="#showDashboard" styleClass="menu-button" text="Dashboard">
-                    <graphic>
+            <!-- Navigation Menu -->
+            <ScrollPane fitToWidth="true" styleClass="sidebar-menu-container">
+                <VBox styleClass="sidebar-menu">
+                    <Button alignment="CENTER" contentDisplay="CENTER" onAction="#showDashboard" styleClass="sidebar-menu-item,active">
+                        <graphic>
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label styleClass="menu-icon" text="⌂" />
+                                <Label styleClass="menu-text" text="Dashboard" />
+                            </HBox>
+                        </graphic>
+                    </Button>
+                    <Button onAction="#showUserManagement" styleClass="sidebar-menu-item">
+                        <graphic>
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label styleClass="menu-icon" text="👤" />
+                                <Label styleClass="menu-text" text="User Management" />
+                            </HBox>
+                        </graphic>
+                    </Button>
 
-                    </graphic>
-                </Button>
+                    <Button onAction="#showUserManagement" styleClass="sidebar-menu-item">
+                        <graphic>
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label styleClass="menu-icon" text="👤" />
+                                <Label styleClass="menu-text" text="User Management" />
+                            </HBox>
+                        </graphic>
+                    </Button>
 
-                <Button onAction="#showUserManagement" styleClass="menu-button" text="User Management">
-                    <graphic>
+                    <Button onAction="#showUserManagement" styleClass="sidebar-menu-item">
+                        <graphic>
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label styleClass="menu-icon" text="👤" />
+                                <Label styleClass="menu-text" text="User Management" />
+                            </HBox>
+                        </graphic>
+                    </Button>
 
-                    </graphic>
-                </Button>
+                    <Button onAction="#showProfile" styleClass="sidebar-menu-item">
+                        <graphic>
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label styleClass="menu-icon" text="👤" />
+                                <Label styleClass="menu-text" text="Profile" />
+                            </HBox>
+                        </graphic>
+                    </Button>
 
-                <Button onAction="#showUserManagement" styleClass="menu-button" text="User Management">
-                    <graphic>
-
-                    </graphic>
-                </Button>
-
-                <Button onAction="#showUserManagement" styleClass="menu-button" text="User Management">
-                    <graphic>
-
-                    </graphic>
-                </Button>
-
-                <Button onAction="#showUserManagement" styleClass="menu-button" text="User Management">
-                    <graphic>
-
-                    </graphic>
-                </Button>
-
-                <Button onAction="#showUserManagement" styleClass="menu-button" text="User Management">
-                    <graphic>
-
-                    </graphic>
-                </Button>
-            </VBox>
-
-            <!-- Bottom Menu Items -->
-            <VBox spacing="8" styleClass="alt_menu_btn">
-                <Button onAction="#showProfile" styleClass="menu-button" text="My Profile">
-                    <graphic>
-
-                    </graphic>
-                </Button>
-
-                <Button onAction="#showSettings" styleClass="menu-button" text="Profile">
-                    <graphic>
-
-                    </graphic>
-                </Button>
-                <VBox.margin>
-                    <Insets top="190.0" />
-                </VBox.margin>
-            </VBox>
+                    <Button onAction="#showSettings" styleClass="sidebar-menu-item">
+                        <graphic>
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label styleClass="menu-icon" text="⚙" />
+                                <Label styleClass="menu-text" text="Settings" />
+                            </HBox>
+                        </graphic>
+                    </Button>
+                </VBox>
+            </ScrollPane>
         </VBox>
     </left>
 
-
-    <!-- Main Content Area -->
+    <!-- Main Content -->
     <center>
-        <StackPane>
-            <!-- Dashboard Panel (Default View) -->
-            <VBox fx:id="dashboardPane" spacing="20" visible="true">
-                <padding>
-                    <Insets bottom="20" left="20" right="20" top="20" />
-                </padding>
-
-                <HBox spacing="20">
-                    <VBox styleClass="stats-card" HBox.hgrow="ALWAYS">
-                        <HBox alignment="CENTER_LEFT" spacing="10">
-
-                            <Text styleClass="stats-title" text="Users" />
-                        </HBox>
-                        <Text fx:id="todayAppointmentsCount" styleClass="stats-value" text="0" />
-                    </VBox>
-
-                    <VBox styleClass="stats-card" HBox.hgrow="ALWAYS">
-                        <HBox alignment="CENTER_LEFT" spacing="10">
-
-                            <Text styleClass="stats-title" text="Products" />
-                        </HBox>
-                        <Text fx:id="totalPatientsCount" styleClass="stats-value" text="0" />
-                    </VBox>
-
-                    <VBox styleClass="stats-card" HBox.hgrow="ALWAYS">
-                        <HBox alignment="CENTER_LEFT" spacing="10">
-
-                            <Text styleClass="stats-title" text="Equippements" />
-                        </HBox>
-                        <Text fx:id="pendingReportsCount" styleClass="stats-value" text="0" />
-                    </VBox>
-                </HBox>
-
-                <VBox styleClass="content-card" VBox.vgrow="ALWAYS">
-                    <HBox alignment="CENTER_LEFT" spacing="10">
-
-                        <Text styleClass="card-title" text="Statistiques" />
+        <VBox>
+            <!-- Top Navigation -->
+            <HBox styleClass="top-nav">
+                <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="794.0" spacing="10" HBox.hgrow="ALWAYS">
+                    <Button fx:id="openSidebarBtn" onAction="#toggleSidebar" styleClass="icon-button">
+                        <graphic>
+                            <Label styleClass="icon" text="≡" />
+                        </graphic>
+                    </Button>
+                    <HBox styleClass="search-container">
+                        <Label styleClass="search-icon" text="🔍" />
+                        <TextField promptText="Search..." styleClass="search-input" />
                     </HBox>
-
-
-                </VBox>
-
-                <HBox spacing="20">
-                    <VBox styleClass="content-card" HBox.hgrow="ALWAYS">
-                        <HBox alignment="CENTER_LEFT" spacing="10">
-
-                            <Text styleClass="card-title" text="Recent Notifications" />
-                        </HBox>
-
-                        <ListView fx:id="notificationsListView" prefHeight="200" styleClass="notification-list" />
-                    </VBox>
-
-                    <VBox styleClass="content-card" HBox.hgrow="ALWAYS">
-                        <HBox alignment="CENTER_LEFT" spacing="10">
-
-                            <Text styleClass="card-title" text="Quick Actions" />
-                        </HBox>
-
-                        <HBox alignment="CENTER" spacing="15" styleClass="quick-actions-box">
-
-
-                        </HBox>
-                    </VBox>
                 </HBox>
-            </VBox>
-
-            <!-- Other content panes -->
-            <VBox fx:id="appointmentsPane" spacing="20" visible="false">
+                <HBox alignment="CENTER_RIGHT" spacing="15">
+                    <Button styleClass="icon-button">
+                        <graphic>
+                            <StackPane>
+                                <!-- Logout Button -->
+                                <Button onAction="#handleLogout" styleClass="logout-button">
+                                    <graphic>
+                                        <HBox alignment="CENTER_LEFT" spacing="10">
+                                            <Label styleClass="menu-text" text="Logout" />
+                                        </HBox>
+                                    </graphic>
+                                </Button>
+                            </StackPane>
+                        </graphic>
+                    </Button>
+                </HBox>
                 <padding>
-                    <Insets bottom="20" left="20" right="20" top="20" />
+                    <Insets bottom="10" left="20" right="20" top="10" />
                 </padding>
-                <Text styleClass="page-title" text="My Appointments" />
-            </VBox>
+            </HBox>
 
-            <VBox fx:id="patientRecordsPane" spacing="20" visible="false">
-                <padding>
-                    <Insets bottom="20" left="20" right="20" top="20" />
-                </padding>
-                <Text styleClass="page-title" text="Patient Records" />
-            </VBox>
+            <!-- Main Content Area -->
+            <ScrollPane fitToWidth="true" styleClass="main-content">
+                <StackPane>
+                    <!-- Dashboard Panel (Default View) -->
+                    <VBox fx:id="dashboardPane" styleClass="content-container" visible="true">
+                        <!-- Page Header -->
+                        <VBox styleClass="page-header">
+                            <Label styleClass="page-title" text="Dashboard" />
+                            <Label styleClass="page-subtitle" text="Welcome, Admin. Here's your overview." />
+                        </VBox>
 
-            <VBox fx:id="prescriptionsPane" spacing="20" visible="false">
-                <padding>
-                    <Insets bottom="20" left="20" right="20" top="20" />
-                </padding>
-                <Text styleClass="page-title" text="Prescriptions" />
-            </VBox>
+                        <!-- Stats Cards -->
+                        <GridPane hgap="15" styleClass="stats-grid" vgap="15">
+                            <columnConstraints>
+                                <ColumnConstraints percentWidth="33.33" />
+                                <ColumnConstraints percentWidth="33.33" />
+                                <ColumnConstraints percentWidth="33.33" />
+                            </columnConstraints>
 
-            <VBox fx:id="medicalNotesPane" spacing="20" visible="false">
-                <padding>
-                    <Insets bottom="20" left="20" right="20" top="20" />
-                </padding>
-                <Text styleClass="page-title" text="Medical Notes" />
-            </VBox>
+                            <!-- Users Card -->
+                            <VBox styleClass="card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                <HBox spacing="15">
+                                    <Circle radius="25" styleClass="stat-icon,green-bg" />
+                                    <VBox>
+                                        <Label styleClass="stat-label" text="Users" />
+                                    </VBox>
+                                </HBox>
+                                <HBox spacing="5" styleClass="stat-trend">
+                                    <Label styleClass="trend-up" text="▲" />
+                                    <Label styleClass="trend-up" text="8.2%" />
+                                    <Label styleClass="trend-text" text="since last month" />
+                                </HBox>
+                            </VBox>
 
-            <!-- User Management Pane -->
-            <VBox fx:id="userManagementPane" spacing="20" visible="false">
-                <padding>
-                    <Insets bottom="20" left="20" right="20" top="20" />
-                </padding>
-                <fx:include fx:id="userManagementContent" source="UserManagement.fxml" />
-            </VBox>
+                            <!-- Products Card -->
+                            <VBox styleClass="card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                <HBox spacing="15">
+                                    <Circle radius="25" styleClass="stat-icon,blue-bg" />
+                                    <VBox>
+                                        <Label styleClass="stat-label" text="Products" />
+                                    </VBox>
+                                </HBox>
+                                <HBox spacing="5" styleClass="stat-trend">
+                                    <Label styleClass="trend-up" text="▲" />
+                                    <Label styleClass="trend-up" text="5.3%" />
+                                    <Label styleClass="trend-text" text="since last week" />
+                                </HBox>
+                            </VBox>
 
-            <VBox fx:id="profilePane" spacing="20" visible="false">
-                <padding>
-                    <Insets bottom="20" left="20" right="20" top="20" />
-                </padding>
-                <fx:include fx:id="profileContent" source="profile.fxml" />
-            </VBox>
+                            <!-- Equipment Card -->
+                            <VBox styleClass="card" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                                <HBox spacing="15">
+                                    <Circle radius="25" styleClass="stat-icon,yellow-bg" />
+                                    <VBox>
+                                        <Label styleClass="stat-label" text="Equipments" />
+                                    </VBox>
+                                </HBox>
+                                <HBox spacing="5" styleClass="stat-trend">
+                                    <Label styleClass="trend-up" text="▲" />
+                                    <Label styleClass="trend-up" text="12.5%" />
+                                    <Label styleClass="trend-text" text="since yesterday" />
+                                </HBox>
+                            </VBox>
+                            <rowConstraints>
+                                <RowConstraints />
+                            </rowConstraints>
+                        </GridPane>
 
-            <VBox fx:id="settingsPane" spacing="20" visible="false">
-                <padding>
-                    <Insets bottom="20" left="20" right="20" top="20" />
-                </padding>
-                <Text styleClass="page-title" text="Settings" />
-            </VBox>
-        </StackPane>
+                        <!-- Charts Section -->
+                        <VBox styleClass="card">
+                            <HBox alignment="CENTER_LEFT" spacing="20">
+                                <Label styleClass="card-title" text="Statistics" />
+                            </HBox>
+                            <LineChart fx:id="statisticsChart" legendVisible="false">
+                                <xAxis>
+                                    <CategoryAxis label="Month" tickLabelRotation="0" />
+                                </xAxis>
+                                <yAxis>
+                                    <NumberAxis label="Value" tickUnit="5" />
+                                </yAxis>
+                            </LineChart>
+                        </VBox>
+
+                        <!-- Notifications and Actions Section -->
+                        <GridPane hgap="15" styleClass="tasks-grid" vgap="15">
+                            <columnConstraints>
+                                <ColumnConstraints percentWidth="60" />
+                                <ColumnConstraints percentWidth="40" />
+                            </columnConstraints>
+
+                            <!-- Recent Notifications Box -->
+                            <VBox styleClass="card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                <HBox alignment="CENTER_LEFT" spacing="20">
+                                    <Label styleClass="card-title" text="Recent Notifications" />
+                                </HBox>
+                                <ListView fx:id="notificationsListView" prefHeight="200" styleClass="notification-list" />
+                            </VBox>
+
+                            <!-- Quick Actions Box -->
+                            <VBox styleClass="card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                <HBox alignment="CENTER_LEFT" spacing="20">
+                                    <Label styleClass="card-title" text="Quick Actions" />
+                                </HBox>
+                                <VBox spacing="10" styleClass="tasks-list">
+                                    <HBox alignment="CENTER_LEFT" spacing="10" styleClass="task-item,in-progress">
+                                        <CheckBox styleClass="task-checkbox" />
+                                        <VBox HBox.hgrow="ALWAYS">
+                                            <Label styleClass="task-title" text="Review pending users" />
+                                            <Label styleClass="task-date" text="Due: April 24, 2025" />
+                                        </VBox>
+                                        <Label styleClass="task-status,status-in-progress" text="In Progress" />
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="10" styleClass="task-item,to-do">
+                                        <CheckBox styleClass="task-checkbox" />
+                                        <VBox HBox.hgrow="ALWAYS">
+                                            <Label styleClass="task-title" text="Check inventory levels" />
+                                            <Label styleClass="task-date" text="Due: April 25, 2025" />
+                                        </VBox>
+                                        <Label styleClass="task-status,status-to-do" text="To Do" />
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="10" styleClass="task-item,completed">
+                                        <CheckBox selected="true" styleClass="task-checkbox" />
+                                        <VBox HBox.hgrow="ALWAYS">
+                                            <Label styleClass="task-title,completed" text="System backup" />
+                                            <Label styleClass="task-date" text="Due: April 22, 2025" />
+                                        </VBox>
+                                        <Label styleClass="task-status,status-completed" text="Completed" />
+                                    </HBox>
+                                </VBox>
+                            </VBox>
+                            <rowConstraints>
+                                <RowConstraints />
+                            </rowConstraints>
+                        </GridPane>
+                    </VBox>
+
+                    <!-- Other content panes -->
+                    <VBox fx:id="appointmentsPane" spacing="20" visible="false">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <Text styleClass="page-title" text="My Appointments" />
+                    </VBox>
+
+                    <VBox fx:id="patientRecordsPane" spacing="20" visible="false">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <Text styleClass="page-title" text="Patient Records" />
+                    </VBox>
+
+                    <VBox fx:id="prescriptionsPane" spacing="20" visible="false">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <Text styleClass="page-title" text="Prescriptions" />
+                    </VBox>
+
+                    <VBox fx:id="medicalNotesPane" spacing="20" visible="false">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <Text styleClass="page-title" text="Medical Notes" />
+                    </VBox>
+
+                    <!-- User Management Pane -->
+                    <VBox fx:id="userManagementPane" spacing="20" visible="false">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <fx:include fx:id="userManagementContent" source="UserManagement.fxml" />
+                    </VBox>
+
+                    <VBox fx:id="profilePane" spacing="20" visible="false">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <fx:include fx:id="profileContent" source="profile.fxml" />
+                    </VBox>
+
+                    <VBox fx:id="settingsPane" spacing="20" visible="false">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <Text styleClass="page-title" text="Settings" />
+                    </VBox>
+                </StackPane>
+            </ScrollPane>
+        </VBox>
     </center>
 
     <!-- Footer -->
@@ -235,12 +336,11 @@
             <padding>
                 <Insets bottom="10" left="20" right="20" top="10" />
             </padding>
-            <Label styleClass="footer-text" text="© 2025 AgriConnect" />
+            <Label styleClass="footer-text" text="© 2025 HopeNest" />
         </HBox>
     </bottom>
+
     <stylesheets>
-
-        <URL value="@styles/dashboard.css" />
-
+        <URL value="@styles.css" />
     </stylesheets>
 </BorderPane>

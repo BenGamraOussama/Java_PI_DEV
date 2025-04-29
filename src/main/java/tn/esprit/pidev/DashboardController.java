@@ -44,6 +44,15 @@ public class DashboardController implements Initializable {
     @FXML private VBox settingsPane;
 
     @FXML
+    private VBox sidebar;
+
+    @FXML
+    private Button openSidebarBtn;
+
+    @FXML
+    private Button closeSidebarBtn;
+
+    @FXML
     private ImageView myImageView;
 
     // Contrôleur pour la gestion des utilisateurs
@@ -55,14 +64,11 @@ public class DashboardController implements Initializable {
         if (User.connecte != null) {
             welcomeLabel.setText("Welcome, " + User.connecte.getLastName());
 
-            loadDashboardData();
         }
 
         // Initialisation du panneau de gestion des utilisateurs
         initUserManagementPane();
 
-        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/tn/esprit/pidev/images/logo.png")));
-        myImageView.setImage(image);
     }
 
     private void initUserManagementPane() {
@@ -79,11 +85,14 @@ public class DashboardController implements Initializable {
         }
     }
 
-    private void loadDashboardData() {
-        // Simulation de données - à remplacer par un vrai chargement
-        todayAppointmentsCount.setText("5");
-        totalPatientsCount.setText("42");
-        pendingReportsCount.setText("3");
+
+    @FXML
+    public void toggleSidebar() {
+        boolean isVisible = sidebar.isVisible();
+        sidebar.setVisible(!isVisible);
+        sidebar.setManaged(!isVisible);
+        openSidebarBtn.setVisible(isVisible);
+        closeSidebarBtn.setVisible(!isVisible);
     }
 
     private void hideAllPanes() {

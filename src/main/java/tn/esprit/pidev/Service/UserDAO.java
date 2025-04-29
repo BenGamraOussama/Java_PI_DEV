@@ -78,6 +78,27 @@ public class UserDAO {
         }
         return false;
     }
+    public boolean updateProfile(User user) {
+        String query = "UPDATE user SET first_name = ?, last_name = ?, adresse = ?, phone = ?, specialite = ? WHERE id = ?";
+
+        try {
+            pst = connection.prepareStatement(query);
+            pst.setString(1, user.getFirstName());
+            pst.setString(2, user.getLastName());
+            pst.setString(3, user.getAddress());
+            pst.setString(4, user.getPhoneNumber());
+            pst.setString(5, user.getSpecialite());
+            pst.setInt(6, user.getId());
+
+            int rowsAffected = pst.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException ex) {
+            System.out.println("Error updating profile: " + ex.getMessage());
+            return false;
+        } finally {
+            closeResources();
+        }
+    }
 
     /**
      * Updates a user's password in the database

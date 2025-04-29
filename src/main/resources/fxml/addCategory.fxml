@@ -11,6 +11,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
 <VBox prefHeight="700" prefWidth="940" spacing="20" styleClass="content-container" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.AddCategoryController">
    <stylesheets>
       <URL value="@/css/styles.css" />
@@ -37,6 +39,15 @@
                      </children>
                   </HBox>
                   <TextArea fx:id="messageReponse" prefHeight="200.0" prefWidth="895.0" promptText="Entrez la Description" />
+                  <StackPane prefHeight="24.0" prefWidth="468.0">
+                     <children>
+                        <Label fx:id="errorMessage2" prefHeight="17.0" prefWidth="359.0" styleClass="error-message" textFill="RED">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </StackPane>
                   <DatePicker fx:id="datePicker" prefHeight="25.0" prefWidth="895.0" promptText="Date Creation" />
                   <Label fx:id="errorLabel" style="-fx-text-fill: red; -fx-font-size: 12px;" text="Erreur" visible="false" />
 

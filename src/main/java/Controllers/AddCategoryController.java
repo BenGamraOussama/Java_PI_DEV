@@ -14,6 +14,7 @@ import java.nio.file.*;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 
 public class AddCategoryController {
 
@@ -31,7 +32,8 @@ public class AddCategoryController {
 
     @FXML
     private TextField imagePathField;
-
+    @FXML
+    private Label errorMessage2;
     @FXML
     private DatePicker datePicker;
 
@@ -80,14 +82,17 @@ public class AddCategoryController {
             newCat.setDescription(description);
             newCat.setImage(selectedImageFile.getName());
             newCat.setCreatedAt(Date.valueOf(date).toLocalDate());
+            if(!descriptionValide(description)){
+                errorMessage2.setText(" la description contient des mots inapropriés");
+            }else {
+                categoryService.ajouter(newCat);
+                showAlert(Alert.AlertType.INFORMATION, "Succès", "Categorie ajoutée avec succès!");
+                Stage stage = (Stage) save.getScene().getWindow();
+                stage.close();
 
-            categoryService.ajouter(newCat);
-            showAlert(Alert.AlertType.INFORMATION, "Succès", "Categorie ajoutée avec succès!");
-            Stage stage = (Stage) save.getScene().getWindow();
-            stage.close();
-
-            errorLabel.setVisible(false);
-            handleCancel(null); // Reset fields
+                errorLabel.setVisible(false);
+                handleCancel(null);
+            }// Reset fields
 
         } catch (IOException | SQLException e) {
             e.printStackTrace();
@@ -95,6 +100,31 @@ public class AddCategoryController {
             errorLabel.setVisible(true);
         }
     }
+    public static boolean descriptionValide(String description) {
+        List<String> motsInterdits = null;
+        try {
+            motsInterdits = Files.readAllLines(Paths.get("src/main/java/utils/motsinap.txt"));
+        } catch (IOException e) {
+            System.out.println("Erreur lors de la lecture du fichier de mots inappropriés");
+            System.out.println(e.getMessage());
+        }
+        if (motsInterdits == null) {
+            return true;
+        }
+
+        // Convertir le titre en minuscules pour une comparaison insensible à la casse
+        String descriptionMiniscule = description.toLowerCase();
+
+        // Vérifier si le titre contient un mot interdit
+        for (String mot : motsInterdits) {
+            if (descriptionMiniscule.contains(mot)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 
     @FXML
     void handleImageUpload(ActionEvent event) {

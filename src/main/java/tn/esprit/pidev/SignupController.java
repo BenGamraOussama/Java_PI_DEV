@@ -1,5 +1,7 @@
 package tn.esprit.pidev;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -39,11 +41,6 @@ public class SignupController implements Initializable {
     private ComboBox<String> roleComboBox; // Affiche "Patient", "Psychiatre", etc.
 
     // Associe l'affichage à la valeur JSON stockée en base
-    private final Map<String, String> roleDisplayToValue = Map.of(
-            "Patient", "[\"ROLE_PATIENT\"]",
-            "Psychiatre", "[\"ROLE_PSYCHIATRE\"]",
-            "Fournisseur", "[\"ROLE_FOURNISSEUR\"]"
-    );
     @FXML
     private Label specialityLabel;
     @FXML
@@ -77,11 +74,29 @@ public class SignupController implements Initializable {
 
     private User pendingUser;
     private final UserDAO userDAO = new UserDAO();
+    private ObservableMap<String, String> rolesMap;
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Default role selection
-        roleComboBox.setValue("Select Role");
+        rolesMap = FXCollections.observableHashMap();
+        rolesMap.put("[\"ROLE_PATIENT\"]", "Patient");
+        rolesMap.put("[\"ROLE_PSYCHIATRE\"]", "Psychiatre");
+        rolesMap.put("[\"ROLE_FOURNISSEUR\"]", "Fournisseur");
+
+        // Configure le ComboBox pour afficher les textes
+        roleComboBox.setItems(FXCollections.observableArrayList(rolesMap.values()));
+
+        // Pour récupérer la valeur sélectionnée (ROLE_XXX) :
+        roleComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            String selectedValue = rolesMap.entrySet().stream()
+                    .filter(entry -> entry.getValue().equals(newVal))
+                    .findFirst()
+                    .map(Map.Entry::getKey)
+                    .orElse(null);
+            System.out.println("Valeur sélectionnée : " + selectedValue);
+        });
 
         try {
             InputStream logoStream = getClass().getResourceAsStream("/tn/esprit/pidev/images/logo.png");
@@ -100,11 +115,9 @@ public class SignupController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        roleComboBox.getItems().addAll("patient", "psychiatre", "admin", "fournisseur"); // exemple
-
 
         roleComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
-            boolean isAdmin = "psychiatre".equals(newVal);
+            boolean isAdmin = "Psychiatre".equals(newVal);
             specialityLabel.setVisible(isAdmin);
             specialityField.setVisible(isAdmin);
         });
@@ -149,8 +162,13 @@ public class SignupController implements Initializable {
         String email = emailField.getText().trim();
         String password = passwordField.getText().trim();
         String confirmPassword = confirmPasswordField.getText().trim();
-        String role = roleComboBox.getValue();
+        String roleDisplay = roleComboBox.getValue();
         String speciality = specialityField.getText().trim();
+        String role = rolesMap.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(roleDisplay))
+                .findFirst()
+                .map(Map.Entry::getKey)
+                .orElse(null);
 
         // Basic validation
         if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() ||
@@ -189,13 +207,22 @@ public class SignupController implements Initializable {
     }
 
     private User createUserFromInputs() {
+        String roleDisplay = roleComboBox.getValue();
+
+        String role = rolesMap.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(roleDisplay))
+                .findFirst()
+                .map(Map.Entry::getKey)
+                .orElse(null);
         User newUser = new User();
         newUser.setFirstName(firstNameField.getText().trim());
         newUser.setLastName(lastNameField.getText().trim());
         newUser.setEmail(emailField.getText().trim());
         newUser.setPassword(passwordField.getText().trim());
-        newUser.setRole(new String[]{roleComboBox.getValue()});
+        newUser.setRole(new String[]{role});
         newUser.setAddress(addressField.getText().trim());
+
+
 
         if (birthDatePicker.getValue() != null) {
             newUser.setBirthDate(Date.valueOf(birthDatePicker.getValue()));
@@ -203,7 +230,7 @@ public class SignupController implements Initializable {
 
         newUser.setPhoneNumber(phoneField.getText().trim());
 
-        if ("psychiatre".equals(roleComboBox.getValue())) {
+        if ("Psychiatre".equals(roleComboBox.getValue())) {
             newUser.setSpecialite(specialityField.getText().trim());
         }
 
@@ -291,9 +318,5 @@ public class SignupController implements Initializable {
             messageLabel.setStyle("-fx-text-fill: red;");
             e.printStackTrace();
         }
-    }
-    public String getSelectedRoleValue() {
-        String selectedDisplay = roleComboBox.getValue();
-        return roleDisplayToValue.get(selectedDisplay);
     }
 }

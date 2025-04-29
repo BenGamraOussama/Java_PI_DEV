@@ -15,6 +15,7 @@ module tn.esprit.pidev {
     requires jbcrypt;
     requires java.mail;
     requires java.desktop;
+    requires spring.security.crypto;
 
     opens tn.esprit.pidev to javafx.fxml;
     exports tn.esprit.pidev;

@@ -63,16 +63,16 @@ public class LoginController {
                 String role = String.join(", ", user.getRole()); // Convertir en minuscules pour éviter les problèmes de casse
 
                 switch (role) {
-                    case "psychiatre":
+                    case "[\"ROLE_PSYCHIATRE\"]":
                         fxmlFile = "PsychiatreDashboard.fxml";
                         break;
-                    case "fournisseur":
+                    case "[\"ROLE_FOURNISSEUR\"]":
                         fxmlFile = "FournisseurDashboard.fxml";
                         break;
-                    case "admin":
+                    case "[\"ROLE_ADMIN\"]":
                         fxmlFile = "Dashboard.fxml"; // ou "AdminDashboard.fxml" selon votre convention
                         break;
-                    case "patient":
+                    case "[\"ROLE_PATIENT\"]":
                         fxmlFile = "ClientHome.fxml"; // ou "AdminDashboard.fxml" selon votre convention
                         break;
                     default:

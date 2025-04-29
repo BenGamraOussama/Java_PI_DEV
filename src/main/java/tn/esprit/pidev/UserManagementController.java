@@ -4,27 +4,19 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import tn.esprit.pidev.Model.User;
 import tn.esprit.pidev.Service.UserDAO;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class UserManagementController implements Initializable {
 
@@ -41,12 +33,24 @@ public class UserManagementController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Initialisation des ComboBox
+        // Initialize ComboBoxes
         genderCombo.setItems(FXCollections.observableArrayList("Homme", "Femme"));
-        roleCombo.setItems(FXCollections.observableArrayList("admin", "psychiatre", "fournisseur"));
+        roleCombo.setItems(FXCollections.observableArrayList("admin", "psychiatre", "fournisseur", "patient"));
 
-        // Chargement initial des utilisateurs
+        // Initial users load
         loadUsers();
+    }
+
+    private String formatRoles(String[] roles) {
+        if (roles == null || roles.length == 0) {
+            return "Aucun rôle";
+        }
+
+        return Arrays.stream(roles)
+                .filter(Objects::nonNull)
+                .map(role -> role.replace("[\"ROLE_", "").replace("\"]", ""))
+                .map(role -> role.substring(0, 1).toUpperCase() + role.substring(1).toLowerCase())
+                .collect(Collectors.joining(", "));
     }
 
     public void loadUsers() {
@@ -64,16 +68,15 @@ public class UserManagementController implements Initializable {
                 "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);");
         card.setPrefWidth(250);
 
-        // Informations utilisateur
+        // User information
         Label nameLabel = new Label(user.getFirstName() + " " + user.getLastName());
         nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
 
-        Label idLabel = new Label("ID: " + user.getId());
         Label emailLabel = new Label("Email: " + user.getEmail());
-        Label roleLabel = new Label("Rôle: " + user.getRole());
+        Label roleLabel = new Label("Rôle: " + formatRoles(user.getRole()));
         Label phoneLabel = new Label("Tél: " + user.getPhoneNumber());
 
-        // Boutons d'action
+        // Action buttons
         HBox buttonsBox = new HBox(5);
         Button editBtn = new Button("Modifier");
         editBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
@@ -84,7 +87,7 @@ public class UserManagementController implements Initializable {
         deleteBtn.setOnAction(e -> deleteUser(user));
 
         buttonsBox.getChildren().addAll(editBtn, deleteBtn);
-        card.getChildren().addAll(nameLabel, idLabel, emailLabel, roleLabel, phoneLabel, buttonsBox);
+        card.getChildren().addAll(nameLabel, emailLabel, roleLabel, phoneLabel, buttonsBox);
         return card;
     }
 
@@ -93,9 +96,17 @@ public class UserManagementController implements Initializable {
         firstNameField.setText(user.getFirstName());
         lastNameField.setText(user.getLastName());
         phoneField.setText(user.getPhoneNumber());
-        String[] role = {"admin", "psychiatre", "fournisseur"};
-        roleCombo.setItems(FXCollections.observableArrayList(Arrays.asList(role)));
         emailField.setText(user.getEmail());
+
+        // Set gender if available
+
+
+        // Set role in combo box
+        if (user.getRole() != null && user.getRole().length > 0) {
+            String role = user.getRole()[0];
+            String roleName = role.replace("[\"ROLE_", "").replace("\"]", "").toLowerCase();
+            roleCombo.setValue(roleName);
+        }
     }
 
     private void deleteUser(User user) {
@@ -115,10 +126,12 @@ public class UserManagementController implements Initializable {
             user.setPassword(generatedPassword);
 
             if (userDAO.addUser(user)) {
-                sendPasswordByEmail(user.getEmail(), generatedPassword);
+                EmailService.sendPasswordByEmail(user.getEmail(), generatedPassword);
                 showMessage("Utilisateur ajouté. Mot de passe envoyé par email.", "green");
                 loadUsers();
                 clearForm();
+            } else {
+                showMessage("Erreur lors de l'ajout de l'utilisateur", "red");
             }
         }
     }
@@ -132,6 +145,8 @@ public class UserManagementController implements Initializable {
             if (userDAO.updateUser(user)) {
                 showMessage("Utilisateur modifié avec succès", "green");
                 loadUsers();
+            } else {
+                showMessage("Erreur lors de la modification", "red");
             }
         }
     }
@@ -144,6 +159,8 @@ public class UserManagementController implements Initializable {
                 showMessage("Utilisateur supprimé avec succès", "green");
                 loadUsers();
                 clearForm();
+            } else {
+                showMessage("Erreur lors de la suppression", "red");
             }
         }
     }
@@ -158,9 +175,17 @@ public class UserManagementController implements Initializable {
         user.setFirstName(firstNameField.getText());
         user.setLastName(lastNameField.getText());
         user.setPhoneNumber(phoneField.getText());
-        String[] role = {"admin", "psychiatre", "fournisseur"};
-        roleCombo.setItems(FXCollections.observableArrayList(role)); // Ceci fonctionne aussi
         user.setEmail(emailField.getText());
+
+        // Set gender if selected
+
+        // Set role if selected
+        if (roleCombo.getValue() != null) {
+            String selectedRole = roleCombo.getValue();
+            String formattedRole = "[\"ROLE_" + selectedRole.toUpperCase() + "\"]";
+            user.setRole(new String[]{formattedRole});
+        }
+
         return user;
     }
 
@@ -180,6 +205,13 @@ public class UserManagementController implements Initializable {
             showMessage("Veuillez remplir tous les champs obligatoires", "red");
             return false;
         }
+
+        // Validate email format
+        if (!emailField.getText().matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            showMessage("Format d'email invalide", "red");
+            return false;
+        }
+
         return true;
     }
 
@@ -191,10 +223,6 @@ public class UserManagementController implements Initializable {
             sb.append(chars.charAt(index));
         }
         return sb.toString();
-    }
-
-    private void sendPasswordByEmail(String email, String password) {
-        System.out.println("Mot de passe envoyé à " + email + ": " + password);
     }
 
     private void showMessage(String message, String color) {

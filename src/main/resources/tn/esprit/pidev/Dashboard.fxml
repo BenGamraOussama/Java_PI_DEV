@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.pidev.DashboardController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.pidev.DashboardController">
 
     <!-- Top Navigation Bar -->
     <top>
@@ -43,7 +43,7 @@
             <!-- Profile Section -->
             <VBox alignment="CENTER" spacing="10" styleClass="profile-section">
                 <StackPane>
-                    <ImageView fx:id="myImageView" fitHeight="100" fitWidth="100" />
+                    <ImageView fx:id="myImageView" fitHeight="70.0" fitWidth="100" />
                 </StackPane>
                 <Text styleClass="doctor-name" text="Admin" />
             </VBox>

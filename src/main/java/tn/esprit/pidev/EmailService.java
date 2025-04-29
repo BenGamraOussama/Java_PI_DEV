@@ -107,7 +107,47 @@ public class EmailService {
 
         return isValid;
     }
+    static void sendPasswordByEmail(String email, String password) {
 
 
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", SMTP_HOST);
+        props.put("mail.smtp.port", SMTP_PORT);
+
+        Session session = Session.getInstance(props,
+                new javax.mail.Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(EMAIL_USERNAME, EMAIL_PASSWORD);
+                    }
+                });
+
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(EMAIL_USERNAME));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+            message.setSubject("Vos identifiants de connexion");
+
+            // Version HTML du message
+            String htmlContent = "<h3>Bonjour,</h3>"
+                    + "<p>Votre compte a été créé avec succès.</p>"
+                    + "<p>Voici vos informations de connexion :</p>"
+                    + "<ul>"
+                    + "<li><strong>Email:</strong> " + email + "</li>"
+                    + "<li><strong>Mot de passe temporaire:</strong> " + password + "</li>"
+                    + "</ul>"
+                    + "<p style='color: red;'>Nous vous recommandons de changer ce mot de passe après votre première connexion.</p>"
+                    + "<p>Cordialement,<br>L'équipe de support</p>";
+
+            message.setContent(htmlContent, "text/html; charset=utf-8");
+
+            Transport.send(message);
+            System.out.println("Email envoyé avec succès à " + email);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            System.err.println("Erreur lors de l'envoi de l'email à " + email);
+        }
+    }
 
 }

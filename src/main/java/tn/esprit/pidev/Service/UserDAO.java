@@ -1,11 +1,13 @@
 package tn.esprit.pidev.Service;
-import org.mindrot.jbcrypt.BCrypt;
 import tn.esprit.pidev.Database.Database;
 import tn.esprit.pidev.Model.User;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class UserDAO {
     private Connection connection;
@@ -22,17 +24,25 @@ public class UserDAO {
      * @return The hashed password
      */
     private String hashPassword(String plainPassword) {
-        return BCrypt.hashpw(plainPassword, BCrypt.gensalt(12));
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        // Symfony utilise $2y$ au lieu de $2a$ pour BCrypt standard
+        String encoded = encoder.encode(plainPassword);
+        return "$2y$" + encoded.substring(4); // Conversion vers le format Symfony
     }
 
     /**
-     * Checks if a plain password matches a BCrypt hashed password
-     * @param plainPassword The plain password to check
-     * @param hashedPassword The hashed password to check against
-     * @return True if the password matches, false otherwise
+     * Checks if a plain password matches a Symfony hashed password
      */
-    private boolean checkPassword(String plainPassword, String hashedPassword) {
-        return BCrypt.checkpw(plainPassword, hashedPassword);
+    private boolean checkPassword(String plainPassword, String symfonyHash) {
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+
+        // Adaptation pour le format Symfony
+        if (symfonyHash.startsWith("$2y$")) {
+            // Convertit le format $2y$ de Symfony en $2a$ pour BCrypt
+            String convertedHash = "$2a$" + symfonyHash.substring(4);
+            return encoder.matches(plainPassword, convertedHash);
+        }
+        return encoder.matches(plainPassword, symfonyHash);
     }
 
     // Add these methods to your UserDAO class
@@ -105,7 +115,8 @@ public class UserDAO {
         }
     }
     public boolean addUser(User user) {
-        String query = "INSERT INTO user (email, password, first_name, last_name, role, specialite, address, birth_date, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        String query = "INSERT INTO user (email, password, first_name, last_name, roles, specialite, adresse, birth_date, phone, discr) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             // Hash the password before storing
@@ -121,6 +132,18 @@ public class UserDAO {
             pst.setString(7, user.getAddress());
             pst.setDate(8, user.getBirthDate());
             pst.setString(9, user.getPhoneNumber());
+
+            String discr = "utilisateur";
+            String roles = String.join(", ", user.getRole());// valeur par défaut
+            if (roles.contains("ROLE_PATIENT")) {
+                discr = "patient";
+            } else if (roles.contains("ROLE_PSYCHIATRE")) {
+                discr = "psychiatre";
+            } else if (roles.contains("ROLE_FOURNISSEUR")) {
+                discr = "fournisseur";
+            }
+
+            pst.setString(10, discr);
 
             int rowsAffected = pst.executeUpdate();
             return rowsAffected > 0;
@@ -153,12 +176,12 @@ public class UserDAO {
                     user.setPassword(storedHash); // Store the hash, not the plain password
                     user.setFirstName(rs.getString("first_name"));
                     user.setLastName(rs.getString("last_name"));
-                    String rolesStr = rs.getString("role");
+                    String rolesStr = rs.getString("roles");
                     user.setRole(rolesStr != null ? rolesStr.split(",") : new String[0]);
                     user.setSpecialite(rs.getString("specialite"));
-                    user.setAddress(rs.getString("address"));
+                    user.setAddress(rs.getString("adresse"));
                     user.setBirthDate(rs.getDate("birth_date"));
-                    user.setPhoneNumber(rs.getString("phone_number"));
+                    user.setPhoneNumber(rs.getString("phone"));
 
                     // Set the static connected user
                     User.connecte = user;
@@ -219,7 +242,7 @@ public class UserDAO {
 
     public List<User> getAllAdmin() {
         List<User> doctors = new ArrayList<>();
-        String query = "SELECT * FROM user WHERE role = 'admin'";
+        String query = "SELECT * FROM user WHERE roles = '[\"ROLE_ADMIN\"]'";
 
         try {
             pst = connection.prepareStatement(query);
@@ -231,7 +254,7 @@ public class UserDAO {
                 doctor.setEmail(rs.getString("email"));
                 doctor.setFirstName(rs.getString("first_name"));
                 doctor.setLastName(rs.getString("last_name"));
-                String rolesStr = rs.getString("role");
+                String rolesStr = rs.getString("roles");
                 doctor.setRole(rolesStr != null ? rolesStr.split(",") : new String[0]);
                 doctor.setSpecialite(rs.getString("specialite"));
 
@@ -265,7 +288,7 @@ public class UserDAO {
             rs = pst.executeQuery();
 
             while (rs.next()) {
-                String rolesStr = rs.getString("role");
+                String rolesStr = rs.getString("roles");
                 User user = new User(
                         rs.getInt("id"),
                         rs.getString("email"),
@@ -275,9 +298,9 @@ public class UserDAO {
                         rs.getString("specialite"),
                         rs.getString("first_name"),
                         rs.getString("last_name"),
-                        rs.getString("address"),
+                        rs.getString("adresse"),
                         rs.getDate("birth_date"),
-                        rs.getString("phone_number")
+                        rs.getString("phone")
                 );
                 users.add(user);
             }
@@ -290,7 +313,7 @@ public class UserDAO {
     }
 
     public boolean updateUser(User user) {
-        String query = "UPDATE user SET first_name=?, last_name=?, role=?, phone_number=?, email=? WHERE id=?";
+        String query = "UPDATE user SET first_name=?, last_name=?, roles=?, phone=?, email=? WHERE id=?";
 
         try {
             pst = connection.prepareStatement(query);
@@ -343,8 +366,8 @@ public class UserDAO {
                 user.setFirstName(rs.getString("first_name"));
                 user.setLastName(rs.getString("last_name"));
                 user.setEmail(rs.getString("email"));
-                user.setPhoneNumber(rs.getString("phone_number"));
-                String rolesStr = rs.getString("role");
+                user.setPhoneNumber(rs.getString("phone"));
+                String rolesStr = rs.getString("roles");
                 user.setRole(rolesStr != null ? rolesStr.split(",") : new String[0]);
             } else {
                 System.err.println("Aucun utilisateur trouvé avec l'ID: " + userId);

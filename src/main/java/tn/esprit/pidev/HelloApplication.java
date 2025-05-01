@@ -11,12 +11,12 @@ import java.io.IOException;
 public class HelloApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("ClientHome.fxml"));
 
         // Appliquer la feuille de style CSS
         primaryStage.setTitle("HopeNest - Dashboard");
         primaryStage.show();
-        primaryStage.setScene(new Scene(root, 300, 500));
+        primaryStage.setScene(new Scene(root, 800, 600));
     }
 
     public static void main(String[] args) {

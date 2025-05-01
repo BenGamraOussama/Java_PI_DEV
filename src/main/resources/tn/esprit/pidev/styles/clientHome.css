@@ -1,32 +1,564 @@
-/* Style des boutons de navigation */
-.nav-button {
-    -fx-background-color: transparent;
+/* Root variables */
+* {
+    -primary-color: #4f46e5;
+    -primary-light: #e0e7ff;
+    -primary-dark: #3730a3;
+    -secondary-color: #10b981;
+    -secondary-light: #d1fae5;
+}
+
+/* Global Styles */
+.root {
+    -fx-font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -fx-background-color: #f9fafb;
+}
+
+.container {
+    -fx-padding: 0 24px;
+    -fx-pref-width: 100%;
+    -fx-max-width: 1280px;
+    -fx-alignment: center;
+}
+
+/* Buttons */
+.primary-button {
+    -fx-background-color: -primary-color;
     -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 12px 24px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.primary-button:hover {
+    -fx-background-color: derive(-primary-color, -10%);
+}
+
+.small-button {
+    -fx-padding: 8px 16px;
+    -fx-font-size: 14px;
+}
+
+.outline-button {
+    -fx-background-color: transparent;
+    -fx-border-color: -primary-color;
+    -fx-border-width: 2px;
+    -fx-text-fill: -primary-color;
+    -fx-font-weight: bold;
+    -fx-padding: 12px 24px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.outline-button:hover {
+    -fx-background-color: -primary-light;
+}
+
+.text-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: -primary-color;
+    -fx-font-weight: bold;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+}
+
+.text-button:hover {
+    -fx-text-fill: derive(-primary-color, -10%);
+}
+
+.icon-button {
+    -fx-background-color: transparent;
+    -fx-padding: 8px;
+    -fx-cursor: hand;
+}
+
+.icon-button:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Header */
+.header {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+    -fx-padding: 10px 0;
+    -fx-min-height: 60px;
+}
+
+.logo-container {
+    -fx-background-color: -primary-light;
+    -fx-background-radius: 8px;
+    -fx-padding: 5px;
+    -fx-min-width: 36px;
+    -fx-min-height: 36px;
+    -fx-max-width: 36px;
+    -fx-max-height: 36px;
+    -fx-alignment: center;
+}
+
+.logo-icon {
+    -fx-font-size: 20px;
+}
+
+.logo-text {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -primary-color;
+}
+
+.header-icon {
+    -fx-font-size: 18px;
+}
+
+/* Hero Section */
+.hero-section {
+    -fx-background-image: url("../images/slide.jpg");
+    -fx-background-size: cover;
+    -fx-background-position: center;
+    -fx-min-height: 500px;
+}
+
+.hero-overlay {
+    -fx-fill: rgba(31, 41, 55, 0.7);
+    -fx-width: 100%;
+    -fx-height: 100%;
+}
+
+.hero-content {
+    -fx-spacing: 24px;
+    -fx-padding: 80px 24px;
+}
+
+.hero-title {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.hero-subtitle {
+    -fx-font-size: 18px;
+    -fx-text-fill: #e5e7eb;
+    -fx-wrap-text: true;
+}
+
+/* Section Styles */
+.section {
+    -fx-padding: 60px 0;
+}
+
+.white-section {
+    -fx-background-color: white;
+}
+
+.gray-section {
+    -fx-background-color: #f9fafb;
+}
+
+.section-header {
+    -fx-padding: 0 0 40px 0;
+}
+
+.section-title {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 10px 0;
+}
+
+.section-subtitle {
+    -fx-font-size: 16px;
+    -fx-text-fill: #4b5563;
+    -fx-max-width: 600px;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+/* Services Section */
+.services-grid {
+    -fx-padding: 20px;
+}
+
+.service-card {
+    -fx-background-color: #f9fafb;
+    -fx-padding: 30px;
+    -fx-spacing: 15px;
+    -fx-background-radius: 8px;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);
+}
+
+.service-card:hover {
+    -fx-border-color: -primary-color;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 4);
+    -fx-background-color: white;
+}
+
+.service-icon-container {
+    -fx-background-color: -primary-light;
+    -fx-min-width: 60px;
+    -fx-min-height: 60px;
+    -fx-max-width: 60px;
+    -fx-max-height: 60px;
+    -fx-background-radius: 100%;
+    -fx-alignment: center;
+    -fx-margin: 0 0 10px 0;
+}
+
+.service-icon {
+    -fx-font-size: 24px;
+}
+
+.service-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px 0;
+}
+
+.service-description {
+    -fx-font-size: 14px;
+    -fx-text-fill: #6b7280;
+    -fx-padding: 5px 0 15px 0;
+}
+
+/* Practitioners Section */
+.practitioners-grid {
+    -fx-padding: 20px;
+}
+
+.practitioner-card {
+    -fx-background-color: white;
+    -fx-padding: 30px;
+    -fx-spacing: 10px;
+    -fx-background-radius: 8px;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);
+}
+
+.practitioner-card:hover {
+    -fx-border-color: -primary-color;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 4);
+}
+
+.practitioner-photo-container {
+    -fx-padding: 0 0 10px 0;
+}
+
+/* Practitioner Section (continued) */
+.practitioner-photo {
+    -fx-background-radius: 100%;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 1);
+}
+
+.practitioner-name {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px 0 0 0;
+}
+
+.practitioner-specialty {
+    -fx-font-size: 14px;
+    -fx-text-fill: #4f46e5; /* Using the value directly instead of reference */
+    -fx-font-weight: bold;
+}
+
+.practitioner-description {
+    -fx-font-size: 14px;
+    -fx-text-fill: #6b7280;
+    -fx-padding: 5px 0 15px 0;
+    -fx-wrap-text: true;
+}
+
+/* Testimonials Section */
+.testimonials-grid {
+    -fx-padding: 20px;
+}
+
+.testimonial-card {
+    -fx-background-color: white;
+    -fx-padding: 24px;
+    -fx-spacing: 15px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 1);
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+}
+
+.testimonial-card:hover {
+    -fx-border-color: #ddd8ff; /* Using a derived color instead of reference */
+}
+
+.star-rating {
+    -fx-spacing: 3px;
+}
+
+.star {
+    -fx-text-fill: #fbbf24;
+    -fx-font-size: 18px;
+}
+
+.star-half {
+    -fx-text-fill: #fbbf24;
+    -fx-font-size: 18px;
+    -fx-opacity: 0.5;
+}
+
+.testimonial-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: #4b5563;
+    -fx-font-style: italic;
+    -fx-wrap-text: true;
+    -fx-padding: 10px 0;
+}
+
+.testimonial-avatar {
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-max-width: 40px;
+    -fx-max-height: 40px;
+    -fx-background-color: #e0e7ff; /* Using the value directly instead of reference */
+    -fx-background-radius: 100%;
+    -fx-alignment: center;
+}
+
+.testimonial-avatar Label {
+    -fx-text-fill: #4f46e5; /* Using the value directly instead of reference */
+    -fx-font-weight: bold;
+}
+
+.testimonial-name {
     -fx-font-size: 14px;
     -fx-font-weight: bold;
 }
 
-.nav-button:hover {
-    -fx-text-fill: #c4b5fd; /* Mauve clair */
-    -fx-underline: true;
+.testimonial-info {
+    -fx-font-size: 12px;
+    -fx-text-fill: #6b7280;
 }
 
-/* Optionnel : un petit effet d'ombre douce sur les boutons au survol */
-.nav-button:hover {
-    -fx-effect: dropshadow(gaussian, #d8b4fe, 5, 0.5, 0, 0);
+/* Contact Section */
+.contact-container {
+    -fx-spacing: 40px;
+    -fx-alignment: center;
 }
 
-/* Hyperliens */
-.hyperlink {
-    -fx-text-fill: #7c3aed; /* Violet profond */
-    -fx-underline: false;
+.contact-info {
+    -fx-spacing: 20px;
+    -fx-min-width: 300px;
+    -fx-max-width: 400px;
 }
 
-.hyperlink:hover {
-    -fx-underline: true;
+.contact-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 10px 0;
 }
 
-/* Texte général */
-.label {
-    -fx-font-family: "Segoe UI", sans-serif;
+.contact-section {
+    -fx-spacing: 5px;
+    -fx-padding: 0 0 15px 0;
 }
+
+.contact-section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 5px 0;
+}
+
+.emergency-box {
+    -fx-background-color: #fee2e2;
+    -fx-padding: 15px;
+    -fx-spacing: 5px;
+    -fx-background-radius: 8px;
+    -fx-border-color: #ef4444;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-margin-top: 20px;
+}
+
+.emergency-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #b91c1c;
+}
+
+.emergency-number {
+    -fx-font-weight: bold;
+    -fx-text-fill: #b91c1c;
+}
+
+.contact-form {
+    -fx-background-color: white;
+    -fx-padding: 30px;
+    -fx-spacing: 20px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 1);
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-min-width: 400px;
+    -fx-max-width: 500px;
+    -fx-pref-width: 100%;
+}
+
+.form-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 10px 0;
+}
+
+.contact-form TextField, .contact-form TextArea {
+    -fx-background-color: #f9fafb;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-padding: 8px;
+}
+
+.contact-form TextField:focused, .contact-form TextArea:focused {
+    -fx-border-color: #4f46e5; /* Using the value directly instead of reference */
+}
+
+.privacy-checkbox {
+    -fx-padding: 10px 0;
+}
+
+/* Accreditations Section */
+.accreditations-section {
+    -fx-padding: 40px 0;
+}
+
+.accreditations-container {
+    -fx-padding: 20px;
+}
+
+.accreditation-item {
+    -fx-spacing: 10px;
+    -fx-padding: 20px;
+    -fx-alignment: center;
+}
+
+.accreditation-icon {
+    -fx-font-size: 36px;
+}
+
+.accreditation-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: #4b5563;
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, -2);
+    -fx-padding: 10px 0;
+    -fx-alignment: center;
+
+    -fx-position: fixed;
+    -fx-bottom: 0;
+    -fx-left: 0;
+    -fx-right: 0;
+}
+
+.bottom-nav-item {
+    -fx-padding: 8px;
+    -fx-cursor: hand;
+}
+
+.bottom-nav-item:hover {
+    -fx-background-color: #f9fafb;
+}
+
+.bottom-nav-item.active {
+    -fx-background-color: #e0e7ff; /* Using the value directly instead of reference */
+}
+
+.bottom-nav-icon {
+    -fx-font-size: 20px;
+}
+
+.bottom-nav-text {
+    -fx-font-size: 12px;
+}
+
+/* Footer */
+.footer {
+    -fx-background-color: #1f2937;
+    -fx-padding: 40px 0;
+}
+
+.footer-container {
+    -fx-spacing: 40px;
+}
+
+.footer-logo {
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+    -fx-font-family: "Pacifico";
+}
+
+.footer-text {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 14px;
+    -fx-wrap-text: true;
+    -fx-max-width: 300px;
+}
+
+.footer-links-title {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 15px 0;
+}
+
+.footer-links {
+    -fx-spacing: 10px;
+}
+
+.footer-link {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.footer-link:hover {
+    -fx-text-fill: white;
+}
+
+.footer-social {
+    -fx-spacing: 15px;
+}
+
+.social-icon {
+    -fx-background-color: #374151;
+    -fx-min-width: 36px;
+    -fx-min-height: 36px;
+    -fx-max-width: 36px;
+    -fx-max-height: 36px;
+    -fx-background-radius: 100%;
+    -fx-alignment: center;
+    -fx-cursor: hand;
+}
+
+.social-icon:hover {
+    -fx-background-color: #4f46e5; /* Using the value directly instead of reference */
+}
+
+.social-icon Label {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+}
+
+.copyright {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 12px;
+    -fx-padding: 20px 0 0 0;
+}
+
+/* Removing media queries as JavaFX CSS doesn't support them */
+/* Instead, you'll need to handle responsiveness programmatically */

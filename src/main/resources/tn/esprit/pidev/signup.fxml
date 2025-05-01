@@ -4,131 +4,172 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.shape.*?>
 
 <?import java.lang.String?>
 <?import javafx.collections.FXCollections?>
-<VBox alignment="CENTER" spacing="20" xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="tn.esprit.pidev.SignupController"
-      prefHeight="700.0" prefWidth="500.0"
-      style="-fx-background-color: #f5f5f5;">
 
-    <padding>
-        <Insets top="40" right="40" bottom="40" left="40"/>
-    </padding>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="tn.esprit.pidev.SignupController"
+           prefHeight="700.0" prefWidth="1100.0">
 
-    <!-- Main Signup Form -->
-    <VBox fx:id="signupFormVBox" spacing="20" alignment="CENTER">
-        <Text style="-fx-font-size: 24px; -fx-font-weight: bold;" text="We Are NovaTeam" />
-        <Text style="-fx-font-size: 14px; -fx-fill: #666;" text="Create your account to get started." />
+    <!-- Background with gradient -->
+    <Rectangle width="1100" height="700" fill="linear-gradient(to bottom right, #3498db, #8e44ad)"/>
 
-        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-padding: 0 0 10 0;">
-            <VBox spacing="15" alignment="CENTER_LEFT" style="-fx-pref-width: 400px;">
-                <!-- First Row - First Name and Last Name -->
-                <HBox spacing="15" alignment="CENTER_LEFT">
-                    <VBox spacing="5">
-                        <Label text="First Name*" style="-fx-font-weight: bold;"/>
-                        <TextField fx:id="firstNameField" style="-fx-pref-width: 185px;"/>
-                    </VBox>
-                    <VBox spacing="5">
-                        <Label text="Last Name*" style="-fx-font-weight: bold;"/>
-                        <TextField fx:id="lastNameField" style="-fx-pref-width: 185px;"/>
-                    </VBox>
-                </HBox>
+    <!-- Main content -->
+    <HBox alignment="CENTER">
+        <!-- Left side - Image/Logo area -->
+        <VBox alignment="CENTER" style="-fx-background-color: rgba(255,255,255,0.1); -fx-background-radius: 10px;"
+              maxWidth="450" maxHeight="600" prefWidth="450" prefHeight="600">
+            <padding>
+                <Insets top="30" right="30" bottom="30" left="30"/>
+            </padding>
 
-                <!-- Email -->
-                <VBox spacing="5">
-                    <Label text="Email*" style="-fx-font-weight: bold;"/>
-                    <TextField fx:id="emailField"/>
-                </VBox>
+            <ImageView fx:id="BgImageView" fitWidth="300" fitHeight="300" preserveRatio="true"/>
 
-                <!-- Password and Confirm Password -->
-                <HBox spacing="15" alignment="CENTER_LEFT">
-                    <VBox spacing="5">
-                        <Label text="Password*" style="-fx-font-weight: bold;"/>
-                        <PasswordField fx:id="passwordField" style="-fx-pref-width: 185px;"/>
-                    </VBox>
-                    <VBox spacing="5">
-                        <Label text="Confirm Password*" style="-fx-font-weight: bold;"/>
-                        <PasswordField fx:id="confirmPasswordField" style="-fx-pref-width: 185px;"/>
-                    </VBox>
-                </HBox>
-
-                <!-- Address -->
-                <VBox spacing="5">
-                    <Label text="Address" style="-fx-font-weight: bold;"/>
-                    <TextField fx:id="addressField"/>
-                </VBox>
-
-                <!-- Birth Date and Phone -->
-                <HBox spacing="15" alignment="CENTER_LEFT">
-                    <VBox spacing="5">
-                        <Label text="Birth Date" style="-fx-font-weight: bold;"/>
-                        <DatePicker fx:id="birthDatePicker" style="-fx-pref-width: 185px;"/>
-                    </VBox>
-                    <VBox spacing="5">
-                        <Label text="Phone Number" style="-fx-font-weight: bold;"/>
-                        <TextField fx:id="phoneField" style="-fx-pref-width: 185px;"/>
-                    </VBox>
-                </HBox>
-
-                <!-- Role and Speciality -->
-                <VBox spacing="5">
-                    <Label text="Role*" style="-fx-font-weight: bold;"/>
-                    <ComboBox fx:id="roleComboBox" style="-fx-pref-width: 400px;">
-                        <items>
-                            <FXCollections fx:factory="observableArrayList">
-                                <String fx:value="Patient" />
-                                <String fx:value="Psychiatre" />
-                                <String fx:value="Fournisseur" />
-                            </FXCollections>
-                        </items>
-                    </ComboBox>
-                </VBox>
-
-                <VBox fx:id="specialityContainer" spacing="5">
-                    <Label fx:id="specialityLabel" text="Speciality*" visible="false" style="-fx-font-weight: bold;"/>
-                    <TextField fx:id="specialityField" visible="false"/>
-                </VBox>
-            </VBox>
-        </ScrollPane>
-
-        <Separator style="-fx-pref-width: 400px;"/>
-
-        <Button text="SIGN UP" onAction="#handleSignup"
-                style="-fx-background-color: #0066cc; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 400px; -fx-pref-height: 40px;"/>
-
-        <HBox spacing="5" alignment="CENTER">
-            <Label text="Already have an account?"/>
-            <Button text="Sign In" onAction="#goToLogin"
-                    style="-fx-background-color: transparent; -fx-text-fill: #0066cc; -fx-padding: 0; -fx-cursor: hand; -fx-font-weight: bold;"/>
-        </HBox>
-
-        <Label fx:id="messageLabel" style="-fx-text-fill: #cc0000; -fx-padding: 10 0 0 0;"/>
-    </VBox>
-
-    <!-- Verification Form -->
-    <VBox fx:id="verificationVBox" alignment="CENTER" spacing="20" visible="false" managed="false" style="-fx-pref-width: 400px;">
-        <Text style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Email Verification" />
-
-        <Text style="-fx-font-size: 13px; -fx-fill: #666; -fx-wrap-text: true; -fx-text-alignment: center;"
-              text="We've sent a verification code to your email. Please enter it below to complete your registration." />
-
-        <VBox spacing="10" alignment="CENTER_LEFT" style="-fx-pref-width: 400px;">
-            <Label text="Verification Code*" style="-fx-font-weight: bold;"/>
-            <TextField fx:id="verificationCodeField"/>
+            <Text style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-fill: white;" text="NovaTeam" />
+            <Text style="-fx-font-size: 16px; -fx-fill: white; -fx-opacity: 0.8;" text="Healthcare Solution Platform" />
         </VBox>
 
-        <Button text="VERIFY" onAction="#handleVerification"
-                style="-fx-background-color: #0066cc; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 400px; -fx-pref-height: 40px;"/>
+        <!-- Right side - Signup form -->
+        <VBox alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 10px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);"
+              maxWidth="550" maxHeight="600" prefWidth="550" prefHeight="600">
+            <padding>
+                <Insets top="30" right="30" bottom="30" left="30"/>
+            </padding>
 
-        <HBox spacing="10" alignment="CENTER">
-            <Button text="Resend Code" onAction="#resendVerificationCode"
-                    style="-fx-background-color: transparent; -fx-text-fill: #0066cc; -fx-padding: 0; -fx-cursor: hand;"/>
-            <Button text="Back" onAction="#backToSignup"
-                    style="-fx-background-color: transparent; -fx-text-fill: #0066cc; -fx-padding: 0; -fx-cursor: hand;"/>
-        </HBox>
-        <Label fx:id="verificationMessageLabel" style="-fx-text-fill: #cc0000;"/>
-    </VBox>
-</VBox>
+            <!-- Main Signup Form -->
+            <VBox fx:id="signupFormVBox" spacing="15" alignment="CENTER">
+                <Text style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #333333;" text="Create Account" />
+                <Text style="-fx-font-size: 14px; -fx-fill: #666666;" text="Join NovaTeam healthcare platform" />
+
+                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-padding: 10 0 10 0;">
+                    <VBox spacing="15" alignment="CENTER_LEFT" style="-fx-pref-width: 450px;">
+                        <!-- First Row - First Name and Last Name -->
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <VBox spacing="5">
+                                <Label text="First Name*" style="-fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                                <TextField fx:id="firstNameField" promptText="Enter first name"
+                                           style="-fx-pref-width: 210px; -fx-pref-height: 35px; -fx-background-radius: 5px; -fx-border-color: #dddddd; -fx-border-radius: 5px;"/>
+                            </VBox>
+                            <VBox spacing="5">
+                                <Label text="Last Name*" style="-fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                                <TextField fx:id="lastNameField" promptText="Enter last name"
+                                           style="-fx-pref-width: 210px; -fx-pref-height: 35px; -fx-background-radius: 5px; -fx-border-color: #dddddd; -fx-border-radius: 5px;"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Email -->
+                        <VBox spacing="5">
+                            <Label text="Email*" style="-fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                            <TextField fx:id="emailField" promptText="Enter your email"
+                                       style="-fx-pref-height: 35px; -fx-background-radius: 5px; -fx-border-color: #dddddd; -fx-border-radius: 5px;"/>
+                        </VBox>
+
+                        <!-- Password and Confirm Password -->
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <VBox spacing="5">
+                                <Label text="Password*" style="-fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                                <PasswordField fx:id="passwordField" promptText="Enter password"
+                                               style="-fx-pref-width: 210px; -fx-pref-height: 35px; -fx-background-radius: 5px; -fx-border-color: #dddddd; -fx-border-radius: 5px;"/>
+                            </VBox>
+                            <VBox spacing="5">
+                                <Label text="Confirm Password*" style="-fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                                <PasswordField fx:id="confirmPasswordField" promptText="Confirm password"
+                                               style="-fx-pref-width: 210px; -fx-pref-height: 35px; -fx-background-radius: 5px; -fx-border-color: #dddddd; -fx-border-radius: 5px;"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Address -->
+                        <VBox spacing="5">
+                            <Label text="Address" style="-fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                            <TextField fx:id="addressField" promptText="Enter your address"
+                                       style="-fx-pref-height: 35px; -fx-background-radius: 5px; -fx-border-color: #dddddd; -fx-border-radius: 5px;"/>
+                        </VBox>
+
+                        <!-- Birth Date and Phone -->
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <VBox spacing="5">
+                                <Label text="Birth Date" style="-fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                                <DatePicker fx:id="birthDatePicker" promptText="Select date"
+                                            style="-fx-pref-width: 210px; -fx-pref-height: 35px; -fx-background-radius: 5px; -fx-border-color: #dddddd; -fx-border-radius: 5px;"/>
+                            </VBox>
+                            <VBox spacing="5">
+                                <Label text="Phone Number" style="-fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                                <TextField fx:id="phoneField" promptText="Enter phone number"
+                                           style="-fx-pref-width: 210px; -fx-pref-height: 35px; -fx-background-radius: 5px; -fx-border-color: #dddddd; -fx-border-radius: 5px;"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Role and Speciality -->
+                        <VBox spacing="5">
+                            <Label text="Role*" style="-fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                            <ComboBox fx:id="roleComboBox" promptText="Select your role"
+                                      style="-fx-pref-width: 450px; -fx-pref-height: 35px; -fx-background-radius: 5px; -fx-border-color: #dddddd; -fx-border-radius: 5px;">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="Patient" />
+                                        <String fx:value="Psychiatre" />
+                                        <String fx:value="Fournisseur" />
+                                    </FXCollections>
+                                </items>
+                            </ComboBox>
+                        </VBox>
+
+                        <VBox fx:id="specialityContainer" spacing="5">
+                            <Label fx:id="specialityLabel" text="Speciality*" visible="false" style="-fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                            <TextField fx:id="specialityField" promptText="Enter your speciality" visible="false"
+                                       style="-fx-pref-height: 35px; -fx-background-radius: 5px; -fx-border-color: #dddddd; -fx-border-radius: 5px;"/>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+
+                <Separator style="-fx-pref-width: 450px;"/>
+
+                <Button text="SIGN UP" onAction="#handleSignup"
+                        style="-fx-background-color: linear-gradient(to right, #3498db, #8e44ad); -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 450px; -fx-pref-height: 40px; -fx-background-radius: 5px;"/>
+
+                <HBox spacing="5" alignment="CENTER">
+                    <Label text="Already have an account?" style="-fx-text-fill: #666666;"/>
+                    <Button text="Sign In" onAction="#goToLogin"
+                            style="-fx-background-color: transparent; -fx-text-fill: #3498db; -fx-padding: 0; -fx-cursor: hand; -fx-font-weight: bold;"/>
+                </HBox>
+
+                <Label fx:id="messageLabel" style="-fx-text-fill: #cc0000; -fx-padding: 10 0 0 0;"/>
+            </VBox>
+
+            <!-- Verification Form -->
+            <VBox fx:id="verificationVBox" alignment="CENTER" spacing="20" visible="false" managed="false" style="-fx-pref-width: 450px;">
+                <Text style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #333333;" text="Email Verification" />
+
+                <Text style="-fx-font-size: 14px; -fx-fill: #666666; -fx-wrap-text: true; -fx-text-alignment: center;"
+                      text="We've sent a verification code to your email. Please enter it below to complete your registration." />
+
+                <VBox spacing="10" alignment="CENTER" style="-fx-pref-width: 450px;">
+                    <padding>
+                        <Insets top="20" right="0" bottom="20" left="0"/>
+                    </padding>
+
+                    <VBox spacing="5" alignment="CENTER_LEFT">
+                        <Label text="Verification Code*" style="-fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                        <TextField fx:id="verificationCodeField" promptText="Enter verification code"
+                                   style="-fx-pref-width: 450px; -fx-pref-height: 35px; -fx-background-radius: 5px; -fx-border-color: #dddddd; -fx-border-radius: 5px;"/>
+                    </VBox>
+                </VBox>
+
+                <Button text="VERIFY" onAction="#handleVerification"
+                        style="-fx-background-color: linear-gradient(to right, #3498db, #8e44ad); -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 450px; -fx-pref-height: 40px; -fx-background-radius: 5px;"/>
+
+                <HBox spacing="20" alignment="CENTER">
+                    <Button text="Resend Code" onAction="#resendVerificationCode"
+                            style="-fx-background-color: transparent; -fx-text-fill: #3498db; -fx-padding: 0; -fx-cursor: hand; -fx-font-weight: bold;"/>
+                    <Button text="Back" onAction="#backToSignup"
+                            style="-fx-background-color: transparent; -fx-text-fill: #3498db; -fx-padding: 0; -fx-cursor: hand; -fx-font-weight: bold;"/>
+                </HBox>
+                <Label fx:id="verificationMessageLabel" style="-fx-text-fill: #cc0000; -fx-padding: 10 0 0 0;"/>
+            </VBox>
+        </VBox>
+    </HBox>
+</StackPane>

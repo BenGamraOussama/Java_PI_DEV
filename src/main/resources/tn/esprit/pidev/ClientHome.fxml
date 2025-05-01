@@ -1,55 +1,406 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.geometry.*?>
+<?import java.net.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.pidev.ClientHomeController" prefWidth="900" prefHeight="600" style="-fx-background-color: #f9f5ff;" stylesheets="@styles/clientHome.css">
+<ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <stylesheets>
+        <URL value="@styles/clientHome.css" />
+    </stylesheets>
+    <content>
+        <VBox spacing="0">
+            <!-- Header -->
+            <HBox styleClass="bottom-nav" style="-fx-position: fixed;">
+                <HBox styleClass="bottom-nav-item, active" alignment="CENTER" HBox.hgrow="ALWAYS">
+                    <VBox alignment="CENTER">
+                        <Label styleClass="bottom-nav-icon" text="🏠" />
+                        <Label styleClass="bottom-nav-text" text="Accueil" />
+                    </VBox>
+                </HBox>
 
-    <!-- Header -->
-    <HBox spacing="20" alignment="CENTER_LEFT" prefHeight="60"
-          style="-fx-background-color: #6b21a8;
-             -fx-background-radius: 15 15 0 0;
-             -fx-padding: 0 20 0 20;"
-          AnchorPane.topAnchor="0" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
+                <HBox styleClass="bottom-nav-item" alignment="CENTER" HBox.hgrow="ALWAYS">
+                    <VBox alignment="CENTER">
+                        <Label styleClass="bottom-nav-icon" text="📅" />
+                        <Label styleClass="bottom-nav-text" text="Rendez-vous" />
+                    </VBox>
+                </HBox>
 
-        <ImageView fitHeight="30" fitWidth="30" pickOnBounds="true"/>
+                <HBox styleClass="bottom-nav-item" alignment="CENTER" HBox.hgrow="ALWAYS">
+                    <VBox alignment="CENTER">
+                        <Label styleClass="bottom-nav-icon" text="💬" />
+                        <Label styleClass="bottom-nav-text" text="Messages" />
+                    </VBox>
+                </HBox>
 
-        <Label text="HopeNest" style="-fx-text-fill: white; -fx-font-size: 20px;"/>
+                <HBox styleClass="bottom-nav-item" alignment="CENTER" HBox.hgrow="ALWAYS">
+                    <VBox alignment="CENTER">
+                        <Label styleClass="bottom-nav-icon" text="👤" />
+                        <Label styleClass="bottom-nav-text" text="Profil" />
+                    </VBox>
+                </HBox>
+            </HBox>
 
-        <Pane HBox.hgrow="ALWAYS"/>
 
-        <HBox spacing="15" alignment="CENTER">
-            <Button text="HOME" styleClass="nav-button"/>
-            <Button text="ABOUT US" styleClass="nav-button"/>
-            <Button text="SERVICES" styleClass="nav-button"/>
-            <Button text="BENEFITS" styleClass="nav-button"/>
-            <Button text="BLOG" styleClass="nav-button"/>
-            <Button text="CONTACT US"
-                    style="-fx-background-color: #a78bfa; -fx-text-fill: white; -fx-background-radius: 10;"/>
-        </HBox>
-    </HBox>
+            <!-- Hero Section -->
+            <StackPane styleClass="hero-section">
+                <Rectangle styleClass="hero-overlay" />
+                <VBox styleClass="container, hero-content" alignment="CENTER_LEFT" maxWidth="500">
+                    <Label styleClass="hero-title" text="Bienvenue chez HopeNest" />
+                    <Label styleClass="hero-subtitle" text="Votre espace de bien-être mental où chaque étape vers la guérison est accueillie avec bienveillance et professionnalisme." wrapText="true" />
+                    <Button styleClass="primary-button">
+                        <graphic>
+                            <HBox spacing="10" alignment="CENTER">
+                                <Label text="📅" />
+                                <Label text="Prendre Rendez-vous" />
+                            </HBox>
+                        </graphic>
+                    </Button>
+                </VBox>
+            </StackPane>
 
-    <!-- Banner Section -->
-    <VBox spacing="10" alignment="CENTER" AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
-        <Label text="Cultivating a Healthier Future\nThrough Compassion" style="-fx-font-size: 26px; -fx-text-fill: #6b21a8; -fx-font-weight: bold;" textAlignment="CENTER"/>
-        <Label text="WELL-BEING" style="-fx-font-size: 40px; -fx-text-fill: #c4b5fd; -fx-font-weight: bold;"/>
-        <ImageView fitWidth="700" fitHeight="250" preserveRatio="true"/>
-    </VBox>
+            <!-- Services Section -->
+            <VBox styleClass="section, white-section" alignment="CENTER">
+                <VBox styleClass="container, section-header" alignment="CENTER">
+                    <Label styleClass="section-title" text="Nos Services" />
+                    <Label styleClass="section-subtitle" text="Découvrez nos services spécialisés conçus pour vous accompagner dans votre parcours de bien-être mental." wrapText="true" />
+                </VBox>
 
-    <!-- Info Cards -->
-    <HBox spacing="40" alignment="CENTER" AnchorPane.bottomAnchor="50" AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="50">
-        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15px; -fx-border-radius: 10px; -fx-background-radius: 10px;">
-            <Label text="Personalized Care Tailored To You" wrapText="true" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
-            <Label text="Our patient-first approach ensures you receive optimal care and support." wrapText="true"/>
-            <Hyperlink text="LEARN MORE →"/>
+                <GridPane styleClass="container, services-grid" hgap="20" vgap="20">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="25" />
+                        <ColumnConstraints percentWidth="25" />
+                        <ColumnConstraints percentWidth="25" />
+                        <ColumnConstraints percentWidth="25" />
+                    </columnConstraints>
+
+                    <!-- Service 1 -->
+                    <VBox styleClass="service-card" alignment="CENTER" GridPane.columnIndex="0">
+                        <StackPane styleClass="service-icon-container">
+                            <Label styleClass="service-icon" text="🧠" />
+                        </StackPane>
+                        <Label styleClass="service-title" text="Consultation Psychiatrique" />
+                        <Label styleClass="service-description" text="Évaluation complète et personnalisée de votre santé mentale par nos psychiatres expérimentés." wrapText="true" textAlignment="CENTER" />
+                        <HBox alignment="CENTER">
+                            <Button styleClass="text-button">
+                                <graphic>
+                                    <HBox spacing="5" alignment="CENTER">
+                                        <Label text="En savoir plus" />
+                                        <Label text="→" />
+                                    </HBox>
+                                </graphic>
+                            </Button>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Service 2 -->
+                    <VBox styleClass="service-card" alignment="CENTER" GridPane.columnIndex="1">
+                        <StackPane styleClass="service-icon-container">
+                            <Label styleClass="service-icon" text="👤" />
+                        </StackPane>
+                        <Label styleClass="service-title" text="Thérapie Individuelle" />
+                        <Label styleClass="service-description" text="Sessions personnalisées pour explorer vos défis et développer des stratégies d'adaptation efficaces." wrapText="true" textAlignment="CENTER" />
+                        <HBox alignment="CENTER">
+                            <Button styleClass="text-button">
+                                <graphic>
+                                    <HBox spacing="5" alignment="CENTER">
+                                        <Label text="En savoir plus" />
+                                        <Label text="→" />
+                                    </HBox>
+                                </graphic>
+                            </Button>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Service 3 -->
+                    <VBox styleClass="service-card" alignment="CENTER" GridPane.columnIndex="2">
+                        <StackPane styleClass="service-icon-container">
+                            <Label styleClass="service-icon" text="👥" />
+                        </StackPane>
+                        <Label styleClass="service-title" text="Thérapie de Groupe" />
+                        <Label styleClass="service-description" text="Rejoignez un environnement de soutien où vous pouvez partager vos expériences et apprendre des autres." wrapText="true" textAlignment="CENTER" />
+                        <HBox alignment="CENTER">
+                            <Button styleClass="text-button">
+                                <graphic>
+                                    <HBox spacing="5" alignment="CENTER">
+                                        <Label text="En savoir plus" />
+                                        <Label text="→" />
+                                    </HBox>
+                                </graphic>
+                            </Button>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Service 4 -->
+                    <VBox styleClass="service-card" alignment="CENTER" GridPane.columnIndex="3">
+                        <StackPane styleClass="service-icon-container">
+                            <Label styleClass="service-icon" text="💊" />
+                        </StackPane>
+                        <Label styleClass="service-title" text="Gestion Médicamenteuse" />
+                        <Label styleClass="service-description" text="Suivi attentif et ajustement de vos médicaments pour optimiser votre traitement et minimiser les effets secondaires." wrapText="true" textAlignment="CENTER" />
+                        <HBox alignment="CENTER">
+                            <Button styleClass="text-button">
+                                <graphic>
+                                    <HBox spacing="5" alignment="CENTER">
+                                        <Label text="En savoir plus" />
+                                        <Label text="→" />
+                                    </HBox>
+                                </graphic>
+                            </Button>
+                        </HBox>
+                    </VBox>
+                </GridPane>
+            </VBox>
+
+            <!-- Praticiens Section -->
+            <VBox styleClass="section, gray-section" alignment="CENTER">
+                <VBox styleClass="container, section-header" alignment="CENTER">
+                    <Label styleClass="section-title" text="Nos Praticiens" />
+                    <Label styleClass="section-subtitle" text="Une équipe de professionnels dévoués à votre bien-être mental et émotionnel." wrapText="true" />
+                </VBox>
+
+                <GridPane styleClass="container, practitioners-grid" hgap="20" vgap="20">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="33.33" />
+                        <ColumnConstraints percentWidth="33.33" />
+                        <ColumnConstraints percentWidth="33.33" />
+                    </columnConstraints>
+
+                    <!-- Praticien 1 -->
+                    <VBox styleClass="practitioner-card" alignment="CENTER" GridPane.columnIndex="0">
+                        <StackPane styleClass="practitioner-photo-container">
+                            <ImageView styleClass="practitioner-photo" fitWidth="120" fitHeight="120" preserveRatio="true">
+                                <Image url="@images/patient.png" />
+                            </ImageView>
+                        </StackPane>
+                        <Label styleClass="practitioner-name" text="Dr. Sophie Laurent" />
+                        <Label styleClass="practitioner-specialty" text="Psychiatre - Spécialiste Anxiété" />
+                        <Label styleClass="practitioner-description" text="Plus de 15 ans d'expérience dans le traitement des troubles anxieux et du stress post-traumatique." wrapText="true" textAlignment="CENTER" />
+                        <Button styleClass="primary-button, small-button" text="Voir le profil" />
+                    </VBox>
+
+                    <!-- Praticien 2 -->
+                    <VBox styleClass="practitioner-card" alignment="CENTER" GridPane.columnIndex="1">
+                        <StackPane styleClass="practitioner-photo-container">
+                            <ImageView styleClass="practitioner-photo" fitWidth="120" fitHeight="120" preserveRatio="true">
+                                <Image url="@images/patient.png" />
+                            </ImageView>
+                        </StackPane>
+                        <Label styleClass="practitioner-name" text="Dr. Marc Dubois" />
+                        <Label styleClass="practitioner-specialty" text="Psychiatre - Spécialiste Dépression" />
+                        <Label styleClass="practitioner-description" text="Expert reconnu dans le traitement des troubles de l'humeur et de la dépression résistante." wrapText="true" textAlignment="CENTER" />
+                        <Button styleClass="primary-button, small-button" text="Voir le profil" />
+                    </VBox>
+
+                    <!-- Praticien 3 -->
+                    <VBox styleClass="practitioner-card" alignment="CENTER" GridPane.columnIndex="2">
+                        <StackPane styleClass="practitioner-photo-container">
+                            <ImageView styleClass="practitioner-photo" fitWidth="120" fitHeight="120" preserveRatio="true">
+                                <Image url="@images/patient.png" />
+                            </ImageView>
+                        </StackPane>
+                        <Label styleClass="practitioner-name" text="Dr. Émilie Moreau" />
+                        <Label styleClass="practitioner-specialty" text="Psychiatre - Spécialiste Adolescents" />
+                        <Label styleClass="practitioner-description" text="Spécialisée dans les problématiques des adolescents et jeunes adultes, incluant les troubles alimentaires." wrapText="true" textAlignment="CENTER" />
+                        <Button styleClass="primary-button, small-button" text="Voir le profil" />
+                    </VBox>
+                </GridPane>
+
+                <HBox styleClass="container" alignment="CENTER">
+                    <Button styleClass="outline-button" text="Voir tous nos praticiens" />
+                </HBox>
+            </VBox>
+
+            <!-- Témoignages Section -->
+            <VBox styleClass="section, white-section" alignment="CENTER">
+                <VBox styleClass="container, section-header" alignment="CENTER">
+                    <Label styleClass="section-title" text="Ce que disent nos patients" />
+                    <Label styleClass="section-subtitle" text="Découvrez les expériences de ceux qui ont trouvé du soutien et du réconfort chez HopeNest." wrapText="true" />
+                </VBox>
+
+                <GridPane styleClass="container, testimonials-grid" hgap="20" vgap="20">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="33.33" />
+                        <ColumnConstraints percentWidth="33.33" />
+                        <ColumnConstraints percentWidth="33.33" />
+                    </columnConstraints>
+
+                    <!-- Témoignage 1 -->
+                    <VBox styleClass="testimonial-card" GridPane.columnIndex="0">
+                        <HBox styleClass="star-rating">
+                            <Label styleClass="star" text="★" />
+                            <Label styleClass="star" text="★" />
+                            <Label styleClass="star" text="★" />
+                            <Label styleClass="star" text="★" />
+                            <Label styleClass="star" text="★" />
+                        </HBox>
+                        <Label styleClass="testimonial-text" text="&quot;Après des années de lutte contre l'anxiété, j'ai enfin trouvé un lieu où je me sens compris. L'approche personnalisée du Dr. Laurent a complètement transformé ma vie quotidienne.&quot;" wrapText="true" />
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <StackPane styleClass="testimonial-avatar">
+                                <Label text="CB" />
+                            </StackPane>
+                            <VBox>
+                                <Label styleClass="testimonial-name" text="Claire B." />
+                                <Label styleClass="testimonial-info" text="Patient depuis 2 ans" />
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Témoignage 2 -->
+                    <VBox styleClass="testimonial-card" GridPane.columnIndex="1">
+                        <HBox styleClass="star-rating">
+                            <Label styleClass="star" text="★" />
+                            <Label styleClass="star" text="★" />
+                            <Label styleClass="star" text="★" />
+                            <Label styleClass="star" text="★" />
+                            <Label styleClass="star" text="★" />
+                        </HBox>
+                        <Label styleClass="testimonial-text" text="&quot;La thérapie de groupe chez HopeNest m'a permis de me sentir moins seul face à ma dépression. L'environnement bienveillant et le professionnalisme de l'équipe font toute la différence.&quot;" wrapText="true" />
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <StackPane styleClass="testimonial-avatar">
+                                <Label text="TM" />
+                            </StackPane>
+                            <VBox>
+                                <Label styleClass="testimonial-name" text="Thomas M." />
+                                <Label styleClass="testimonial-info" text="Patient depuis 1 an" />
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Témoignage 3 -->
+                    <VBox styleClass="testimonial-card" GridPane.columnIndex="2">
+                        <HBox styleClass="star-rating">
+                            <Label styleClass="star" text="★" />
+                            <Label styleClass="star" text="★" />
+                            <Label styleClass="star" text="★" />
+                            <Label styleClass="star" text="★" />
+                            <Label styleClass="star-half" text="★" />
+                        </HBox>
+                        <Label styleClass="testimonial-text" text="&quot;En tant que parent d'une adolescente en difficulté, j'ai été impressionné par l'approche du Dr. Moreau. Sa capacité à établir une relation de confiance a été déterminante dans le rétablissement de ma fille.&quot;" wrapText="true" />
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <StackPane styleClass="testimonial-avatar">
+                                <Label text="SL" />
+                            </StackPane>
+                            <VBox>
+                                <Label styleClass="testimonial-name" text="Stéphanie L." />
+                                <Label styleClass="testimonial-info" text="Parent d'une patiente" />
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                </GridPane>
+            </VBox>
+
+            <!-- Contact Section -->
+            <VBox styleClass="section, gray-section" alignment="CENTER">
+                <HBox styleClass="container, contact-container">
+                    <!-- Info Contact -->
+                    <VBox styleClass="contact-info">
+                        <Label styleClass="contact-title" text="Contactez-nous" />
+
+                        <VBox styleClass="contact-section">
+                            <Label styleClass="contact-section-title" text="Horaires" />
+                            <Label text="Lundi - Vendredi: 9h00 - 19h00" />
+                            <Label text="Samedi: 9h00 - 13h00" />
+                            <Label text="Dimanche: Fermé" />
+                        </VBox>
+
+                        <VBox styleClass="contact-section">
+                            <Label styleClass="contact-section-title" text="Adresse" />
+                            <Label text="15 Rue de la Paix" />
+                            <Label text="75002 Paris, France" />
+                        </VBox>
+
+                        <VBox styleClass="contact-section">
+                            <Label styleClass="contact-section-title" text="Contact" />
+                            <HBox spacing="5" alignment="CENTER_LEFT">
+                                <Label text="📞" />
+                                <Label text="01 23 45 67 89" />
+                            </HBox>
+                            <HBox spacing="5" alignment="CENTER_LEFT">
+                                <Label text="✉️" />
+                                <Label text="contact@hopenest.fr" />
+                            </HBox>
+                        </VBox>
+
+                        <VBox styleClass="emergency-box">
+                            <Label styleClass="emergency-title" text="Urgence" />
+                            <Label text="En cas d'urgence psychiatrique, contactez:" />
+                            <HBox spacing="5" alignment="CENTER_LEFT">
+                                <Label text="📞" />
+                                <Label styleClass="emergency-number" text="01 23 45 67 90" />
+                            </HBox>
+                        </VBox>
+                    </VBox>
+
+                    <!-- Formulaire -->
+                    <VBox styleClass="contact-form">
+                        <Label styleClass="form-title" text="Envoyez-nous un message" />
+
+                        <VBox spacing="15">
+                            <VBox spacing="5">
+                                <Label text="Nom complet" />
+                                <TextField promptText="Votre nom" />
+                            </VBox>
+
+                            <VBox spacing="5">
+                                <Label text="Email" />
+                                <TextField promptText="Votre email" />
+                            </VBox>
+
+                            <VBox spacing="5">
+                                <Label text="Téléphone" />
+                                <TextField promptText="Votre numéro de téléphone" />
+                            </VBox>
+
+                            <VBox spacing="5">
+                                <Label text="Message" />
+                                <TextArea promptText="Votre message" prefHeight="100" />
+                            </VBox>
+
+                            <CheckBox styleClass="privacy-checkbox" text="J'accepte la politique de confidentialité" />
+
+                            <Button styleClass="primary-button" text="Envoyer le message" maxWidth="Infinity" />
+                        </VBox>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- Accréditations Section -->
+            <VBox styleClass="section, white-section, accreditations-section" alignment="CENTER">
+                <VBox styleClass="container, section-header" alignment="CENTER">
+                    <Label styleClass="section-title" text="Nos Accréditations" />
+                </VBox>
+
+                <HBox styleClass="container, accreditations-container" spacing="30" alignment="CENTER">
+                    <VBox alignment="CENTER" styleClass="accreditation-item">
+                        <Label styleClass="accreditation-icon" text="🏥" />
+                        <Label styleClass="accreditation-text" text="Ordre des Médecins" />
+                    </VBox>
+
+                    <VBox alignment="CENTER" styleClass="accreditation-item">
+                        <Label styleClass="accreditation-icon" text="🧠" />
+                        <Label styleClass="accreditation-text" text="Association Française de Psychiatrie" />
+                    </VBox>
+
+                    <VBox alignment="CENTER" styleClass="accreditation-item">
+                        <Label styleClass="accreditation-icon" text="🏛️" />
+                        <Label styleClass="accreditation-text" text="Ministère de la Santé" />
+                    </VBox>
+
+                    <VBox alignment="CENTER" styleClass="accreditation-item">
+                        <Label styleClass="accreditation-icon" text="🏢" />
+                        <Label styleClass="accreditation-text" text="Fédération Française de Psychothérapie" />
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- Bottom Navigation -->
         </VBox>
 
-        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15px; -fx-border-radius: 10px; -fx-background-radius: 10px;">
-            <Label text="Modern Tools for Better Health Tracking" wrapText="true" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
-            <Label text="Empower yourself with cutting-edge technology for wellness monitoring." wrapText="true"/>
-            <Hyperlink text="LEARN MORE →"/>
-        </VBox>
-    </HBox>
-</AnchorPane>
+    </content>
+
+</ScrollPane>

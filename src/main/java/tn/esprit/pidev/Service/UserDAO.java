@@ -136,26 +136,20 @@ public class UserDAO {
         }
     }
     public boolean addUser(User user) {
+        // Première requête pour insérer dans la table user
+        String userQuery = "INSERT INTO user (email, password, first_name, last_name, roles, specialite, adresse, birth_date, phone, discr) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        String query = "INSERT INTO user (email, password, first_name, last_name, roles, specialite, adresse, birth_date, phone, discr) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        // Requête pour insérer dans la table patient (si c'est un patient)
+        String patientQuery = "INSERT INTO patient (id, adresse, name) VALUES (?, ?, ?)";
 
         try {
-            // Hash the password before storing
+            // Hash du mot de passe
             String hashedPassword = hashPassword(user.getPassword());
 
-            pst = connection.prepareStatement(query);
-            pst.setString(1, user.getEmail());
-            pst.setString(2, hashedPassword); // Store the hashed password
-            pst.setString(3, user.getFirstName());
-            pst.setString(4, user.getLastName());
-            pst.setString(5, String.join(",", user.getRole()));
-            pst.setString(6, user.getSpecialite());
-            pst.setString(7, user.getAddress());
-            pst.setDate(8, user.getBirthDate());
-            pst.setString(9, user.getPhoneNumber());
-
+            // Déterminer le discr
+            String roles = String.join(", ", user.getRole());
             String discr = "utilisateur";
-            String roles = String.join(", ", user.getRole());// valeur par défaut
+
             if (roles.contains("ROLE_PATIENT")) {
                 discr = "patient";
             } else if (roles.contains("ROLE_PSYCHIATRE")) {
@@ -164,9 +158,42 @@ public class UserDAO {
                 discr = "fournisseur";
             }
 
+            // Insertion dans la table user
+            pst = connection.prepareStatement(userQuery, Statement.RETURN_GENERATED_KEYS);
+            pst.setString(1, user.getEmail());
+            pst.setString(2, hashedPassword);
+            pst.setString(3, user.getFirstName());
+            pst.setString(4, user.getLastName());
+            pst.setString(5, roles);
+            pst.setString(6, user.getSpecialite());
+            pst.setString(7, user.getAddress());
+            pst.setDate(8, user.getBirthDate());
+            pst.setString(9, user.getPhoneNumber());
             pst.setString(10, discr);
 
             int rowsAffected = pst.executeUpdate();
+
+            // Si c'est un patient et que l'insertion dans user a réussi
+            if (rowsAffected > 0 && discr.equals("patient")) {
+                // Récupérer l'ID généré
+                ResultSet generatedKeys = pst.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    long userId = generatedKeys.getLong(1);
+
+                    // Insertion dans la table patient
+                    PreparedStatement pstPatient = connection.prepareStatement(patientQuery);
+                    pstPatient.setLong(1, userId);
+                    pstPatient.setString(2, user.getAddress()); // Remplacez par le champ supplémentaire du patient
+                    pstPatient.setString(3, user.getAddress());
+
+                    int patientRowsAffected = pstPatient.executeUpdate();
+                    if (patientRowsAffected <= 0) {
+                        // Rollback si l'insertion dans patient échoue ?
+                        return false;
+                    }
+                }
+            }
+
             return rowsAffected > 0;
         } catch (SQLException ex) {
             System.out.println("Error adding user: " + ex.getMessage());
@@ -175,7 +202,6 @@ public class UserDAO {
             closeResources();
         }
     }
-
     public User authenticateUser(String email, String password) {
         String query = "SELECT * FROM user WHERE email = ?";
 

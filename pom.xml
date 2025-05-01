@@ -16,6 +16,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.twilio.sdk</groupId>
+            <artifactId>twilio</artifactId>
+            <version>8.0.0</version> <!-- ou version plus récente -->
+        </dependency>
+        <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-remixicon-pack</artifactId>
             <version>12.3.1</version>

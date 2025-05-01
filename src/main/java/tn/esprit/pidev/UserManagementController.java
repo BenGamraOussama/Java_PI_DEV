@@ -175,15 +175,44 @@ public class UserManagementController implements Initializable {
             String generatedPassword = generateRandomPassword();
             user.setPassword(generatedPassword);
 
+            // Valider et formater le numéro de téléphone
+            String formattedPhoneNumber = formatPhoneNumber(user.getPhoneNumber());
+            if (formattedPhoneNumber == null) {
+                showMessage("Numéro de téléphone invalide. Format attendu: +216XXXXXXXX ou 2XXXXXXXX", "red");
+                return;
+            }
+
             if (userDAO.addUser(user)) {
-                EmailService.sendPasswordByEmail(user.getEmail(), generatedPassword);
-                showMessage("Utilisateur ajouté. Mot de passe envoyé par email.", "green");
+                TwilioSmsSender.sendPasswordBySms(formattedPhoneNumber, generatedPassword);
+                showMessage("Utilisateur ajouté. Mot de passe envoyé par SMS.", "green");
                 loadUsers();
                 clearForm();
             } else {
                 showMessage("Erreur lors de l'ajout de l'utilisateur", "red");
             }
         }
+    }
+
+    public static String formatPhoneNumber(String phoneNumber) {
+        if (phoneNumber == null) return null;
+
+        // Supprimer tous les caractères non numériques
+        String digitsOnly = phoneNumber.replaceAll("[^0-9]", "");
+
+        // Si le numéro commence par 2 (pour la Tunisie) et a 8 chiffres, ajouter +216
+        if (digitsOnly.startsWith("2") && digitsOnly.length() == 8) {
+            return "+216" + digitsOnly;
+        }
+        // Si le numéro commence par 216 et a 10 ou 11 chiffres, ajouter +
+        else if (digitsOnly.startsWith("216") && (digitsOnly.length() == 10 || digitsOnly.length() == 11)) {
+            return "+" + digitsOnly;
+        }
+        // Si le numéro est déjà au format international (+216), le garder tel quel
+        else if (phoneNumber.startsWith("+216") && phoneNumber.length() == 12) {
+            return phoneNumber;
+        }
+
+        return null; // Format non reconnu
     }
 
     @FXML

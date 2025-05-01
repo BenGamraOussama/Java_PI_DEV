@@ -16,6 +16,7 @@ module tn.esprit.pidev {
     requires java.mail;
     requires java.desktop;
     requires spring.security.crypto;
+    requires twilio;
 
     opens tn.esprit.pidev to javafx.fxml;
     exports tn.esprit.pidev;

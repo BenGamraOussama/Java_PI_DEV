@@ -8,7 +8,7 @@
 <?import javafx.geometry.*?>
 <?import java.net.*?>
 
-<ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<ScrollPane fitToWidth="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="tn.esprit.pidev.ClientHomeController">
     <stylesheets>
         <URL value="@styles/clientHome.css" />
     </stylesheets>
@@ -37,7 +37,7 @@
                     </VBox>
                 </HBox>
 
-                <HBox styleClass="bottom-nav-item" alignment="CENTER" HBox.hgrow="ALWAYS">
+                <HBox onMouseClicked="#handleProfileButtonClick" styleClass="bottom-nav-item" alignment="CENTER" HBox.hgrow="ALWAYS">
                     <VBox alignment="CENTER">
                         <Label styleClass="bottom-nav-icon" text="👤" />
                         <Label styleClass="bottom-nav-text" text="Profil" />

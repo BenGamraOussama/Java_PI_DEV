@@ -14,6 +14,7 @@ import tn.esprit.pidev.Service.UserDAO;
 
 import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -29,7 +30,15 @@ public class UserManagementController implements Initializable {
     @FXML private Label messageLabel;
     @FXML private ComboBox<String> filterRoleCombo;
     @FXML private TextField searchField;
+    @FXML private Button prevPageButton;
+    @FXML private Button nextPageButton;
+    @FXML private Label pageInfoLabel;
 
+    // Pagination variables
+    private int currentPage = 1;
+    private final int ITEMS_PER_PAGE = 5;
+    private int totalPages = 1;
+    private List<User> filteredUsers;
 
     private ObservableList<User> usersList = FXCollections.observableArrayList();
     private UserDAO userDAO = new UserDAO();
@@ -42,8 +51,20 @@ public class UserManagementController implements Initializable {
         filterRoleCombo.setItems(FXCollections.observableArrayList("Tous", "admin", "psychiatre", "fournisseur", "patient"));
         filterRoleCombo.setValue("Tous");
 
-        searchField.textProperty().addListener((obs, oldVal, newVal) -> filterUsers());
-        filterRoleCombo.valueProperty().addListener((obs, oldVal, newVal) -> filterUsers());
+        // Initialize pagination
+        currentPage = 1;
+        prevPageButton.setDisable(true); // Initially disabled as we start at page 1
+
+        // Add listeners for search and filter
+        searchField.textProperty().addListener((obs, oldVal, newVal) -> {
+            currentPage = 1; // Reset to first page when search changes
+            filterUsers();
+        });
+
+        filterRoleCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
+            currentPage = 1; // Reset to first page when filter changes
+            filterUsers();
+        });
 
         loadUsers();
     }
@@ -51,6 +72,10 @@ public class UserManagementController implements Initializable {
         usersCardsContainer.getChildren().clear();
         usersList.clear();
         usersList.addAll(userDAO.getAllUsers());
+
+        // Reset pagination to first page
+        currentPage = 1;
+
         filterUsers();
     }
 
@@ -74,10 +99,76 @@ public class UserManagementController implements Initializable {
         String searchTerm = searchField.getText().toLowerCase();
         String selectedRole = filterRoleCombo.getValue();
 
-        usersList.stream()
+        // Filter users based on search term and role
+        filteredUsers = usersList.stream()
                 .filter(user -> matchesSearch(user, searchTerm))
                 .filter(user -> matchesRole(user, selectedRole))
-                .forEach(user -> usersCardsContainer.getChildren().add(createUserCard(user)));
+                .collect(Collectors.toList());
+
+        // Calculate total pages
+        totalPages = (int) Math.ceil((double) filteredUsers.size() / ITEMS_PER_PAGE);
+        if (totalPages == 0) totalPages = 1;
+
+        // Ensure current page is valid
+        if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
+
+        // Update pagination controls
+        updatePaginationControls();
+
+        // Display current page
+        displayCurrentPage();
+    }
+
+    /**
+     * Displays the current page of user cards
+     */
+    private void displayCurrentPage() {
+        usersCardsContainer.getChildren().clear();
+
+        int startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        int endIndex = Math.min(startIndex + ITEMS_PER_PAGE, filteredUsers.size());
+
+        for (int i = startIndex; i < endIndex; i++) {
+            usersCardsContainer.getChildren().add(createUserCard(filteredUsers.get(i)));
+        }
+    }
+
+    /**
+     * Updates the pagination controls (button states and page info)
+     */
+    private void updatePaginationControls() {
+        // Update page info label
+        pageInfoLabel.setText("Page " + currentPage + " / " + totalPages);
+
+        // Enable/disable navigation buttons
+        prevPageButton.setDisable(currentPage <= 1);
+        nextPageButton.setDisable(currentPage >= totalPages);
+    }
+
+    /**
+     * Handles the previous page button click
+     */
+    @FXML
+    private void handlePreviousPage(ActionEvent event) {
+        if (currentPage > 1) {
+            currentPage--;
+            displayCurrentPage();
+            updatePaginationControls();
+        }
+    }
+
+    /**
+     * Handles the next page button click
+     */
+    @FXML
+    private void handleNextPage(ActionEvent event) {
+        if (currentPage < totalPages) {
+            currentPage++;
+            displayCurrentPage();
+            updatePaginationControls();
+        }
     }
 
     private boolean matchesSearch(User user, String searchTerm) {
@@ -116,6 +207,12 @@ public class UserManagementController implements Initializable {
         Label roleLabel = new Label("Rôle: " + formatRoles(user.getRole()));
         Label phoneLabel = new Label("Tél: " + user.getPhoneNumber());
 
+        // Status label for banned users
+        Label statusLabel = new Label(user.isBanned() ? "Statut: Banni" : "Statut: Actif");
+        statusLabel.setStyle(user.isBanned() ? 
+                "-fx-text-fill: #f44336; -fx-font-weight: bold;" : 
+                "-fx-text-fill: #4CAF50; -fx-font-weight: bold;");
+
         // Action buttons
         HBox buttonsBox = new HBox(5);
         Button editBtn = new Button("Modifier");
@@ -126,18 +223,65 @@ public class UserManagementController implements Initializable {
         deleteBtn.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
         deleteBtn.setOnAction(e -> deleteUser(user));
 
-        buttonsBox.getChildren().addAll(editBtn, deleteBtn);
-        card.getChildren().addAll(nameLabel, emailLabel, roleLabel, phoneLabel, buttonsBox);
+        // Ban/Unban button
+        Button banBtn = new Button(user.isBanned() ? "Débloquer" : "Bloquer");
+        banBtn.setStyle(user.isBanned() ? 
+                "-fx-background-color: #2196F3; -fx-text-fill: white;" : 
+                "-fx-background-color: #FF9800; -fx-text-fill: white;");
+        banBtn.setOnAction(e -> toggleBanStatus(user));
+
+        buttonsBox.getChildren().addAll(editBtn, deleteBtn, banBtn);
+        card.getChildren().addAll(nameLabel, emailLabel, roleLabel, phoneLabel, statusLabel, buttonsBox);
         return card;
     }
+
+    /**
+     * Toggle the ban status of a user
+     * @param user The user to toggle ban status for
+     */
+    private void toggleBanStatus(User user) {
+        boolean success;
+        if (user.isBanned()) {
+            // Unban the user
+            success = userDAO.unbanUser(user.getId());
+            if (success) {
+                user.setBanned(false);
+                showMessage("Utilisateur débloqué avec succès", "green");
+            } else {
+                showMessage("Erreur lors du déblocage de l'utilisateur", "red");
+            }
+        } else {
+            // Ban the user
+            success = userDAO.banUser(user.getId());
+            if (success) {
+                user.setBanned(true);
+                showMessage("Utilisateur bloqué avec succès", "green");
+            } else {
+                showMessage("Erreur lors du blocage de l'utilisateur", "red");
+            }
+        }
+
+        if (success) {
+            // Refresh the user card
+            refreshUserCard(user);
+        }
+    }
     private void refreshUserCard(User user) {
-        // Trouver l'index de l'utilisateur dans la liste
+        // Find the user in the main list and update it
         int index = usersList.indexOf(user);
         if (index >= 0) {
-            // Mettre à jour l'utilisateur dans la liste
-            usersList.set(index, userDAO.getUserById(user.getId()));
-            // Recréer la carte
-            usersCardsContainer.getChildren().set(index, createUserCard(usersList.get(index)));
+            // Update the user in the main list
+            User updatedUser = userDAO.getUserById(user.getId());
+            usersList.set(index, updatedUser);
+
+            // Also update in filtered list if present
+            int filteredIndex = filteredUsers.indexOf(user);
+            if (filteredIndex >= 0) {
+                filteredUsers.set(filteredIndex, updatedUser);
+            }
+
+            // Refresh the current page display
+            displayCurrentPage();
         }
     }
 
@@ -162,7 +306,23 @@ public class UserManagementController implements Initializable {
     private void deleteUser(User user) {
         if (userDAO.deleteUser(user.getId())) {
             showMessage("Utilisateur supprimé avec succès", "green");
-            loadUsers();
+
+            // Save current page
+            int savedPage = currentPage;
+
+            // Reload users
+            usersList.clear();
+            usersList.addAll(userDAO.getAllUsers());
+
+            // Apply filters
+            filterUsers();
+
+            // Try to restore the previous page if it's valid
+            if (savedPage <= totalPages) {
+                currentPage = savedPage;
+                displayCurrentPage();
+                updatePaginationControls();
+            }
         } else {
             showMessage("Erreur lors de la suppression", "red");
         }
@@ -185,7 +345,14 @@ public class UserManagementController implements Initializable {
             if (userDAO.addUser(user)) {
                 TwilioSmsSender.sendPasswordBySms(formattedPhoneNumber, generatedPassword);
                 showMessage("Utilisateur ajouté. Mot de passe envoyé par SMS.", "green");
-                loadUsers();
+
+                // After adding a user, we typically want to show the first page
+                // to see the newly added user, so we reset to page 1
+                currentPage = 1;
+                usersList.clear();
+                usersList.addAll(userDAO.getAllUsers());
+                filterUsers();
+
                 clearForm();
             } else {
                 showMessage("Erreur lors de l'ajout de l'utilisateur", "red");
@@ -223,7 +390,23 @@ public class UserManagementController implements Initializable {
 
             if (userDAO.updateUser(user)) {
                 showMessage("Utilisateur modifié avec succès", "green");
-                loadUsers();
+
+                // Save current page
+                int savedPage = currentPage;
+
+                // Reload users
+                usersList.clear();
+                usersList.addAll(userDAO.getAllUsers());
+
+                // Apply filters
+                filterUsers();
+
+                // Try to restore the previous page if it's valid
+                if (savedPage <= totalPages) {
+                    currentPage = savedPage;
+                    displayCurrentPage();
+                    updatePaginationControls();
+                }
             } else {
                 showMessage("Erreur lors de la modification", "red");
             }
@@ -236,7 +419,24 @@ public class UserManagementController implements Initializable {
             int id = Integer.parseInt(idField.getText());
             if (userDAO.deleteUser(id)) {
                 showMessage("Utilisateur supprimé avec succès", "green");
-                loadUsers();
+
+                // Save current page
+                int savedPage = currentPage;
+
+                // Reload users
+                usersList.clear();
+                usersList.addAll(userDAO.getAllUsers());
+
+                // Apply filters
+                filterUsers();
+
+                // Try to restore the previous page if it's valid
+                if (savedPage <= totalPages) {
+                    currentPage = savedPage;
+                    displayCurrentPage();
+                    updatePaginationControls();
+                }
+
                 clearForm();
             } else {
                 showMessage("Erreur lors de la suppression", "red");
@@ -311,6 +511,22 @@ public class UserManagementController implements Initializable {
 
     @FXML
     private void handleRefresh(ActionEvent actionEvent) {
-        loadUsers();
+        // Save current page
+        int savedPage = currentPage;
+
+        // Reload users
+        usersCardsContainer.getChildren().clear();
+        usersList.clear();
+        usersList.addAll(userDAO.getAllUsers());
+
+        // Apply filters but keep the same page if possible
+        filterUsers();
+
+        // Try to restore the previous page if it's valid
+        if (savedPage <= totalPages) {
+            currentPage = savedPage;
+            displayCurrentPage();
+            updatePaginationControls();
+        }
     }
 }

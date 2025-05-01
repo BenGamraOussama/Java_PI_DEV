@@ -4,7 +4,9 @@ import tn.esprit.pidev.Model.User;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -215,6 +217,21 @@ public class UserDAO {
                 // Get the stored hashed password
                 String storedHash = rs.getString("password");
 
+                // Check if user is banned
+                boolean banned = false;
+                try {
+                    banned = rs.getBoolean("banned");
+                } catch (SQLException e) {
+                    // Column doesn't exist, default to false
+                    banned = false;
+                }
+
+                // If user is banned, return null with a specific message
+                if (banned) {
+                    System.out.println("User is banned and cannot log in: " + email);
+                    return null;
+                }
+
                 // Check if the provided password matches the stored hash
                 if (checkPassword(password, storedHash)) {
                     User user = new User();
@@ -229,6 +246,7 @@ public class UserDAO {
                     user.setAddress(rs.getString("adresse"));
                     user.setBirthDate(rs.getDate("birth_date"));
                     user.setPhoneNumber(rs.getString("phone"));
+                    user.setBanned(banned);
 
                     // Set the static connected user
                     User.connecte = user;
@@ -336,6 +354,15 @@ public class UserDAO {
 
             while (rs.next()) {
                 String rolesStr = rs.getString("roles");
+                boolean banned = false;
+                // Check if banned column exists
+                try {
+                    banned = rs.getBoolean("banned");
+                } catch (SQLException e) {
+                    // Column doesn't exist, default to false
+                    banned = false;
+                }
+
                 User user = new User(
                         rs.getInt("id"),
                         rs.getString("email"),
@@ -349,6 +376,7 @@ public class UserDAO {
                         rs.getDate("birth_date"),
                         rs.getString("phone")
                 );
+                user.setBanned(banned);
                 users.add(user);
             }
         } catch (SQLException ex) {
@@ -416,6 +444,14 @@ public class UserDAO {
                 user.setPhoneNumber(rs.getString("phone"));
                 String rolesStr = rs.getString("roles");
                 user.setRole(rolesStr != null ? rolesStr.split(",") : new String[0]);
+
+                // Check if banned column exists
+                try {
+                    user.setBanned(rs.getBoolean("banned"));
+                } catch (SQLException e) {
+                    // Column doesn't exist, default to false
+                    user.setBanned(false);
+                }
             } else {
                 System.err.println("Aucun utilisateur trouvé avec l'ID: " + userId);
             }
@@ -433,4 +469,149 @@ public class UserDAO {
         }
 
         return user;
-    }}
+    }
+
+    /**
+     * Ban a user by setting their banned status to true
+     * @param userId The ID of the user to ban
+     * @return True if the ban was successful, false otherwise
+     */
+    public boolean banUser(int userId) {
+        String query = "UPDATE user SET banned = ? WHERE id = ?";
+
+        try {
+            // First check if the banned column exists
+            try {
+                // Try to get a user to check if banned column exists
+                String checkQuery = "SELECT banned FROM user LIMIT 1";
+                PreparedStatement checkStmt = connection.prepareStatement(checkQuery);
+                checkStmt.executeQuery();
+                checkStmt.close();
+            } catch (SQLException e) {
+                // Column doesn't exist, create it
+                String alterQuery = "ALTER TABLE user ADD COLUMN banned BOOLEAN DEFAULT FALSE";
+                PreparedStatement alterStmt = connection.prepareStatement(alterQuery);
+                alterStmt.executeUpdate();
+                alterStmt.close();
+            }
+
+            // Now update the user's banned status
+            pst = connection.prepareStatement(query);
+            pst.setBoolean(1, true);
+            pst.setInt(2, userId);
+
+            int rowsAffected = pst.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException ex) {
+            System.out.println("Error banning user: " + ex.getMessage());
+            return false;
+        } finally {
+            closeResources();
+        }
+    }
+
+    /**
+     * Unban a user by setting their banned status to false
+     * @param userId The ID of the user to unban
+     * @return True if the unban was successful, false otherwise
+     */
+    public boolean unbanUser(int userId) {
+        String query = "UPDATE user SET banned = ? WHERE id = ?";
+
+        try {
+            pst = connection.prepareStatement(query);
+            pst.setBoolean(1, false);
+            pst.setInt(2, userId);
+
+            int rowsAffected = pst.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException ex) {
+            System.out.println("Error unbanning user: " + ex.getMessage());
+            return false;
+        } finally {
+            closeResources();
+        }
+    }
+
+    /**
+     * Check if a user is banned by email
+     * @param email The email of the user to check
+     * @return True if the user is banned, false otherwise
+     */
+    public boolean isUserBanned(String email) {
+        String query = "SELECT banned FROM user WHERE email = ?";
+
+        try {
+            // First check if the banned column exists
+            try {
+                // Try to get a user to check if banned column exists
+                String checkQuery = "SELECT banned FROM user LIMIT 1";
+                PreparedStatement checkStmt = connection.prepareStatement(checkQuery);
+                checkStmt.executeQuery();
+                checkStmt.close();
+            } catch (SQLException e) {
+                // Column doesn't exist, create it
+                String alterQuery = "ALTER TABLE user ADD COLUMN banned BOOLEAN DEFAULT FALSE";
+                PreparedStatement alterStmt = connection.prepareStatement(alterQuery);
+                alterStmt.executeUpdate();
+                alterStmt.close();
+                return false; // If column didn't exist, user can't be banned
+            }
+
+            // Now check if the user is banned
+            pst = connection.prepareStatement(query);
+            pst.setString(1, email);
+
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                return rs.getBoolean("banned");
+            }
+            return false; // User not found
+        } catch (SQLException ex) {
+            System.out.println("Error checking if user is banned: " + ex.getMessage());
+            return false;
+        } finally {
+            closeResources();
+        }
+    }
+
+    /**
+     * Get the count of users by role
+     * @return A map with role as key and count as value
+     */
+    public Map<String, Integer> getUserCountByRole() {
+        Map<String, Integer> roleCounts = new HashMap<>();
+        List<User> users = getAllUsers();
+
+        for (User user : users) {
+            String[] roles = user.getRole();
+            if (roles != null) {
+                for (String role : roles) {
+                    // Trim the role to remove any whitespace
+                    role = role.trim();
+                    // Increment the count for this role
+                    roleCounts.put(role, roleCounts.getOrDefault(role, 0) + 1);
+                }
+            }
+        }
+
+        return roleCounts;
+    }
+
+    /**
+     * Get the count of banned users
+     * @return The number of banned users
+     */
+    public int getBannedUserCount() {
+        int count = 0;
+        List<User> users = getAllUsers();
+
+        for (User user : users) {
+            if (user.isBanned()) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+}

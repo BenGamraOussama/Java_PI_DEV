@@ -17,16 +17,19 @@ public class User {
     private String address;
     private Date birthDate;
     private String phoneNumber;
+    private boolean banned; // Field to track if user is banned
     public static User connecte;
 
     // Default constructor
     public User() {
+        this.banned = false; // Default to not banned
     }
 
     // Constructor for login
     public User(String email, String password) {
         this.email = email;
         this.password = password;
+        this.banned = false; // Default to not banned
     }
 
     // Constructor for basic user creation
@@ -36,6 +39,7 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
+        this.banned = false; // Default to not banned
     }
 
     // Full constructor
@@ -52,6 +56,24 @@ public class User {
         this.address = address;
         this.birthDate = birthDate;
         this.phoneNumber = phoneNumber;
+        this.banned = false; // Default to not banned
+    }
+
+    // Full constructor with banned status
+    public User(int id, String email, String password, String name,  String[] role, String specialite,
+                String firstName, String lastName, String address, Date birthDate, String phoneNumber, boolean banned) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.role = role;
+        this.specialite = specialite;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+        this.birthDate = birthDate;
+        this.phoneNumber = phoneNumber;
+        this.banned = banned;
     }
 
     // Getters and Setters
@@ -142,6 +164,15 @@ public class User {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    public boolean isBanned() {
+        return banned;
+    }
+
+    public void setBanned(boolean banned) {
+        this.banned = banned;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -150,6 +181,7 @@ public class User {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", role='" + role + '\'' +
+                ", banned=" + banned +
                 '}';
     }
 }

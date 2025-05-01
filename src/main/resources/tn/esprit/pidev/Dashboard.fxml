@@ -210,16 +210,36 @@
                         <!-- Charts Section -->
                         <VBox styleClass="card">
                             <HBox alignment="CENTER_LEFT" spacing="20">
-                                <Label styleClass="card-title" text="Statistics" />
+                                <Label styleClass="card-title" text="User Statistics" />
                             </HBox>
-                            <LineChart fx:id="statisticsChart" legendVisible="false">
-                                <xAxis>
-                                    <CategoryAxis label="Month" tickLabelRotation="0" />
-                                </xAxis>
-                                <yAxis>
-                                    <NumberAxis label="Value" tickUnit="5" />
-                                </yAxis>
-                            </LineChart>
+                            <GridPane hgap="15" vgap="15">
+                                <columnConstraints>
+                                    <ColumnConstraints percentWidth="50" />
+                                    <ColumnConstraints percentWidth="50" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints />
+                                </rowConstraints>
+
+                                <!-- User Roles Pie Chart -->
+                                <VBox GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                    <Label styleClass="chart-title" text="Users by Role" />
+                                    <PieChart fx:id="userRoleChart" legendVisible="true" labelsVisible="true" />
+                                </VBox>
+
+                                <!-- User Status Bar Chart -->
+                                <VBox GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                    <Label styleClass="chart-title" text="User Status" />
+                                    <BarChart fx:id="userStatusChart" legendVisible="true">
+                                        <xAxis>
+                                            <CategoryAxis label="Status" />
+                                        </xAxis>
+                                        <yAxis>
+                                            <NumberAxis label="Count" />
+                                        </yAxis>
+                                    </BarChart>
+                                </VBox>
+                            </GridPane>
                         </VBox>
 
                         <!-- Notifications and Actions Section -->

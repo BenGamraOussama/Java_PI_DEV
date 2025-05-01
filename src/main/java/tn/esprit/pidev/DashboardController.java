@@ -1,5 +1,7 @@
 package tn.esprit.pidev;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,6 +9,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,8 +20,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import tn.esprit.pidev.Model.User;
+import tn.esprit.pidev.Service.UserDAO;
 
 import org.kordamp.ikonli.javafx.FontIcon;
+import java.util.Map;
 
 import java.io.IOException;
 import java.net.URL;
@@ -32,6 +40,10 @@ public class DashboardController implements Initializable {
     @FXML private Text pendingReportsCount;
     @FXML private TableView<?> upcomingAppointmentsTable;
     @FXML private ListView<?> notificationsListView;
+
+    // Chart components for user statistics
+    @FXML private PieChart userRoleChart;
+    @FXML private BarChart<String, Number> userStatusChart;
 
     // Panneaux de contenu
     @FXML private VBox dashboardPane;
@@ -58,17 +70,68 @@ public class DashboardController implements Initializable {
     // Contrôleur pour la gestion des utilisateurs
     private UserManagementController userManagementController;
 
+    // UserDAO instance for database operations
+    private UserDAO userDAO = new UserDAO();
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Initialisation avec l'utilisateur connecté
         if (User.connecte != null) {
             welcomeLabel.setText("Welcome, " + User.connecte.getLastName());
-
         }
 
         // Initialisation du panneau de gestion des utilisateurs
         initUserManagementPane();
 
+        // Initialize user statistics charts
+        initUserStatisticsCharts();
+    }
+
+    /**
+     * Initialize the user statistics charts with data from the database
+     */
+    private void initUserStatisticsCharts() {
+        try {
+            // Get user statistics from the database
+            Map<String, Integer> userRoleCounts = userDAO.getUserCountByRole();
+            int bannedUserCount = userDAO.getBannedUserCount();
+
+            // Create data for the pie chart (user roles)
+            ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+            for (Map.Entry<String, Integer> entry : userRoleCounts.entrySet()) {
+                pieChartData.add(new PieChart.Data(entry.getKey(), entry.getValue()));
+            }
+
+            // Set the data to the pie chart
+            if (userRoleChart != null) {
+                userRoleChart.setData(pieChartData);
+                userRoleChart.setTitle("Users by Role");
+            }
+
+            // Create data for the bar chart (banned vs active users)
+            XYChart.Series<String, Number> series = new XYChart.Series<>();
+            series.setName("User Status");
+
+            // Calculate active users (total - banned)
+            int totalUsers = 0;
+            for (Integer count : userRoleCounts.values()) {
+                totalUsers += count;
+            }
+            int activeUsers = totalUsers - bannedUserCount;
+
+            series.getData().add(new XYChart.Data<>("Active", activeUsers));
+            series.getData().add(new XYChart.Data<>("Banned", bannedUserCount));
+
+            // Set the data to the bar chart
+            if (userStatusChart != null) {
+                userStatusChart.getData().clear();
+                userStatusChart.getData().add(series);
+                userStatusChart.setTitle("User Status");
+            }
+        } catch (Exception e) {
+            System.err.println("Error initializing user statistics charts: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void initUserManagementPane() {
@@ -113,6 +176,9 @@ public class DashboardController implements Initializable {
     private void showDashboard(ActionEvent event) {
         hideAllPanes();
         dashboardPane.setVisible(true);
+
+        // Refresh the user statistics charts when showing dashboard
+        initUserStatisticsCharts();
     }
 
     @FXML
@@ -144,6 +210,9 @@ public class DashboardController implements Initializable {
         hideAllPanes();
         userManagementPane.setVisible(true);
         userManagementController.loadUsers(); // Rafraîchit la liste des utilisateurs
+
+        // Refresh the user statistics charts when showing user management
+        initUserStatisticsCharts();
     }
 
     @FXML

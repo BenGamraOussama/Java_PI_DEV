@@ -27,7 +27,7 @@ public class TwilioSmsSender {
                             new PhoneNumber(TWILIO_PHONE_NUMBER), // Numéro Twilio
                             "Votre compte a été créé avec succès.\n"
                                     + "Identifiant: " + phoneNumber + "\n"
-                                    + "Mot de passe temporaire: " + password + "\n"
+                                    + "Mot de passe : " + password + "\n"
                                     + "Merci de changer ce mot de passe après connexion.")
                     .create();
 

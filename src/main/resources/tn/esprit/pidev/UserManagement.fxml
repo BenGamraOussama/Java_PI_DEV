@@ -135,6 +135,22 @@
             <FlowPane fx:id="usersCardsContainer" hgap="15" styleClass="user-cards-container" vgap="15">
                 <!-- User cards will be added dynamically in the controller -->
             </FlowPane>
+
+            <!-- Pagination Controls -->
+            <HBox alignment="CENTER" spacing="15" styleClass="pagination-controls"
+                  style="-fx-padding: 20 0 15 0; -fx-background-color: #f5f5f5; -fx-border-radius: 5; -fx-background-radius: 5;">
+                <Button fx:id="prevPageButton" text="Précédent"
+                        styleClass="pagination-button"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"
+                        onAction="#handlePreviousPage" />
+                <Label fx:id="pageInfoLabel" text="Page 1"
+                       styleClass="pagination-label"
+                       style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333333;" />
+                <Button fx:id="nextPageButton" text="Suivant"
+                        styleClass="pagination-button"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"
+                        onAction="#handleNextPage" />
+            </HBox>
         </VBox>
     </VBox>
 

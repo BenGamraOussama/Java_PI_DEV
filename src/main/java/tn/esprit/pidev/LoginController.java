@@ -50,6 +50,13 @@ public class LoginController {
             return;
         }
 
+        // Check if user is banned
+        if (userDAO.isUserBanned(email)) {
+            messageLabel.setText("Votre compte a été bloqué. Veuillez contacter l'administrateur.");
+            messageLabel.setStyle("-fx-text-fill: red;");
+            return;
+        }
+
         User authenticatedUser = userDAO.authenticateUser(email, password);
 
         if (authenticatedUser != null) {

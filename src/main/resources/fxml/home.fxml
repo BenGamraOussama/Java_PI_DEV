@@ -17,7 +17,7 @@
                <children>
                   <ImageView fitHeight="100.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../JavaFX/NovaTravel-User/src/main/resources/icons/LOGO.png" />
+                        <Image url="@../css/LOGO.png" />
                      </image>
                      <VBox.margin>
                         <Insets top="20.0" />

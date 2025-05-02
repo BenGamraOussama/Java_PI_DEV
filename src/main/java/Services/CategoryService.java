@@ -1,5 +1,6 @@
 package Services;
 
+import Entities.Article;
 import Entities.Category;
 import Utils.MyDatabase;
 
@@ -81,6 +82,33 @@ public class CategoryService implements ICategory<Category> {
             );
         }
         return null;
+    }
+    public List<Category> rechercher(String keyword) throws SQLException {
+        List<Category> result = new ArrayList<>();
+        String sql = "SELECT * FROM category WHERE name LIKE ? OR description LIKE ?";
+
+        try{
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            String pattern = "%" + keyword + "%";
+            stmt.setString(1, pattern);
+            stmt.setString(2, pattern);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Category category = new Category();
+                category.setId(rs.getInt("id"));
+                category.setName(rs.getString("name"));
+                category.setDescription(rs.getString("description"));
+                category.setImage(rs.getString("image"));
+                category.setCreatedAt(rs.getObject("created_At", LocalDate.class));
+
+                result.add(category);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return result;
     }
 
 }

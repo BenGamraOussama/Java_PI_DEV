@@ -30,10 +30,12 @@
             <VBox alignment="CENTER" spacing="15">
                <children>
                   <TextField fx:id="title" promptText="Titre" />
+                  <Button fx:id="emojiButton" onAction="#emojiPopup" text="😊" />
+
                   <ComboBox fx:id="comboCategory" prefHeight="25.0" prefWidth="882.0" promptText="Choisir Categorie" />
                   <HBox alignment="CENTER_LEFT" prefHeight="43.0" prefWidth="900.0" spacing="20.0">
                      <children>
-                        <Button fx:id="uploadBtn" onAction="#handleImageUpload" text="Upload Image" />
+                        <Button fx:id="uploadBtn" onAction="#handleMediaUpload" text="Upload Image" />
                         <TextField fx:id="imagePathField" editable="false" promptText="image" />
                      </children>
                   </HBox>

@@ -76,5 +76,53 @@ public class ArticleService implements IArticle<Article> {
 
         return articles;
     }
+    public Article getById(int id) throws SQLException {
+        String query = "SELECT * FROM article WHERE id = ?";
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            return new Article(
+                    rs.getInt("id"),
+                    rs.getInt("category_id"),
+                    rs.getInt("user_id"),
+                    rs.getString("title"),
+                    rs.getString("content"),
+                    rs.getString("media_path"),
+                    rs.getDate("published_at").toLocalDate()
+            );
+        }
+
+        return null; // Return null if no article found with the given ID
+    }
+    public List<Article> rechercher(String keyword) throws SQLException {
+        List<Article> result = new ArrayList<>();
+        String sql = "SELECT * FROM article WHERE title LIKE ? OR content LIKE ?";
+
+        try{
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            String pattern = "%" + keyword + "%";
+            stmt.setString(1, pattern);
+            stmt.setString(2, pattern);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Article article = new Article();
+                article.setId(rs.getInt("id"));
+                article.setTitle(rs.getString("title"));
+                article.setContent(rs.getString("content"));
+                article.setMediaPath(rs.getString("media_Path"));
+                article.setPublishedAt(rs.getObject("published_At", LocalDate.class));
+                article.setCategoryId(rs.getInt("category_id"));
+                result.add(article);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return result;
+    }
+
 
 }

@@ -2,30 +2,22 @@ package Controllers;
 
 import Entities.Article;
 import Services.ArticleService;
-import Services.CategoryService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.List;
-import java.util.ResourceBundle;
 
-public class ArticleController  {
+public class ArticleController {
 
     @FXML
     private GridPane articleContainer;
@@ -33,28 +25,28 @@ public class ArticleController  {
     @FXML
     private TextField searchField;
 
-
     @FXML
     private ScrollPane scrollPane;
 
-    private ArticleService articleService = new ArticleService();
+    @FXML
+    private ComboBox<String> sortComboBox;
+
+    private final ArticleService articleService = new ArticleService();
 
     public void initialize() throws SQLException {
+        sortComboBox.getItems().addAll("Titre", "Contenu");
         loadArticleCards();
     }
-
 
     @FXML
     void handleAddArticle(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addArticle.fxml"));
             Parent root = loader.load();
-
             Stage stage = new Stage();
             stage.setTitle("Ajouter Article");
             stage.setScene(new Scene(root));
             stage.show();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -62,19 +54,43 @@ public class ArticleController  {
 
     @FXML
     void handleSearch(ActionEvent event) {
-
+        String keyword = searchField.getText().trim();
+        try {
+            List<Article> filteredArticles = articleService.rechercher(keyword);
+            displayArticles(filteredArticles);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
+    @FXML
+    void handleSort(ActionEvent event) {
+        String sortBy = sortComboBox.getValue();
+        try {
+            List<Article> articles = articleService.afficher();
 
+            if ("Titre".equals(sortBy)) {
+                articles.sort(Comparator.comparing(Article::getTitle, String.CASE_INSENSITIVE_ORDER));
+            } else if ("Contenu".equals(sortBy)) {
+                articles.sort(Comparator.comparing(Article::getContent, String.CASE_INSENSITIVE_ORDER));
+            }
+
+            displayArticles(articles);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void loadArticleCards() throws SQLException {
-        articleContainer.getChildren().clear(); // Clear previous items
+        List<Article> articles = articleService.afficher();
+        displayArticles(articles);
+    }
 
-        List<Article> articles = articleService.afficher(); // Fetch from your DB
-
+    private void displayArticles(List<Article> articles) {
+        articleContainer.getChildren().clear();
         int column = 0;
         int row = 1;
-        int maxCols = 3; // You can adjust the max columns as needed
+        int maxCols = 3;
 
         articleContainer.setHgap(10);
         articleContainer.setVgap(10);
@@ -101,5 +117,4 @@ public class ArticleController  {
             }
         }
     }
-
 }

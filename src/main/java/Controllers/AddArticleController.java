@@ -5,15 +5,21 @@ import Entities.Category;
 import Services.ArticleService;
 import Services.CategoryService;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -28,6 +34,8 @@ public class AddArticleController implements Initializable {
 
     @FXML
     private ComboBox<Category> comboCategory;
+    @FXML
+    private Button emojiButton;
 
     @FXML
     private TextArea content;
@@ -52,7 +60,25 @@ public class AddArticleController implements Initializable {
 
     private final CategoryService categoryService = new CategoryService();
     private final ArticleService articleService = new ArticleService();
+    public static String emojis = "";
 
+    Stage newStage = new Stage();
+
+    public void emojiPopup() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/emojis.fxml"));
+        Scene scene = new Scene(root);
+        newStage.setScene(scene);
+        newStage.show();
+
+        newStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                String currentText = title.getText();
+                title.setText(currentText +" "+ emojis);
+                emojis = "";
+            }
+        });
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
@@ -97,17 +123,23 @@ public class AddArticleController implements Initializable {
     }
 
     @FXML
-    void handleImageUpload(ActionEvent event) {
+    void handleMediaUpload(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choose Image File");
+        fileChooser.setTitle("Choose Media File");
+
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif")
+                new FileChooser.ExtensionFilter("All Supported Media", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.mp4", "*.mov", "*.avi", "*.pdf"),
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif"),
+                new FileChooser.ExtensionFilter("Video Files", "*.mp4", "*.mov", "*.avi"),
+                new FileChooser.ExtensionFilter("PDF Files", "*.pdf")
         );
+
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
             imagePathField.setText(selectedFile.getAbsolutePath());
         }
     }
+
 
     @FXML
     void handleSave(ActionEvent event) {

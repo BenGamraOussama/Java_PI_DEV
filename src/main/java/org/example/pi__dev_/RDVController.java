@@ -1,12 +1,9 @@
 package org.example.pi__dev_;
 
 
-
-
-
-
-
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.geometry.*;
@@ -14,12 +11,16 @@ import org.example.pi__dev_.dao.RDVDAO;
 import org.example.pi__dev_.enteties.RDV;
 
 import java.sql.Time;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import static java.lang.String.valueOf;
 
 public class RDVController {
     @FXML private TextField idField;
@@ -67,7 +68,7 @@ public class RDVController {
         Label prioriteLabel = new Label("Priorité: " + rdv.getPriorite());
         prioriteLabel.getStyleClass().add("card-title");
 
-        Label dateLabel = new Label("Date: " + rdv.getDate().toString());
+        Label dateLabel = new Label("Date: " + rdv.getDate());
         dateLabel.getStyleClass().add("card-date");
 
         Label heureLabel = new Label("Heure: " + rdv.getHeure().toString());
@@ -91,22 +92,23 @@ public class RDVController {
     }
 
     private void fillFormWithRDV(RDV rdv) {
-        idField.setText(String.valueOf(rdv.getId()));
+        idField.setText(valueOf(rdv.getId()));
         datePicker.setValue(rdv.getDate().toLocalDate());
         heureField.setText(rdv.getHeure().toString());
         prioriteField.setText(rdv.getPriorite());
     }
-
     private RDV getRDVFromForm() throws DateTimeParseException {
         int id = idField.getText().isEmpty() ? 0 : Integer.parseInt(idField.getText());
         LocalDate date = datePicker.getValue();
         LocalTime heure = LocalTime.parse(heureField.getText(), timeFormatter);
         String priorite = prioriteField.getText();
 
-        RDV rdv = new RDV(Time.valueOf(heure), new java.sql.Date(date.toEpochDay()), priorite);
+        RDV rdv = new RDV(Date.from(Instant.from(datePicker.getValue())),Time.valueOf(heure), priorite);
         rdv.setId(id);
         return rdv;
     }
+
+
 
     @FXML
     private void handleNewRDV() {
@@ -159,7 +161,7 @@ public class RDVController {
             try {
                 rdvDAO.deleteRDV(rdv.getId());
                 loadRDVs();
-                if (idField.getText().equals(String.valueOf(rdv.getId()))) {
+                if (idField.getText().equals(valueOf(rdv.getId()))) {
                     clearForm();
                 }
                 showAlert("Succès", "RDV supprimé avec succès", Alert.AlertType.INFORMATION);
@@ -195,10 +197,7 @@ public class RDVController {
     }
 
     private void showAlert(String title, String message, Alert.AlertType type) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+
     }
+
 }

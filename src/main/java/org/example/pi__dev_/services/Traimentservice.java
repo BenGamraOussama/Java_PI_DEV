@@ -1,6 +1,7 @@
 package org.example.pi__dev_.services;
 
 
+import org.example.pi__dev_.enteties.RDV;
 import org.example.pi__dev_.enteties.Traitement;
 import org.example.pi__dev_.utils.Pidev;
 
@@ -38,7 +39,7 @@ public class Traimentservice implements Iservice<Traitement> {
     }
 
     @Override
-    public void add(Traitement traitement) throws SQLException {
+    public RDV add(Traitement traitement) throws SQLException {
         String query = "INSERT INTO `traitement`(`type`, `medicament`, `suivi`) VALUES (?, ?, ?)";
 
         try (PreparedStatement pstmt = con.prepareStatement(query)) {
@@ -48,7 +49,11 @@ public class Traimentservice implements Iservice<Traitement> {
             pstmt.executeUpdate();
             System.out.println("Traitement ajouté avec succès.");
         }
+        return null;
     }
+
+
+
     @Override
     public void update(Traitement traitement) throws SQLException {
         String query = "UPDATE `traitement` SET `type` = ?, `medicament` = ?, `suivi` = ? WHERE `id` = ?";

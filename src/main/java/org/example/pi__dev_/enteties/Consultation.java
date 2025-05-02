@@ -14,21 +14,25 @@ public class Consultation {
     private double prix;
     private String modeconsultation;
     private Etat etatenum;
-    private int patient_id;
+    private Psychiatre psychiatre;
+    private Patient patient;
 
     public Consultation(Date date, Time heure, double prix,
-                        String modeconsultation, Etat etatenum, int patient_id) {
+                        String modeconsultation, Etat etatenum) {
         this.date = Objects.requireNonNull(date, "Date cannot be null");
         this.heure = Objects.requireNonNull(heure, "Time cannot be null");
         this.etatenum = Objects.requireNonNull(etatenum, "Etat cannot be null");
 
-        if (patient_id <= 0) throw new IllegalArgumentException("Invalid patient ID");
         if (prix < 0) throw new IllegalArgumentException("Price cannot be negative");
 
         this.prix = prix;
         this.modeconsultation = modeconsultation != null ? modeconsultation : "";
-        this.patient_id = patient_id;
     }
+
+    public Consultation() {
+
+    }
+
 
     public LocalDate getLocalDate() {
         return this.date != null ? this.date.toLocalDate() : null;
@@ -94,17 +98,18 @@ public class Consultation {
         this.etatenum = Objects.requireNonNull(etatenum, "Etat cannot be null");
     }
 
-    public int getPatientId() {
-        return patient_id;
+    public Psychiatre getPsychiatre() {
+        return psychiatre;
     }
-
-    public void setPatientId(int patient_id) {
-        if (patient_id <= 0) {
-            throw new IllegalArgumentException("Patient ID must be positive");
-        }
-        this.patient_id = patient_id;
+    public void setPsychiatre(Psychiatre psychiatre) {
+        this.psychiatre = psychiatre;
     }
-
+    public void setPatient(Patient patient) {
+        this.patient = Objects.requireNonNull(patient, "Patient cannot be null");
+    }
+    public Patient getPatient() {
+        return patient;
+    }
     @Override
     public String toString() {
         return "Consultation{" +
@@ -114,7 +119,6 @@ public class Consultation {
                 ", prix=" + prix +
                 ", modeconsultation='" + modeconsultation + '\'' +
                 ", etatenum=" + etatenum +
-                ", patient_id=" + patient_id +
                 '}';
     }
 }

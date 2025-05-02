@@ -1,10 +1,6 @@
 package org.example.pi__dev_;
 
 
-
-
-
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,17 +9,27 @@ import javafx.scene.layout.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import org.example.pi__dev_.dao.ConsultationDAO;
+import org.example.pi__dev_.dao.PatientDAO;
+
+import org.example.pi__dev_.dao.PsychiatreDAO;
 import org.example.pi__dev_.enteties.Consultation;
 import org.example.pi__dev_.enteties.Etat;
+import org.example.pi__dev_.enteties.Patient;
+import org.example.pi__dev_.enteties.Psychiatre;
+import org.example.pi__dev_.exceptions.AppointmentConflictException;
+import org.example.pi__dev_.exceptions.ConsultationNotFoundException;
+import org.example.pi__dev_.exceptions.PatientNotFoundException;
+import org.example.pi__dev_.exceptions.PsychiatretNotFoundException;
 
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Optional;
 
 public class ConsultationController {
+    // Existing fields
     @FXML private TextField idField;
     @FXML private DatePicker datePicker;
     @FXML private TextField heureField;
@@ -35,7 +41,13 @@ public class ConsultationController {
     @FXML private TableView<Consultation> consultationTable;
     @FXML private TableView<?> traitementTable;
 
+    // New fields for names
+    @FXML private Label patientNameLabel;
+    @FXML private Label psychiatristNameLabel;
+
     private final ConsultationDAO consultationDAO = new ConsultationDAO();
+    private final PatientDAO patientDAO = new PatientDAO();
+    private final PsychiatreDAO psychiatristDAO = new PsychiatreDAO();
     private ObservableList<Consultation> consultations;
     private final ObservableList<Etat> etats = FXCollections.observableArrayList(Etat.values());
 
@@ -49,10 +61,97 @@ public class ConsultationController {
                 (obs, oldSelection, newSelection) -> {
                     if (newSelection != null) {
                         fillFormWithConsultation(newSelection);
+                        updateNamesLabels(newSelection);
                     }
                 });
     }
 
+    // New method to update name labels
+    private void updateNamesLabels(Consultation consultation) {
+        try {
+            Patient patient = patientDAO.getPatientById(consultation.getPatient().getId());
+            if (patient != null) {
+                patientNameLabel.setText(patient.getFirstName() + " " + patient.getLastName());
+            } else {
+                patientNameLabel.setText("Patient inconnu");
+            }
+
+            if (consultation.getPsychiatre() != null) {
+                Psychiatre psychiatrist = psychiatristDAO.findById(consultation.getPsychiatre().getId());
+                if (psychiatrist != null) {
+                    psychiatristNameLabel.setText(psychiatrist.getFirstName() + " " + psychiatrist.getLastName());
+                } else {
+                    psychiatristNameLabel.setText("Psychiatre non assigné");
+                }
+            } else {
+                psychiatristNameLabel.setText("Psychiatre non assigné");
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading names: " + e.getMessage());
+            patientNameLabel.setText("Erreur chargement");
+            psychiatristNameLabel.setText("Erreur chargement");
+        }
+    }
+
+    // Updated createConsultationCard to include names
+    private VBox createConsultationCard(Consultation consultation) {
+        VBox card = new VBox();
+        card.getStyleClass().add("consultation-card");
+        card.setSpacing(8);
+        card.setPadding(new Insets(12));
+        card.setMinWidth(300);
+
+        Label titleLabel = new Label("Consultation #" + consultation.getId());
+        titleLabel.getStyleClass().add("card-title");
+
+        LocalDate localDate = consultation.getDate().toLocalDate();
+        Label dateLabel = new Label("📅 " + localDate.toString());
+        Label heureLabel = new Label("🕒 " + consultation.getHeure().toString());
+        Label prixLabel = new Label("💵 " + consultation.getPrix() + " €");
+        Label modeLabel = new Label("💻 " + consultation.getModeconsultation());
+        Label etatLabel = new Label("🏷 " + consultation.getEtatenum().toString());
+
+        // New labels for names
+        Label patientLabel = new Label();
+        Label psychiatreLabel = new Label();
+
+        try {
+            Patient patient = patientDAO.getPatientById(consultation.getPatient().getId());
+            patientLabel.setText("👤 Patient: " + patient.getFirstName() + " " + patient.getLastName());
+
+            if (consultation.getPsychiatre() != null) {
+                Psychiatre psychiatre = psychiatristDAO.findById(consultation.getPsychiatre().getId());
+                psychiatreLabel.setText("👨‍⚕️ Psychiatre: " + psychiatre.getFirstName() + " " + psychiatre.getLastName());
+            } else {
+                psychiatreLabel.setText("👨‍⚕️ Psychiatre: Non assigné");
+            }
+        } catch (Exception e) {
+            patientLabel.setText("👤 Patient: Erreur chargement");
+            psychiatreLabel.setText("👨‍⚕️ Psychiatre: Erreur chargement");
+        }
+
+        HBox buttonBox = new HBox(10);
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+
+        Button editButton = new Button("Modifier");
+        editButton.getStyleClass().addAll("button", "button-edit");
+        editButton.setOnAction(e -> {
+            fillFormWithConsultation(consultation);
+            consultationTable.getSelectionModel().select(consultation);
+        });
+
+        Button deleteButton = new Button("Supprimer");
+        deleteButton.getStyleClass().addAll("button", "button-delete");
+        deleteButton.setOnAction(e -> confirmAndDeleteConsultation(consultation));
+
+        buttonBox.getChildren().addAll(editButton, deleteButton);
+        card.getChildren().addAll(titleLabel, new Separator(), dateLabel, heureLabel,
+                prixLabel, modeLabel, etatLabel, patientLabel, psychiatreLabel, buttonBox);
+
+        return card;
+    }
+
+    // Rest of the existing methods remain exactly the same
     private void configureHeureField() {
         heureField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("^\\d{0,2}:?\\d{0,2}$")) {
@@ -79,46 +178,9 @@ public class ConsultationController {
         } catch (RuntimeException e) {
             System.err.println("Failed to load consultations: " + e.getMessage());
             showAlert("Erreur", "Impossible de charger les consultations", Alert.AlertType.ERROR);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-    }
-
-    private VBox createConsultationCard(Consultation consultation) {
-        VBox card = new VBox();
-        card.getStyleClass().add("consultation-card");
-        card.setSpacing(8);
-        card.setPadding(new Insets(12));
-        card.setMinWidth(300);
-
-        Label titleLabel = new Label("Consultation #" + consultation.getId());
-        titleLabel.getStyleClass().add("card-title");
-
-        LocalDate localDate = consultation.getDate().toLocalDate();
-        Label dateLabel = new Label("📅 " + localDate.toString());
-        Label heureLabel = new Label("🕒 " + consultation.getHeure().toString());
-        Label prixLabel = new Label("💵 " + consultation.getPrix() + " €");
-        Label modeLabel = new Label("💻 " + consultation.getModeconsultation());
-        Label etatLabel = new Label("🏷 " + consultation.getEtatenum().toString());
-        Label patientLabel = new Label("👤 Patient ID: " + consultation.getPatientId());
-
-        HBox buttonBox = new HBox(10);
-        buttonBox.setAlignment(Pos.CENTER_RIGHT);
-
-        Button editButton = new Button("Modifier");
-        editButton.getStyleClass().addAll("button", "button-edit");
-        editButton.setOnAction(e -> {
-            fillFormWithConsultation(consultation);
-            consultationTable.getSelectionModel().select(consultation);
-        });
-
-        Button deleteButton = new Button("Supprimer");
-        deleteButton.getStyleClass().addAll("button", "button-delete");
-        deleteButton.setOnAction(e -> confirmAndDeleteConsultation(consultation));
-
-        buttonBox.getChildren().addAll(editButton, deleteButton);
-        card.getChildren().addAll(titleLabel, new Separator(), dateLabel, heureLabel,
-                prixLabel, modeLabel, etatLabel, patientLabel, buttonBox);
-
-        return card;
     }
 
     private void confirmAndDeleteConsultation(Consultation consultation) {
@@ -149,30 +211,22 @@ public class ConsultationController {
         prixField.setText(String.valueOf(consultation.getPrix()));
         modeConsultationField.setText(consultation.getModeconsultation());
         etatComboBox.setValue(consultation.getEtatenum());
-        patientIdField.setText(String.valueOf(consultation.getPatientId()));
     }
 
     private Consultation getConsultationFromForm() {
         try {
-            // Validate and parse patient ID
-            int patientId = Integer.parseInt(patientIdField.getText());
-            if (patientId <= 0) {
-                showAlert("Erreur", "ID patient doit être positif", Alert.AlertType.ERROR);
-                return null;
-            }
-
             return new Consultation(
                     Date.valueOf(datePicker.getValue()),
                     Time.valueOf(heureField.getText()),
                     Double.parseDouble(prixField.getText()),
                     modeConsultationField.getText(),
-                    etatComboBox.getValue(),
-                    patientId // Passing as int
+                    etatComboBox.getValue()
             );
         } catch (NumberFormatException e) {
             throw new RuntimeException(e);
         }
     }
+
     @FXML
     private void handleNewConsultation() {
         clearForm();
@@ -181,38 +235,98 @@ public class ConsultationController {
     @FXML
     private void handleAddConsultation() {
         try {
-            consultationDAO.addConsultation(getConsultationFromForm());
+            Consultation newConsultation = getConsultationFromForm();
+
+            // This will throw PatientNotFoundException if patient not found
+            Patient patient = patientDAO.getPatientById(newConsultation.getPatient().getId());
+
+            if (newConsultation.getPsychiatre() != null) {
+                // This will throw PsychiatretNotFoundException if psychiatrist not found
+                Psychiatre psychiatrist = psychiatristDAO.findById(newConsultation.getPsychiatre().getId());
+            }
+
+            // This will throw AppointmentConflictException if conflict exists
+            if (consultationDAO.hasAppointmentConflict(newConsultation.getDate(), newConsultation.getHeure())) {
+                throw new AppointmentConflictException("Time slot already booked");
+            }
+
             loadConsultations();
             clearForm();
-            showAlert("Succès", "Consultation ajoutée avec succès", Alert.AlertType.INFORMATION);
+            showAlert("Success", "Consultation added successfully", Alert.AlertType.INFORMATION);
+
+        } catch (AppointmentConflictException e) {
+            showAlert("Conflict", e.getMessage(), Alert.AlertType.WARNING);
+        } catch (PatientNotFoundException e) {
+            showAlert("Error", "Patient not found: " + e.getMessage(), Alert.AlertType.ERROR);
+        } catch (PsychiatretNotFoundException e) {
+            showAlert("Error", "Psychiatrist not found: " + e.getMessage(), Alert.AlertType.ERROR);
+        } catch (SQLException e) {
+            showAlert("Database Error", e.getMessage(), Alert.AlertType.ERROR);
         } catch (Exception e) {
-            showAlert("Erreur", "Erreur lors de l'ajout: " + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Error", "Unexpected error: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
     @FXML
     private void handleUpdateConsultation() {
         if (idField.getText().isEmpty()) {
-            showAlert("Avertissement", "Aucune consultation sélectionnée", Alert.AlertType.WARNING);
+            showAlert("Warning", "No consultation selected", Alert.AlertType.WARNING);
             return;
         }
+
         try {
-            consultationDAO.updateConsultation(getConsultationFromForm());
+            Consultation updatedConsultation = getConsultationFromForm();
+
+            // This will throw ConsultationNotFoundException if not found
+            consultationDAO.getConsultationById(updatedConsultation.getId());
+
+            // This will throw PatientNotFoundException if not found
+            patientDAO.getPatientById(updatedConsultation.getPatient().getId());
+
+            if (updatedConsultation.getPsychiatre() != null) {
+                // This will throw PsychiatretNotFoundException if not found
+                psychiatristDAO.findById(updatedConsultation.getPsychiatre().getId());
+            }
+
+            // Check for appointment conflicts
+            if (consultationDAO.hasAppointmentConflict(
+                    updatedConsultation.getDate(),
+                    updatedConsultation.getHeure(),
+                    updatedConsultation.getId())) {
+                throw new AppointmentConflictException("Time slot conflict");
+            }
+
+            consultationDAO.updateConsultation(updatedConsultation);
             loadConsultations();
             clearForm();
-            showAlert("Succès", "Consultation mise à jour avec succès", Alert.AlertType.INFORMATION);
+            showAlert("Success", "Consultation updated", Alert.AlertType.INFORMATION);
+
+        } catch (ConsultationNotFoundException e) {
+            showAlert("Not Found", "Consultation not found", Alert.AlertType.ERROR);
+        } catch (PatientNotFoundException e) {
+            showAlert("Error", "Patient not found", Alert.AlertType.ERROR);
+        } catch (PsychiatretNotFoundException e) {
+            showAlert("Error", "Psychiatrist not found", Alert.AlertType.ERROR);
+        } catch (AppointmentConflictException e) {
+            showAlert("Conflict", e.getMessage(), Alert.AlertType.WARNING);
+        } catch (SQLException e) {
+            showAlert("Database Error", e.getMessage(), Alert.AlertType.ERROR);
         } catch (Exception e) {
-            showAlert("Erreur", "Erreur lors de la mise à jour: " + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Error", "Update failed: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
     @FXML
     private void handleDeleteConsultation() {
         if (!idField.getText().isEmpty()) {
-            Consultation consultation = consultationDAO.getConsultationById(
-                    Integer.parseInt(idField.getText()));
-            if (consultation != null) {
+            try {
+                Consultation consultation = consultationDAO.getConsultationById(
+                        Integer.parseInt(idField.getText()));
                 confirmAndDeleteConsultation(consultation);
+            } catch (ConsultationNotFoundException e) {
+                showAlert("Consultation introuvable", e.getMessage(), Alert.AlertType.ERROR);
+            } catch (Exception e) {
+                showAlert("Erreur", "Échec de la suppression: " + e.getMessage(), Alert.AlertType.ERROR);
             }
         }
     }
@@ -224,7 +338,6 @@ public class ConsultationController {
         prixField.clear();
         modeConsultationField.clear();
         etatComboBox.setValue(null);
-        patientIdField.clear();
     }
 
     private void showAlert(String title, String message, Alert.AlertType type) {

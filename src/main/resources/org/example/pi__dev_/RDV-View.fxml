@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
+
+<?import javafx.scene.paint.LinearGradient?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.pi__dev_.PatientrdvController"
+            styleClass="main-pane"
+            prefHeight="700.0" prefWidth="1000.0">
+
+    <!-- Top Navigation Bar with Medical Theme -->
+    <top>
+        <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="20">
+            <padding>
+                <Insets top="15" right="20" bottom="15" left="20"/>
+            </padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <ImageView fitHeight="32" fitWidth="32">
+                    <image>
+
+                    </image>
+                </ImageView>
+                <Text styleClass="app-title" text="MedicalConnect - Patient Portal" />
+            </HBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Label fx:id="welcomeLabel" text="Welcome, Patient" styleClass="welcome-text" />
+            <Button text="Logout" onAction="#handleLogout" styleClass="logout-button" />
+        </HBox>
+    </top>
+
+    <!-- Left Sidebar with Appointment Focus -->
+    <left>
+        <VBox styleClass="sidebar" spacing="15" prefWidth="220">
+            <padding>
+                <Insets top="30" right="15" bottom="20" left="15"/>
+            </padding>
+
+            <VBox alignment="CENTER" spacing="10">
+                <Circle radius="40" fill="#e3f2fd">
+                    <stroke>
+                        <LinearGradient startX="0" startY="0" endX="1" endY="1">
+                            <stop color="#2196F3" offset="0"/>
+                            <stop color="#64B5F6" offset="1"/>
+                        </LinearGradient>
+                    </stroke>
+                    <ImageView fitHeight="50" fitWidth="50" />
+                </Circle>
+                <Text fx:id="patientNameLabel" styleClass="patient-name" text="Patient Name"/>
+            </VBox>
+
+            <Separator styleClass="sidebar-separator"/>
+
+            <Button text="Dashboard" onAction="#showDashboard" styleClass="menu-button" maxWidth="Infinity">
+                <graphic>
+                    <ImageView fitHeight="20" fitWidth="20">
+                        <image>
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Button>
+
+            <Button text="New Appointment" onAction="#showNewAppointment" styleClass="menu-button-active" maxWidth="Infinity">
+                <graphic>
+                    <ImageView fitHeight="20" fitWidth="20">
+                        <image>
+                            <Image url="@../icons/appointment-icon.png"/>
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Button>
+
+            <Button text="My Appointments" onAction="#showMyAppointments" styleClass="menu-button" maxWidth="Infinity">
+                <graphic>
+                    <ImageView fitHeight="20" fitWidth="20">
+                        <image>
+                            <Image url="@../icons/calendar-icon.png"/>
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Button>
+
+            <Button text="Medical History" onAction="#showMedicalHistory" styleClass="menu-button" maxWidth="Infinity">
+                <graphic>
+                    <ImageView fitHeight="20" fitWidth="20">
+                        <image>
+                            <Image url="@../icons/history-icon.png"/>
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Button>
+
+            <VBox VBox.vgrow="ALWAYS"/>
+
+            <Button text="Emergency Contact" styleClass="emergency-button" maxWidth="Infinity">
+                <graphic>
+                    <ImageView fitHeight="20" fitWidth="20">
+                        <image>
+                            <Image url="@../icons/emergency-icon.png"/>
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Button>
+        </VBox>
+    </left>
+
+    <!-- Main Appointment Content Area -->
+    <center>
+        <StackPane>
+            <!-- New Appointment Booking View -->
+            <VBox fx:id="newAppointmentPane" spacing="20" styleClass="content-pane">
+                <padding>
+                    <Insets top="25" right="25" bottom="25" left="25"/>
+                </padding>
+
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <ImageView fitHeight="30" fitWidth="30">
+                        <image>
+                            <Image url="@../icons/appointment-large-icon.png"/>
+                        </image>
+                    </ImageView>
+                    <Text styleClass="page-title" text="Book New Appointment"/>
+                </HBox>
+
+                <GridPane vgap="20" hgap="20" styleClass="form-grid">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="RIGHT" hgrow="NEVER" minWidth="150"/>
+                        <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" minWidth="300"/>
+                    </columnConstraints>
+
+                    <Label text="Specialty:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <ComboBox fx:id="specialtyComboBox" promptText="Select specialty" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                    <Label text="Doctor:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <HBox spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                        <ComboBox fx:id="doctorComboBox" promptText="Select doctor" prefWidth="250"/>
+                        <Button text="View Profile" styleClass="small-button"/>
+                    </HBox>
+
+                    <Label text="Appointment Date:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <DatePicker fx:id="appointmentDatePicker" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                    <Label text="Available Time Slots:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <TilePane fx:id="timeSlotsTilePane" hgap="10" vgap="10" prefColumns="4"
+                              GridPane.rowIndex="3" GridPane.columnIndex="1">
+                        <padding>
+                            <Insets bottom="10"/>
+                        </padding>
+                    </TilePane>
+
+                    <Label text="Reason for Visit:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                    <TextArea fx:id="reasonTextArea" wrapText="true" prefRowCount="4"
+                              GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                    <Label text="Urgency Level:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                    <HBox spacing="15" GridPane.rowIndex="5" GridPane.columnIndex="1">
+                        <ToggleGroup fx:id="urgencyToggleGroup"/>
+                        <RadioButton text="Routine" toggleGroup="$urgencyToggleGroup" userData="ROUTINE"/>
+                        <RadioButton text="Urgent" toggleGroup="$urgencyToggleGroup" userData="URGENT"/>
+                        <RadioButton text="Emergency" toggleGroup="$urgencyToggleGroup" userData="EMERGENCY"/>
+                    </HBox>
+                </GridPane>
+
+                <HBox spacing="15" alignment="CENTER_RIGHT">
+                    <Button text="Cancel" styleClass="cancel-button" onAction="#cancelBooking"/>
+                    <Button text="Confirm Appointment" styleClass="confirm-button" onAction="#confirmAppointment"/>
+                </HBox>
+            </VBox>
+
+            <!-- My Appointments View -->
+            <VBox fx:id="myAppointmentsPane" spacing="20" styleClass="content-pane" visible="false">
+                <padding>
+                    <Insets top="25" right="25" bottom="25" left="25"/>
+                </padding>
+
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <ImageView fitHeight="30" fitWidth="30">
+                        <image>
+                            <Image url="@../icons/calendar-large-icon.png"/>
+                        </image>
+                    </ImageView>
+                    <Text styleClass="page-title" text="My Appointments"/>
+                </HBox>
+
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <ComboBox fx:id="appointmentFilterComboBox" promptText="Filter by status"/>
+                    <DatePicker fx:id="dateRangeStartPicker" promptText="From date"/>
+                    <DatePicker fx:id="dateRangeEndPicker" promptText="To date"/>
+                    <Button text="Apply Filters" styleClass="small-button" onAction="#filterAppointments"/>
+                    <Button text="Clear Filters" styleClass="small-button" onAction="#clearFilters"/>
+                </HBox>
+
+                <TableView fx:id="appointmentsTableView" styleClass="appointments-table">
+                    <columns>
+                        <TableColumn text="Date" fx:id="dateColumn" prefWidth="120"/>
+                        <TableColumn text="Time" fx:id="timeColumn" prefWidth="100"/>
+                        <TableColumn text="Doctor" fx:id="doctorColumn" prefWidth="200"/>
+                        <TableColumn text="Specialty" fx:id="specialtyColumn" prefWidth="150"/>
+                        <TableColumn text="Status" fx:id="statusColumn" prefWidth="100"/>
+                        <TableColumn text="Actions" fx:id="actionsColumn" prefWidth="150">
+                            <cellFactory>
+                                <fx:reference factory="actionButtonCellFactory"/>
+                            </cellFactory>
+                        </TableColumn>
+                    </columns>
+                </TableView>
+
+                <HBox spacing="15" alignment="CENTER_RIGHT">
+                    <Button text="Export to PDF" styleClass="small-button" onAction="#exportToPDF"/>
+                    <Button text="Print" styleClass="small-button" onAction="#printAppointments"/>
+                </HBox>
+            </VBox>
+        </StackPane>
+    </center>
+
+    <!-- Status Bar -->
+    <bottom>
+        <HBox styleClass="status-bar" alignment="CENTER">
+            <padding>
+                <Insets top="8" right="20" bottom="8" left="20"/>
+            </padding>
+            <Label fx:id="statusLabel" text="Ready"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="Last sync: "/>
+            <Label fx:id="lastSyncLabel" text="Never"/>
+        </HBox>
+    </bottom>
+</BorderPane>
+

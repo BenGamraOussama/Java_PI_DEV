@@ -9,28 +9,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RDVDAO {
-    private Connection connection;
+    private static Connection connection;
 
     public RDVDAO() {
         this.connection = DatabaseConnection.getConnection();
     }
 
-    public void addRDV(RDV rdv) throws SQLException {
+    public static void addRDV(RDV rdv) throws SQLException {
+        if (rdv == null) {
+            throw new IllegalArgumentException("RDV object cannot be null");
+        }
+
         String query = "INSERT INTO rdv(heure, date, priorite) VALUES (?, ?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setTime(1, rdv.getHeure());
-            stmt.setDate(2, new java.sql.Date(rdv.getDate().getTime()));
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+
+            // Handle Time conversion
+            Time sqlTime = rdv.getHeure() != null ? rdv.getHeure() : null;
+            stmt.setTime(1, sqlTime);
+
+            // Handle Date conversion - properly convert from java.util.Date to java.sql.Date
+            stmt.setDate(2,rdv.getDate());
             stmt.setString(3, rdv.getPriorite());
 
-            stmt.executeUpdate();
+            int affectedRows = stmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Creating RDV failed, no rows affected.");
+            }
 
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     rdv.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("Creating RDV failed, no ID obtained.");
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            // Re-throw the exception with additional context
+            throw new SQLException("Failed to add RDV: " + e.getMessage(), e);
         }
     }
 
@@ -42,8 +60,8 @@ public class RDVDAO {
 
             while (rs.next()) {
                 RDV rdv = new RDV(
-                        rs.getTime("heure"),
                         rs.getDate("date"),
+                        rs.getTime("heure"),
                         rs.getString("priorite")
                 );
                 rdv.setId(rs.getInt("id"));
@@ -59,7 +77,7 @@ public class RDVDAO {
         String query = "UPDATE rdv SET heure = ?, date = ?, priorite = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setTime(1, rdv.getHeure());
-            stmt.setDate(2, new java.sql.Date(rdv.getDate().getTime()));
+            stmt.setDate(2, rdv.getDate());
             stmt.setString(3, rdv.getPriorite());
             stmt.setInt(4, rdv.getId());
 
@@ -87,8 +105,8 @@ public class RDVDAO {
 
             if (rs.next()) {
                 RDV rdv = new RDV(
-                        rs.getTime("heure"),
                         rs.getDate("date"),
+                        rs.getTime("heure"),
                         rs.getString("priorite")
                 );
                 rdv.setId(rs.getInt("id"));

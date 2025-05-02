@@ -39,15 +39,15 @@ public class ListViewCommande implements Initializable {
             System.out.println(commandes);
             // Display each commande as a card
             for (Commande commande : commandes) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/commande/commandeCard.fxml"));
-                VBox commandeCard = loader.load();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/commande/CommandeCard.fxml"));
+                VBox CommandeCard = loader.load();
 
                 // Get the controller to set the data
                 CommandeCardController cardController = loader.getController();
                 cardController.setCommandeData(commande);
 
                 // Add the card to the container
-                commandesContainer.getChildren().add(commandeCard);
+                commandesContainer.getChildren().add(CommandeCard);
             }
 
             // If no commandes found, you might want to show a message

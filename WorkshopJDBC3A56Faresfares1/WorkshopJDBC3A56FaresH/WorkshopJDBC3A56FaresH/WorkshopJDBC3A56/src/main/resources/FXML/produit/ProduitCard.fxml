@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox fx:id="produitCard" prefWidth="200" prefHeight="300" style="-fx-background-color: white; -fx-border-color: lightgray; -fx-border-radius: 5; -fx-background-radius: 5;" spacing="10" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exemple.controllers.ProduitCardController">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+    
+    <ImageView fx:id="produitImage" fitWidth="180" fitHeight="120" preserveRatio="true">
+        <VBox.margin>
+            <Insets bottom="10"/>
+        </VBox.margin>
+    </ImageView>
+    
+    <Label fx:id="nomLabel" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+    <Label fx:id="descriptionLabel" wrapText="true" maxWidth="180"/>
+    <Label fx:id="prixLabel" style="-fx-font-weight: bold; -fx-text-fill: #2ecc71;"/>
+    <Label fx:id="stockLabel" style="-fx-font-size: 12;"/>
+    
+    <HBox spacing="10" alignment="CENTER">
+        <Spinner fx:id="quantiteSpinner" min="1" max="100" initialValue="1" editable="true"/>
+        <Button text="Ajouter au panier" onAction="#ajouterAuPanier" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+    </HBox>
+</VBox> 

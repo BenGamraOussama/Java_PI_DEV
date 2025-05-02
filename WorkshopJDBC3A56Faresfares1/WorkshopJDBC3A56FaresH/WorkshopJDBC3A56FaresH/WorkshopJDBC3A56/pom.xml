@@ -4,25 +4,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
-    <artifactId>WorkshopJDBC3A56</artifactId>
+    <groupId>com.exemple</groupId>
+    <artifactId>BoutiqueEnLigne</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <javafx.version>21.0.2</javafx.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <javafx.version>21.0.1</javafx.version>
     </properties>
 
     <dependencies>
-        <!-- MySQL JDBC (une seule fois) -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.33</version>
-        </dependency>
-
         <!-- JavaFX -->
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -34,27 +27,32 @@
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+
+        <!-- MySQL Connector -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.28</version>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Compilation -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
+                <version>3.11.0</version>
                 <configuration>
-                    <release>17</release>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
-
-            <!-- JavaFX Maven Plugin for execution -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>com.exemple.tests.MainFX</mainClass> <!-- À adapter -->
+                    <mainClass>com.exemple.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>

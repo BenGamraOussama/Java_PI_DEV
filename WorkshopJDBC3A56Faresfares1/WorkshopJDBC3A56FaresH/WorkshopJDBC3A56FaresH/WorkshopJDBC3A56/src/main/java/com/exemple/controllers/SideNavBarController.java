@@ -5,8 +5,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
@@ -103,6 +105,9 @@ public class SideNavBarController {
     @FXML
     private Label usersText;
 
+    @FXML
+    private Label panierCount;
+
     private boolean sideBarVisible = true;
 
     @FXML
@@ -117,7 +122,6 @@ public class SideNavBarController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     @FXML
@@ -132,9 +136,51 @@ public class SideNavBarController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
+    @FXML
+    private void showProduits() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/produit/ProduitView.fxml"));
+            VBox produitView = loader.load();
+            
+            // Remplacer le contenu de la scène
+            AnchorPane root = (AnchorPane) panierCount.getScene().getRoot();
+            root.getChildren().set(1, produitView);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    @FXML
+    private void showPanier() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/panier/PanierView.fxml"));
+            VBox panierView = loader.load();
+            
+            // Remplacer le contenu de la scène
+            AnchorPane root = (AnchorPane) panierCount.getScene().getRoot();
+            root.getChildren().set(1, panierView);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    @FXML
+    private void showCommandes() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/commande/CommandeView.fxml"));
+            VBox commandeView = loader.load();
+            
+            // Remplacer le contenu de la scène
+            AnchorPane root = (AnchorPane) panierCount.getScene().getRoot();
+            root.getChildren().set(1, commandeView);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updatePanierCount(int count) {
+        panierCount.setText(count + " articles");
+    }
 }

@@ -358,4 +358,38 @@ public class ProfileController implements Initializable {
             }
         }).start();
     }
+    @FXML
+    private void handleGoBack(ActionEvent event) {
+        try {
+            String fxmlPath;
+            String title;
+            // Determine the destination based on user role
+            if (User.connecte.getRole().equals("[\"ROLE_PATIENT\"]")) {
+                fxmlPath = "/tn/esprit/pidev/ClientHome.fxml";
+                title = "HopeNest / Client Home";
+            } else if (User.connecte.getRole().equals("[\"ROLE_ADMIN\"]")) {
+                fxmlPath = "/tn/esprit/pidev/Dashboard.fxml";
+                title = "HopeNest / Dashboard";
+            } else {
+                // Default case (optional)
+                fxmlPath = "/tn/esprit/pidev/ClientHome.fxml";
+                title = "HopeNest";
+            }
+
+            // Load the appropriate view
+            Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
+            Scene scene = new Scene(root);
+
+            // Get the current stage
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            // Set the new scene
+            stage.setScene(scene);
+            stage.setTitle(title);
+            stage.show();
+        } catch (IOException e) {
+            showError("Error navigating back: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }

@@ -63,42 +63,79 @@ public class LoginController {
             messageLabel.setText("Login successful!");
             messageLabel.setStyle("-fx-text-fill: green;");
 
-            // Navigate to home page based on role
-            try {
-                String fxmlFile;
-                User user = userDAO.authenticateUser(email, password);
-                String role = String.join(", ", user.getRole()); // Convertir en minuscules pour éviter les problèmes de casse
+            // Check if 2FA is enabled for this user
+            if (authenticatedUser.isTwoFactorEnabled()) {
+                // Redirect to 2FA verification screen
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("TwoFactorVerification.fxml"));
+                    Parent root = loader.load();
 
-                switch (role) {
-                    case "[\"ROLE_PSYCHIATRE\"]":
-                        fxmlFile = "PsychiatreDashboard.fxml";
-                        break;
-                    case "[\"ROLE_FOURNISSEUR\"]":
-                        fxmlFile = "FournisseurDashboard.fxml";
-                        break;
-                    case "[\"ROLE_ADMIN\"]":
-                        fxmlFile = "Dashboard.fxml"; // ou "AdminDashboard.fxml" selon votre convention
-                        break;
-                    case "[\"ROLE_PATIENT\"]":
-                        fxmlFile = "ClientHome.fxml"; // ou "AdminDashboard.fxml" selon votre convention
-                        break;
-                    default:
-                        // Rôle non reconnu, rediriger vers une page par défaut ou afficher une erreur
-                        fxmlFile = "DefaultDashboard.fxml";
-                        break;
+                    TwoFactorVerificationController controller = loader.getController();
+                    controller.initData(authenticatedUser);
+
+                    Scene scene = new Scene(root);
+                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+                    stage.setScene(scene);
+                    stage.show();
+
+                } catch (IOException e) {
+                    messageLabel.setText("Error loading 2FA verification page");
+                    messageLabel.setStyle("-fx-text-fill: red;");
+                    e.printStackTrace();
                 }
+            } else {
+                // Navigate to home page based on role
+                try {
+                    String fxmlFile;
+                    // Get the first role if available, otherwise use an empty string
+                    String role = (authenticatedUser.getRole() != null && authenticatedUser.getRole().length > 0) ? authenticatedUser.getRole()[0] : "";
 
-                Parent root = FXMLLoader.load(getClass().getResource(fxmlFile));
-                Scene scene = new Scene(root);
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    System.out.println("Original role: " + role);
 
-                stage.setScene(scene);
-                stage.show();
+                    // Remove any JSON formatting if present
+                    role = role.replace("[", "").replace("]", "").replace("\"", "");
 
-            } catch (IOException e) {
-                messageLabel.setText("Error loading home page");
-                messageLabel.setStyle("-fx-text-fill: red;");
-                e.printStackTrace();
+                    System.out.println("Processed role: " + role);
+
+                    if (role.isEmpty()) {
+                        System.out.println("Warning: User has no role assigned, using default dashboard");
+                    }
+
+                    switch (role) {
+                        case "ROLE_PSYCHIATRE":
+                            fxmlFile = "PsychiatreDashboard.fxml";
+                            break;
+                        case "ROLE_FOURNISSEUR":
+                            fxmlFile = "FournisseurDashboard.fxml";
+                            break;
+                        case "ROLE_ADMIN":
+                            fxmlFile = "Dashboard.fxml"; // ou "AdminDashboard.fxml" selon votre convention
+                            break;
+                        case "ROLE_PATIENT":
+                            fxmlFile = "ClientHome.fxml"; // ou "AdminDashboard.fxml" selon votre convention
+                            break;
+                        default:
+                            // Rôle non reconnu, rediriger vers une page par défaut ou afficher une erreur
+                            fxmlFile = "DefaultDashboard.fxml";
+                            break;
+                    }
+
+                    // Set the static connected user
+                    User.connecte = authenticatedUser;
+
+                    Parent root = FXMLLoader.load(getClass().getResource(fxmlFile));
+                    Scene scene = new Scene(root);
+                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+                    stage.setScene(scene);
+                    stage.show();
+
+                } catch (IOException e) {
+                    messageLabel.setText("Error loading home page");
+                    messageLabel.setStyle("-fx-text-fill: red;");
+                    e.printStackTrace();
+                }
             }
         } else {
             messageLabel.setText("Invalid email or password");

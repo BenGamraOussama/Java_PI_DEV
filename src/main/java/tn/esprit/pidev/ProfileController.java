@@ -90,6 +90,9 @@ public class ProfileController implements Initializable {
     @FXML
     private Label successLabel;
 
+    @FXML
+    private Button twoFactorButton;
+
     private UserDAO userDAO;
     private String tempImagePath;
 
@@ -126,9 +129,16 @@ public class ProfileController implements Initializable {
                 specialiteField.setText(User.connecte.getSpecialite());
             }
 
+            // Update 2FA button based on current status
+            if (User.connecte.isTwoFactorEnabled()) {
+                twoFactorButton.setText("Disable Two-Factor Authentication");
+                twoFactorButton.setStyle("-fx-background-color: #f44336; -fx-background-radius: 22;");
+            } else {
+                twoFactorButton.setText("Set Up Two-Factor Authentication");
+                twoFactorButton.setStyle("-fx-background-color: #4CAF50; -fx-background-radius: 22;");
+            }
 
             // Show or hide specialite field based on user role
-
         }
     }
 
@@ -358,6 +368,44 @@ public class ProfileController implements Initializable {
             }
         }).start();
     }
+    @FXML
+    private void handleTwoFactorSetup(ActionEvent event) {
+        if (User.connecte.isTwoFactorEnabled()) {
+            // Disable 2FA
+            if (userDAO.disableTwoFactor(User.connecte.getId())) {
+                User.connecte.setTwoFactorEnabled(false);
+                User.connecte.setTwoFactorSecret(null);
+
+                // Update button
+                twoFactorButton.setText("Set Up Two-Factor Authentication");
+                twoFactorButton.setStyle("-fx-background-color: #4CAF50; -fx-background-radius: 22;");
+
+                showSuccess("Two-factor authentication has been disabled");
+            } else {
+                showError("Failed to disable two-factor authentication");
+            }
+        } else {
+            // Enable 2FA - Navigate to setup page
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("TwoFactorSetup.fxml"));
+                Parent root = loader.load();
+
+                TwoFactorSetupController controller = loader.getController();
+                controller.initData(User.connecte);
+
+                Scene scene = new Scene(root);
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+                stage.setScene(scene);
+                stage.show();
+
+            } catch (IOException e) {
+                showError("Error loading two-factor setup page: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
     @FXML
     private void handleGoBack(ActionEvent event) {
         try {

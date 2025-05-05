@@ -18,6 +18,32 @@ public class UserDAO {
 
     public UserDAO() {
         connection = Database.getConnection();
+        ensureTwoFactorColumnsExist();
+    }
+
+    /**
+     * Ensures that the two-factor authentication columns exist in the user table.
+     * If they don't exist, they will be added.
+     */
+    private void ensureTwoFactorColumnsExist() {
+        try {
+            // Check if the two_factor_secret column exists
+            DatabaseMetaData meta = connection.getMetaData();
+            ResultSet rs = meta.getColumns(null, null, "user", "two_factor_secret");
+
+            if (!rs.next()) {
+                // Column doesn't exist, add it
+                Statement stmt = connection.createStatement();
+                stmt.executeUpdate("ALTER TABLE user ADD COLUMN two_factor_secret VARCHAR(255)");
+                stmt.executeUpdate("ALTER TABLE user ADD COLUMN two_factor_enabled BOOLEAN DEFAULT FALSE");
+                stmt.close();
+                System.out.println("Added two-factor authentication columns to user table");
+            }
+
+            rs.close();
+        } catch (SQLException e) {
+            System.out.println("Error checking/adding two-factor columns: " + e.getMessage());
+        }
     }
 
     /**
@@ -248,8 +274,23 @@ public class UserDAO {
                     user.setPhoneNumber(rs.getString("phone"));
                     user.setBanned(banned);
 
-                    // Set the static connected user
-                    User.connecte = user;
+                    // Check for 2FA fields
+                    try {
+                        String twoFactorSecret = rs.getString("two_factor_secret");
+                        boolean twoFactorEnabled = rs.getBoolean("two_factor_enabled");
+                        user.setTwoFactorSecret(twoFactorSecret);
+                        user.setTwoFactorEnabled(twoFactorEnabled);
+                    } catch (SQLException e) {
+                        // 2FA columns don't exist yet, default to disabled
+                        user.setTwoFactorEnabled(false);
+                        user.setTwoFactorSecret(null);
+                    }
+
+                    // Only set the static connected user if 2FA is not enabled
+                    // This will be set after 2FA verification for users with 2FA enabled
+                    if (!user.isTwoFactorEnabled()) {
+                        User.connecte = user;
+                    }
 
                     return user;
                 }
@@ -613,5 +654,148 @@ public class UserDAO {
         }
 
         return count;
+    }
+
+    /**
+     * Enable two-factor authentication for a user
+     * @param userId The ID of the user
+     * @return The secret key for 2FA setup, or null if failed
+     */
+    public String enableTwoFactor(int userId) {
+        String query = "UPDATE user SET two_factor_secret = ?, two_factor_enabled = ? WHERE id = ?";
+
+        try {
+            // Generate a new secret key
+            String secretKey = TwoFactorAuth.generateSecretKey();
+
+            pst = connection.prepareStatement(query);
+            pst.setString(1, secretKey);
+            pst.setBoolean(2, true);
+            pst.setInt(3, userId);
+
+            int rowsAffected = pst.executeUpdate();
+            if (rowsAffected > 0) {
+                return secretKey;
+            } else {
+                return null;
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error enabling two-factor authentication: " + ex.getMessage());
+            return null;
+        } finally {
+            closeResources();
+        }
+    }
+
+    /**
+     * Disable two-factor authentication for a user
+     * @param userId The ID of the user
+     * @return True if successful, false otherwise
+     */
+    public boolean disableTwoFactor(int userId) {
+        String query = "UPDATE user SET two_factor_secret = NULL, two_factor_enabled = FALSE WHERE id = ?";
+
+        try {
+            pst = connection.prepareStatement(query);
+            pst.setInt(1, userId);
+
+            int rowsAffected = pst.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException ex) {
+            System.out.println("Error disabling two-factor authentication: " + ex.getMessage());
+            return false;
+        } finally {
+            closeResources();
+        }
+    }
+
+    /**
+     * Check if two-factor authentication is enabled for a user
+     * @param userId The ID of the user
+     * @return True if 2FA is enabled, false otherwise
+     */
+    public boolean isTwoFactorEnabled(int userId) {
+        String query = "SELECT two_factor_enabled FROM user WHERE id = ?";
+
+        try {
+            pst = connection.prepareStatement(query);
+            pst.setInt(1, userId);
+
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                return rs.getBoolean("two_factor_enabled");
+            }
+            return false;
+        } catch (SQLException ex) {
+            System.out.println("Error checking two-factor status: " + ex.getMessage());
+            return false;
+        } finally {
+            closeResources();
+        }
+    }
+
+    /**
+     * Get the two-factor secret key for a user
+     * @param userId The ID of the user
+     * @return The secret key, or null if not found
+     */
+    public String getTwoFactorSecret(int userId) {
+        String query = "SELECT two_factor_secret FROM user WHERE id = ?";
+
+        try {
+            pst = connection.prepareStatement(query);
+            pst.setInt(1, userId);
+
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                return rs.getString("two_factor_secret");
+            }
+            return null;
+        } catch (SQLException ex) {
+            System.out.println("Error getting two-factor secret: " + ex.getMessage());
+            return null;
+        } finally {
+            closeResources();
+        }
+    }
+
+    /**
+     * Verify a two-factor authentication code
+     * @param userId The ID of the user
+     * @param code The code to verify
+     * @return True if the code is valid, false otherwise
+     */
+    public boolean verifyTwoFactorCode(int userId, String code) {
+        String secretKey = getTwoFactorSecret(userId);
+        if (secretKey == null || secretKey.isEmpty()) {
+            System.out.println("2FA secret introuvable pour l'utilisateur " + userId);
+            return false;
+        }
+        boolean valid = TwoFactorAuth.validateCode(secretKey, code);
+        System.out.println("Vérification 2FA pour userId=" + userId + " code=" + code + " result=" + valid);
+        return valid;
+    }
+
+    /**
+     * Enregistre le secret 2FA pour un utilisateur
+     * @param userId L'identifiant utilisateur
+     * @param secretKey La clé secrète à enregistrer
+     * @return true si succès, false sinon
+     */
+    public boolean saveTwoFactorSecret(int userId, String secretKey) {
+        String query = "UPDATE user SET two_factor_secret = ?, two_factor_enabled = ? WHERE id = ?";
+        try {
+            pst = connection.prepareStatement(query);
+            pst.setString(1, secretKey);
+            pst.setBoolean(2, true);
+            pst.setInt(3, userId);
+            int rowsAffected = pst.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException ex) {
+            System.out.println("Erreur lors de l'enregistrement du secret 2FA : " + ex.getMessage());
+            return false;
+        } finally {
+            closeResources();
+        }
     }
 }

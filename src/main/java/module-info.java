@@ -17,6 +17,9 @@ module tn.esprit.pidev {
     requires java.desktop;
     requires spring.security.crypto;
     requires twilio;
+    requires aerogear.otp.java;
+    requires com.google.zxing;
+    requires com.google.zxing.javase;
 
     opens tn.esprit.pidev to javafx.fxml;
     exports tn.esprit.pidev;

@@ -250,6 +250,45 @@
                                                     <Insets top="10.0" />
                                                 </VBox.margin>
                                             </Button>
+
+                                            <!-- Two-Factor Authentication Section -->
+                                            <Separator style="-fx-background-color: #8e54e9;">
+                                                <VBox.margin>
+                                                    <Insets top="20.0" bottom="10.0" />
+                                                </VBox.margin>
+                                            </Separator>
+
+                                            <Label text="Two-Factor Authentication" textFill="#8e54e9">
+                                                <font>
+                                                    <Font name="System Bold" size="16.0" />
+                                                </font>
+                                            </Label>
+
+                                            <Label text="Add an extra layer of security to your account by enabling two-factor authentication" textFill="#555555" wrapText="true">
+                                                <font>
+                                                    <Font size="13.0" />
+                                                </font>
+                                                <VBox.margin>
+                                                    <Insets bottom="10.0" />
+                                                </VBox.margin>
+                                            </Label>
+
+                                            <!-- Two-Factor Authentication Button -->
+                                            <Button fx:id="twoFactorButton" mnemonicParsing="false" onAction="#handleTwoFactorSetup" prefHeight="45.0" style="-fx-background-color: #4CAF50; -fx-background-radius: 22;" text="Set Up Two-Factor Authentication" textFill="WHITE">
+                                                <font>
+                                                    <Font name="System Bold" size="14.0" />
+                                                </font>
+                                                <graphic>
+                                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                        <image>
+                                                            <Image url="@images/user.png" />
+                                                        </image>
+                                                    </ImageView>
+                                                </graphic>
+                                                <padding>
+                                                    <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                                                </padding>
+                                            </Button>
                                         </VBox>
                                     </VBox>
                                 </children>

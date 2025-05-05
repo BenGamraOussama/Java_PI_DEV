@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.pidev.TwoFactorSetupController">
+   <children>
+      <VBox alignment="CENTER" layoutX="150.0" layoutY="50.0" prefHeight="500.0" prefWidth="500.0" spacing="20.0">
+         <children>
+            <Label text="Set Up Two-Factor Authentication" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Label>
+            <Label text="Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.)" textAlignment="CENTER" wrapText="true">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <ImageView fx:id="qrCodeImageView" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+            <Label text="Having trouble scanning? Enter this code manually in your app:" textAlignment="CENTER" style="-fx-font-weight: bold;">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <VBox alignment="CENTER" spacing="10" style="-fx-background-color: #f0f0f0; -fx-padding: 15px; -fx-border-color: #4CAF50; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-background-radius: 5px;">
+               <Label fx:id="secretKeyLabel" textAlignment="CENTER" style="-fx-font-weight: bold;">
+                  <font>
+                     <Font name="Courier New Bold" size="20.0" />
+                  </font>
+               </Label>
+               <Label text="Copy this key and enter it in your authenticator app" textAlignment="CENTER">
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+               </Label>
+            </VBox>
+            <VBox alignment="CENTER" spacing="5" style="-fx-padding: 10px;">
+               <Label text="Instructions:" textAlignment="CENTER" style="-fx-font-weight: bold;">
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+               </Label>
+               <Label text="1. Open your authenticator app (Google Authenticator, Authy, etc.)" textAlignment="LEFT" wrapText="true">
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+               </Label>
+               <Label text="2. Select 'Add account' or '+' icon" textAlignment="LEFT" wrapText="true">
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+               </Label>
+               <Label text="3. Choose 'Enter key manually' or 'Enter provided key'" textAlignment="LEFT" wrapText="true">
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+               </Label>
+               <Label text="4. Enter the key shown above (spaces don't matter)" textAlignment="LEFT" wrapText="true">
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+               </Label>
+               <Label text="5. Enter 'MentalHealth' as the account name" textAlignment="LEFT" wrapText="true">
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+               </Label>
+               <Label text="6. For Microsoft Authenticator: Select 'Other' account type" textAlignment="LEFT" wrapText="true" style="-fx-font-weight: bold;">
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+               </Label>
+            </VBox>
+            <Label text="Enter the verification code from your app to confirm setup:" textAlignment="CENTER">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="verificationCodeField" alignment="CENTER" maxWidth="200.0" promptText="Enter 6-digit code">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <Label fx:id="messageLabel" textAlignment="CENTER" wrapText="true">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <HBox alignment="CENTER" spacing="20.0">
+               <children>
+                  <Button fx:id="verifyButton" mnemonicParsing="false" onAction="#handleVerify" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #4CAF50;" text="Verify &amp; Enable" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="handleLogout" mnemonicParsing="false" onAction="#handleLogout" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #f44336;" text="Cancel" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+      </VBox>
+   </children>
+</AnchorPane>

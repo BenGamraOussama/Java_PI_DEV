@@ -18,11 +18,15 @@ public class User {
     private Date birthDate;
     private String phoneNumber;
     private boolean banned; // Field to track if user is banned
+    private String twoFactorSecret; // Secret key for 2FA
+    private boolean twoFactorEnabled; // Flag to indicate if 2FA is enabled
     public static User connecte;
 
     // Default constructor
     public User() {
         this.banned = false; // Default to not banned
+        this.twoFactorEnabled = false; // Default to 2FA disabled
+        this.twoFactorSecret = null; // Default to no secret key
     }
 
     // Constructor for login
@@ -30,6 +34,8 @@ public class User {
         this.email = email;
         this.password = password;
         this.banned = false; // Default to not banned
+        this.twoFactorEnabled = false; // Default to 2FA disabled
+        this.twoFactorSecret = null; // Default to no secret key
     }
 
     // Constructor for basic user creation
@@ -40,6 +46,8 @@ public class User {
         this.lastName = lastName;
         this.role = role;
         this.banned = false; // Default to not banned
+        this.twoFactorEnabled = false; // Default to 2FA disabled
+        this.twoFactorSecret = null; // Default to no secret key
     }
 
     // Full constructor
@@ -57,6 +65,8 @@ public class User {
         this.birthDate = birthDate;
         this.phoneNumber = phoneNumber;
         this.banned = false; // Default to not banned
+        this.twoFactorEnabled = false; // Default to 2FA disabled
+        this.twoFactorSecret = null; // Default to no secret key
     }
 
     // Full constructor with banned status
@@ -74,6 +84,28 @@ public class User {
         this.birthDate = birthDate;
         this.phoneNumber = phoneNumber;
         this.banned = banned;
+        this.twoFactorEnabled = false; // Default to 2FA disabled
+        this.twoFactorSecret = null; // Default to no secret key
+    }
+
+    // Full constructor with banned status and 2FA
+    public User(int id, String email, String password, String name,  String[] role, String specialite,
+                String firstName, String lastName, String address, Date birthDate, String phoneNumber, 
+                boolean banned, boolean twoFactorEnabled, String twoFactorSecret) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.role = role;
+        this.specialite = specialite;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+        this.birthDate = birthDate;
+        this.phoneNumber = phoneNumber;
+        this.banned = banned;
+        this.twoFactorEnabled = twoFactorEnabled;
+        this.twoFactorSecret = twoFactorSecret;
     }
 
     // Getters and Setters
@@ -171,6 +203,22 @@ public class User {
 
     public void setBanned(boolean banned) {
         this.banned = banned;
+    }
+
+    public String getTwoFactorSecret() {
+        return twoFactorSecret;
+    }
+
+    public void setTwoFactorSecret(String twoFactorSecret) {
+        this.twoFactorSecret = twoFactorSecret;
+    }
+
+    public boolean isTwoFactorEnabled() {
+        return twoFactorEnabled;
+    }
+
+    public void setTwoFactorEnabled(boolean twoFactorEnabled) {
+        this.twoFactorEnabled = twoFactorEnabled;
     }
 
     @Override

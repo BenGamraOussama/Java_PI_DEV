@@ -101,7 +101,7 @@
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button fx:id="handleLogout" mnemonicParsing="false" onAction="#handleLogout" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #f44336;" text="Cancel" textFill="WHITE">
+                  <Button fx:id="handleCancel" mnemonicParsing="false" onAction="#handleCancel" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #f44336;" text="Cancel" textFill="WHITE">
                      <font>
                         <Font size="14.0" />
                      </font>

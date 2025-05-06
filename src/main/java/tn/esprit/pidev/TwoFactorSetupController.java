@@ -118,7 +118,7 @@ public class TwoFactorSetupController {
             // Set the static connected user before navigating back
             User.connecte = user;
 
-            Parent root = FXMLLoader.load(getClass().getResource("profile.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("Dashboard.fxml"));
             Scene scene = new Scene(root);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.esprit.pidev.gestion_produit.gui.ModifierCategorieController"
+            prefHeight="400.0" prefWidth="600.0"
+            style="-fx-background-color: #f5f6fa;">
+
+    <VBox spacing="20" alignment="CENTER" layoutX="50" layoutY="50" prefWidth="500">
+        <Label text="Modifier la Catégorie"
+               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+
+        <TextField fx:id="nomCategorieField"
+                   promptText="Nom de la catégorie"
+                   style="-fx-pref-height: 40px; -fx-font-size: 14px; -fx-border-color: #bdc3c7; -fx-border-radius: 5px;" />
+
+        <HBox spacing="20" alignment="CENTER">
+            <Button text="Enregistrer"
+                    onAction="#handleEnregistrer"
+                    style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 120;" />
+
+            <Button text="Annuler"
+                    onAction="#handleAnnuler"
+                    style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 120;" />
+        </HBox>
+    </VBox>
+</AnchorPane>

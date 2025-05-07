@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.171"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.pidev.gestion_produit.gui.FrontController"
+            fx:id="mainBorderPane"
+            stylesheets="@modern-style.css">
+
+    <!-- En-tête -->
+    <top>
+        <VBox styleClass="header-box">
+            <padding>
+                <Insets top="10" right="20" bottom="10" left="20"/>
+            </padding>
+
+            <!-- Ligne 1 : Titre et recherche -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Boutique" styleClass="header-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="searchField" promptText="Rechercher..." styleClass="search-field"/>
+                <Button text="Rechercher" onAction="#handleSearch" styleClass="search-button"/>
+            </HBox>
+
+            <!-- Ligne 2 : Panier et filtres -->
+            <HBox alignment="CENTER_RIGHT" spacing="15">
+                <!-- Conteneur d'évaluation -->
+                <HBox alignment="CENTER" spacing="5">
+                    <Label text="Évaluer : "/>
+                    <HBox fx:id="starsContainer" spacing="3" alignment="CENTER">
+                        <Label fx:id="star1" text="☆" styleClass="rating-star" onMouseClicked="#handleStarClick" userData="1"/>
+                        <Label fx:id="star2" text="☆" styleClass="rating-star" onMouseClicked="#handleStarClick" userData="2"/>
+                        <Label fx:id="star3" text="☆" styleClass="rating-star" onMouseClicked="#handleStarClick" userData="3"/>
+                        <Label fx:id="star4" text="☆" styleClass="rating-star" onMouseClicked="#handleStarClick" userData="4"/>
+                        <Label fx:id="star5" text="☆" styleClass="rating-star" onMouseClicked="#handleStarClick" userData="5"/>
+                    </HBox>
+                    <Label fx:id="ratingFeedback" styleClass="rating-feedback"/>
+                </HBox>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- Panier -->
+                <Button fx:id="cartButton" styleClass="cart-button">
+                    <graphic>
+                        <HBox alignment="CENTER" spacing="5">
+                            <Label text="🛒" styleClass="cart-icon"/>
+                            <Label fx:id="cartCountLabel" text="0" styleClass="cart-count"/>
+                        </HBox>
+                    </graphic>
+                </Button>
+
+                <!-- Filtres -->
+                <ComboBox fx:id="priceFilterCombo" promptText="Filtrer par prix"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- Contenu principal -->
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="main-scroll">
+            <FlowPane fx:id="productsContainer"
+                      hgap="20"
+                      vgap="20"
+                      alignment="TOP_CENTER"
+                      styleClass="products-flow"/>
+        </ScrollPane>
+    </center>
+
+    <!-- Pied de page -->
+    <bottom>
+        <HBox alignment="CENTER" styleClass="footer-box">
+            <Label fx:id="cartItemCountLabel" text="Total articles : 0" styleClass="footer-label"/>
+        </HBox>
+    </bottom>
+</BorderPane>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tn.esprit.pidev.gestion_produit.gui.RatingController"
+      spacing="10"
+      alignment="CENTER"
+      style="-fx-padding: 15; -fx-background-color: #f5f5f5; -fx-border-radius: 5;">
+
+    <Label text="Notez ce produit" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+
+    <HBox fx:id="starsContainer" spacing="5" alignment="CENTER">
+        <!-- Les ImageView seront ajoutées dynamiquement par le contrôleur -->
+    </HBox>
+
+    <Label fx:id="ratingLabel" text="Note : 0/5" style="-fx-text-fill: #555;"/>
+
+    <Button text="Envoyer la note"
+            onAction="#submitRating"
+            style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 5 15;"/>
+</VBox>

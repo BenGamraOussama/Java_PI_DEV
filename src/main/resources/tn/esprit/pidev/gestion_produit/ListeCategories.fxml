@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="tn.esprit.pidev.gestion_produit.gui.ListeCategoriesController"
+      spacing="15"
+      style="-fx-background-color: #f5f6fa;">
+
+    <padding>
+        <Insets top="25" right="25" bottom="25" left="25"/>
+    </padding>
+
+    <!-- Titre -->
+    <Label text="Liste des Catégories"
+           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+    <!-- TableView -->
+    <TableView fx:id="tableCategories" prefHeight="400" prefWidth="600"
+               style="-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 5px;">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="100"/>
+            <TableColumn fx:id="colNom" text="Nom de la Catégorie" prefWidth="300"/>
+        </columns>
+    </TableView>
+
+    <!-- Boutons -->
+    <HBox spacing="15" alignment="CENTER">
+        <Button fx:id="ajouterBtn" text="Ajouter"
+                onAction="#ajouterCategorie"
+                style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 100;" />
+
+        <Button fx:id="supprimerBtn" text="Supprimer"
+                onAction="#supprimerCategorie"
+                style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 100;" />
+
+        <Button text="Modifier"
+                onAction="#handleModifierCategorie"
+                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 100;" />
+    </HBox>
+</VBox>

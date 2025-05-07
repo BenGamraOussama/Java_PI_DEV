@@ -29,6 +29,12 @@
                         <Label styleClass="bottom-nav-text" text="Rendez-vous" />
                     </VBox>
                 </HBox>
+                <HBox onMouseClicked="#handleProduitButtonClick" styleClass="bottom-nav-item" alignment="CENTER" HBox.hgrow="ALWAYS">
+                    <VBox alignment="CENTER">
+                        <Label styleClass="bottom-nav-icon" text="👤" />
+                        <Label styleClass="bottom-nav-text" text="Produit" />
+                    </VBox>
+                </HBox>
 
                 <HBox onMouseClicked="#handleAvtiviteButtonClick" styleClass="bottom-nav-item" alignment="CENTER" HBox.hgrow="ALWAYS">
                     <VBox alignment="CENTER">

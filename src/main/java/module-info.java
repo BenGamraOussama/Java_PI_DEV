@@ -36,11 +36,14 @@ module tn.esprit.pidev {
     requires java.rmi;
     requires java.instrument;
     requires javafx.media;
+    requires okhttp3;
 
     opens tn.esprit.pidev to javafx.fxml;
     opens tn.esprit.pidev.gestion_activite.gui to javafx.fxml;
     opens tn.esprit.pidev.gestion_commande.controllers to javafx.fxml;
     opens tn.esprit.pidev.gestion_ressource.Controllers to javafx.fxml;
+    opens tn.esprit.pidev.gestion_produit.gui to javafx.fxml;
+
 
 
     exports tn.esprit.pidev;
@@ -49,4 +52,7 @@ module tn.esprit.pidev {
     exports tn.esprit.pidev.gestion_commande.entities;
     exports tn.esprit.pidev.gestion_ressource.Controllers;
     exports tn.esprit.pidev.gestion_ressource.Entities;
+    exports tn.esprit.pidev.gestion_produit.entities;
+    exports tn.esprit.pidev.gestion_produit.gui;
+
 }

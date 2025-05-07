@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pii.gui.ModifierProduitController"
+      spacing="15"
+      alignment="CENTER"
+      style="-fx-background-color: #f5f6fa;"
+      prefWidth="500" prefHeight="600">
+
+    <padding>
+        <Insets top="30" right="40" bottom="30" left="40"/>
+    </padding>
+
+    <Label text="Modifier le produit"
+           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+
+    <Label text="Nom" style="-fx-font-weight: bold;" />
+    <TextField fx:id="nomTextField"
+               style="-fx-pref-height: 35px; -fx-border-color: #bdc3c7; -fx-border-radius: 5px;" />
+
+    <Label text="Description" style="-fx-font-weight: bold;" />
+    <TextField fx:id="descriptionTextField"
+               style="-fx-pref-height: 35px; -fx-border-color: #bdc3c7; -fx-border-radius: 5px;" />
+
+    <Label text="Quantité" style="-fx-font-weight: bold;" />
+    <TextField fx:id="quantiteTextField"
+               style="-fx-pref-height: 35px; -fx-border-color: #bdc3c7; -fx-border-radius: 5px;" />
+
+    <Label text="Prix" style="-fx-font-weight: bold;" />
+    <TextField fx:id="prixTextField"
+               style="-fx-pref-height: 35px; -fx-border-color: #bdc3c7; -fx-border-radius: 5px;" />
+
+    <Label text="Catégorie" style="-fx-font-weight: bold;" />
+    <ComboBox fx:id="categorieComboBox"
+              style="-fx-pref-height: 35px;" />
+
+    <Button text="Modifier"
+            onAction="#modifierProduit"
+            style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 150; -fx-pref-height: 40px;" />
+</VBox>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.pidev.gestion_produit.gui.PanierController">
+    <top>
+        <HBox alignment="CENTER" style="-fx-background-color: #3498db;">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+            <Label text="Votre Panier" textFill="WHITE">
+                <font>
+                    <Font name="System Bold" size="24.0"/>
+                </font>
+            </Label>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="10" alignment="CENTER">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <TableView fx:id="panierTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="nomCol" text="Produit" prefWidth="200"/>
+                    <TableColumn fx:id="prixCol" text="Prix" prefWidth="100"/>
+                    <TableColumn fx:id="quantiteCol" text="Quantité" prefWidth="100"/>
+                    <TableColumn fx:id="totalCol" text="Total" prefWidth="100"/>
+                    <TableColumn fx:id="supprimerCol" text="Action" prefWidth="100"/>
+                </columns>
+            </TableView>
+
+            <HBox alignment="CENTER_RIGHT" spacing="10">
+                <Label text="Total avant remise:"/>
+                <Label fx:id="totalAvantRemiseLabel" text="0.00 DT" style="-fx-font-weight: bold;"/>
+            </HBox>
+            
+            <HBox fx:id="remiseContainer" alignment="CENTER_RIGHT" spacing="10">
+                <Label text="Remise:"/>
+                <Label fx:id="remiseLabel" text="0.00 DT" style="-fx-font-weight: bold;"/>
+            </HBox>
+            
+            <HBox alignment="CENTER_RIGHT" spacing="10">
+                <Label text="Total à payer:"/>
+                <Label fx:id="totalAPayerLabel" text="0.00 DT" style="-fx-font-weight: bold;"/>
+            </HBox>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" spacing="20" style="-fx-background-color: #f4f4f4;">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+            <Button fx:id="continuerAchatsBtn" text="Continuer les achats" onAction="#fermerFenetre"/>
+            <Button fx:id="passerCommandeBtn" text="Passer la commande" onAction="#commander" 
+                    style="-fx-background-color: #2ecc71; -fx-text-fill: white;"/>
+        </HBox>
+    </bottom>
+</BorderPane>

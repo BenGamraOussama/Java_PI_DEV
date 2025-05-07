@@ -96,6 +96,23 @@
                         </graphic>
                     </Button>
 
+                    <Button onAction="#showCategoryProduit" styleClass="sidebar-menu-item">
+                        <graphic>
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label styleClass="menu-icon" text="👤" />
+                                <Label styleClass="menu-text" text="Category Produit" />
+                            </HBox>
+                        </graphic>
+                    </Button>
+                    <Button onAction="#showProduit" styleClass="sidebar-menu-item">
+                        <graphic>
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label styleClass="menu-icon" text="👤" />
+                                <Label styleClass="menu-text" text="Produit" />
+                            </HBox>
+                        </graphic>
+                    </Button>
+
                     <Button onAction="#showProfile" styleClass="sidebar-menu-item">
                         <graphic>
                             <HBox alignment="CENTER_LEFT" spacing="10">
@@ -371,6 +388,20 @@
                             <Insets bottom="20" left="20" right="20" top="20" />
                         </padding>
                         <fx:include fx:id="CategoryContent" source="FXML/categoryList.fxml" />
+                    </VBox>
+
+                    <VBox fx:id="CategoryProduitPane" spacing="20" visible="false">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <fx:include fx:id="CategoryProduitContent" source="gestion_produit/ListeCategories.fxml" />
+                    </VBox>
+
+                    <VBox fx:id="ProduitPane" spacing="20" visible="false">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <fx:include fx:id="ProduitContent" source="gestion_produit/listeProduits.fxml" />
                     </VBox>
 
                     <VBox fx:id="profilePane" spacing="20" visible="false">

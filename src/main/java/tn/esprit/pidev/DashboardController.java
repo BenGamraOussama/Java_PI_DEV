@@ -61,7 +61,9 @@ public class DashboardController implements Initializable {
     @FXML private VBox CategoryProduitPane;
     @FXML private VBox ProduitPane;
 
-
+    @FXML private VBox rdvPane;
+    @FXML private VBox consultationPane;
+    @FXML private VBox traitementPane;
 
     @FXML private VBox profilePane;
     @FXML private VBox settingsPane;
@@ -183,6 +185,9 @@ public class DashboardController implements Initializable {
         CategoryProduitPane.setVisible(false);
         ProduitPane.setVisible(false);
         profilePane.setVisible(false);
+        rdvPane.setVisible(false);
+        consultationPane.setVisible(false);
+        traitementPane.setVisible(false);
         settingsPane.setVisible(false);
     }
 
@@ -196,6 +201,21 @@ public class DashboardController implements Initializable {
 
         // Refresh the user statistics charts when showing dashboard
         initUserStatisticsCharts();
+    }
+    @FXML
+    private void showRdv(ActionEvent event) {
+        hideAllPanes();
+        rdvPane.setVisible(true);
+    }
+    @FXML
+    private void showConsultation(ActionEvent event) {
+        hideAllPanes();
+        consultationPane.setVisible(true);
+    }
+    @FXML
+    private void showTraitement(ActionEvent event) {
+        hideAllPanes();
+        traitementPane.setVisible(true);
     }
 
     @FXML

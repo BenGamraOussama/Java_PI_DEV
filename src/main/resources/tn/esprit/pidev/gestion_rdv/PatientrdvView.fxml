@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+
+<?import java.net.URL?>
+<?import javafx.collections.FXCollections?>
+<BorderPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.pidev.gestion_rdv.AppointmentController">
+    <stylesheets>
+        <URL value="@Patientrdv.css" />
+    </stylesheets>
+
+    <!-- Header -->
+    <top>
+        <HBox styleClass="header" alignment="CENTER" spacing="20" prefHeight="70">
+            <padding>
+                <Insets left="20" right="20" />
+            </padding>
+
+            <!-- Logo -->
+            <Label text="logo" styleClass="logo-text" />
+
+            <!-- Navigation -->
+            <HBox spacing="30" alignment="CENTER">
+                <Button text="Accueil" styleClass="nav-button" />
+                <Button text="Rendez-vous" styleClass="nav-button active" />
+                <Button text="Dossier médical" styleClass="nav-button" />
+                <Button text="Contact" styleClass="nav-button" />
+            </HBox>
+
+            <Region HBox.hgrow="ALWAYS" />
+
+            <!-- User controls -->
+            <HBox spacing="15" alignment="CENTER">
+                <Button styleClass="icon-button" text="🔔">
+                </Button>
+
+                <HBox spacing="10" alignment="CENTER">
+                    <StackPane styleClass="user-avatar">
+                        <Label text="👤" style="-fx-font-size: 18px;" />
+                    </StackPane>
+                    <Label text="Sophie Martin" styleClass="user-name" />
+                </HBox>
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- Main Content -->
+    <center>
+        <VBox styleClass="main-content">
+            <!-- Title Section -->
+            <VBox spacing="5" styleClass="title-section">
+                <Label text="Gestion des Rendez-vous" styleClass="title" />
+                <Label text="Planifiez et gérez vos consultations médicales" styleClass="subtitle" />
+            </VBox>
+
+            <!-- Content Area -->
+            <HBox spacing="20" styleClass="content-area">
+                <!-- Calendar Section -->
+                <VBox styleClass="calendar-section" spacing="15">
+                    <!-- Calendar Controls -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <HBox spacing="5" alignment="CENTER">
+                            <Button styleClass="nav-button" text="◀">
+                            </Button>
+                            <Label text="Mai 2025" styleClass="month-label" />
+                            <Button styleClass="nav-button" text="▶">
+                            </Button>
+                        </HBox>
+
+                        <Region HBox.hgrow="ALWAYS" />
+
+                        <HBox spacing="10" alignment="CENTER">
+                            <Button text="Aujourd'hui" styleClass="today-button" />
+                            <HBox styleClass="view-toggle">
+                                <Button text="Mois" styleClass="toggle-button active" />
+                                <Button text="Semaine" styleClass="toggle-button" />
+                            </HBox>
+                        </HBox>
+                    </HBox>
+
+                    <!-- Calendar Grid -->
+                    <GridPane styleClass="calendar-grid" hgap="5" vgap="5">
+                        <!-- Day headers -->
+                        <Label text="Lun" styleClass="day-header" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <Label text="Mar" styleClass="day-header" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <Label text="Mer" styleClass="day-header" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                        <Label text="Jeu" styleClass="day-header" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                        <Label text="Ven" styleClass="day-header" GridPane.columnIndex="4" GridPane.rowIndex="0" />
+                        <Label text="Sam" styleClass="day-header" GridPane.columnIndex="5" GridPane.rowIndex="0" />
+                        <Label text="Dim" styleClass="day-header" GridPane.columnIndex="6" GridPane.rowIndex="0" />
+
+                        <!-- Calendar days -->
+                        <Label text="29" styleClass="calendar-day disabled" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <Label text="30" styleClass="calendar-day disabled" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="1" styleClass="calendar-day" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Label text="2" styleClass="calendar-day" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <Label text="3" styleClass="calendar-day" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                        <Label text="4" styleClass="calendar-day" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                        <Label text="5" styleClass="calendar-day" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+
+                        <Label text="6" styleClass="calendar-day" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <Label text="7" styleClass="calendar-day today" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label text="8" styleClass="calendar-day has-appointment" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Label text="9" styleClass="calendar-day" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <Label text="10" styleClass="calendar-day" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                        <Label text="11" styleClass="calendar-day" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                        <Label text="12" styleClass="calendar-day" GridPane.columnIndex="6" GridPane.rowIndex="2" />
+
+                        <Label text="13" styleClass="calendar-day" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <Label text="14" styleClass="calendar-day" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label text="15" styleClass="calendar-day selected" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                        <Label text="16" styleClass="calendar-day" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                        <Label text="17" styleClass="calendar-day has-appointment" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                        <Label text="18" styleClass="calendar-day" GridPane.columnIndex="5" GridPane.rowIndex="3" />
+                        <Label text="19" styleClass="calendar-day" GridPane.columnIndex="6" GridPane.rowIndex="3" />
+
+                        <Label text="20" styleClass="calendar-day" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                        <Label text="21" styleClass="calendar-day" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label text="22" styleClass="calendar-day" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                        <Label text="23" styleClass="calendar-day" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                        <Label text="24" styleClass="calendar-day" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                        <Label text="25" styleClass="calendar-day" GridPane.columnIndex="5" GridPane.rowIndex="4" />
+                        <Label text="26" styleClass="calendar-day" GridPane.columnIndex="6" GridPane.rowIndex="4" />
+
+                        <Label text="27" styleClass="calendar-day" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                        <Label text="28" styleClass="calendar-day" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <Label text="29" styleClass="calendar-day" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                        <Label text="30" styleClass="calendar-day" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                        <Label text="31" styleClass="calendar-day" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+                        <Label text="1" styleClass="calendar-day disabled" GridPane.columnIndex="5" GridPane.rowIndex="5" />
+                        <Label text="2" styleClass="calendar-day disabled" GridPane.columnIndex="6" GridPane.rowIndex="5" />
+                    </GridPane>
+
+                    <!-- Time slots -->
+                    <VBox spacing="10">
+                        <Label text="Créneaux disponibles - 15 Mai 2025" styleClass="time-slots-title" />
+                        <GridPane hgap="5" vgap="5" styleClass="time-slots-grid">
+                            <Button text="09:00" styleClass="time-slot" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                            <Button text="09:30" styleClass="time-slot" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                            <Button text="10:00" styleClass="time-slot" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                            <Button text="10:30" styleClass="time-slot" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+
+                            <Button text="11:00" styleClass="time-slot" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <Button text="11:30" styleClass="time-slot" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <Button text="14:00" styleClass="time-slot selected" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                            <Button text="14:30" styleClass="time-slot" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+
+                            <Button text="15:00" styleClass="time-slot" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                            <Button text="15:30" styleClass="time-slot" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <Button text="16:00" styleClass="time-slot" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                            <Button text="16:30" styleClass="time-slot" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        </GridPane>
+                    </VBox>
+                </VBox>
+
+            <!-- Right Panel -->
+            <VBox spacing="20" styleClass="right-panel">
+                <!-- New Appointment Form -->
+                <VBox styleClass="appointment-form" spacing="15">
+                    <Label text="Nouveau Rendez-vous" styleClass="form-title" />
+
+                    <GridPane hgap="10" vgap="10">
+                        <Label text="ID:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <TextField fx:id="idField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                        <Label text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <DatePicker fx:id="datePicker" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                        <Label text="Heure:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <TextField fx:id="heureField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                        <Label text="Priorité:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <TextField fx:id="prioriteField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                        <Label text="Type:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                        <ComboBox fx:id="typeComboBox" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Consultation générale" />
+                                    <String fx:value="Suivi médical" />
+                                    <String fx:value="Examen spécifique" />
+                                    <String fx:value="Urgence" />
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+
+                        <Label text="Psychiatre:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                        <ComboBox fx:id="medecinCombo" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Dr. Philippe Dubois - Généraliste" />
+                                    <String fx:value="Dr. Marie Laurent - Cardiologue" />
+                                    <String fx:value="Dr. Thomas Moreau - Dermatologue" />
+                                    <String fx:value="Dr. Claire Petit - Pédiatre" />
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+
+                        <Label text="Motif:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                        <TextArea fx:id="motifArea" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+                        <columnConstraints>
+                            <ColumnConstraints />
+                            <ColumnConstraints />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints minHeight="80" />
+                        </rowConstraints>
+                    </GridPane>
+
+                    <CheckBox fx:id="reminderCheckbox" text="Recevoir un rappel 24h avant" styleClass="reminder-checkbox" />
+
+                    <Button text="Confirmer le rendez-vous" styleClass="confirm-button" onAction="#handleConfirmAppointment" />
+                </VBox>
+
+                <!-- Appointments List -->
+                <VBox styleClass="appointments-list" spacing="15">
+                    <HBox spacing="10" alignment="CENTER">
+                        <Label text="Mes Rendez-vous" styleClass="list-title" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label text="Vue liste" styleClass="view-label" />
+                        <ToggleSwitch styleClass="view-toggle-switch" selected="true" />
+                        <Label text="Vue calendrier" styleClass="view-label" />
+                    </HBox>
+
+                    <VBox spacing="10">
+                        <!-- Appointment Cards -->
+                        <VBox styleClass="appointment-card">
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <VBox spacing="2">
+                                    <Label text="Consultation générale" styleClass="appointment-title" />
+                                    <Label text="Dr. Philippe Dubois" styleClass="appointment-doctor" />
+                                </VBox>
+                                <Region HBox.hgrow="ALWAYS" />
+                                <VBox spacing="2" alignment="TOP_RIGHT">
+                                    <Label text="8 Mai 2025" styleClass="appointment-date" />
+                                    <Label text="10:30" styleClass="appointment-time" />
+                                </VBox>
+                            </HBox>
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Label text="Confirmé" styleClass="status-label confirmed" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Button styleClass="icon-button" text="✏️" />
+                                <Button styleClass="icon-button" text="🗑️" />
+                            </HBox>
+                        </VBox>
+
+                        <!-- More appointment cards... -->
+                    </VBox>
+
+                    <Button text="Voir l'historique complet" styleClass="history-button" />
+                </VBox>
+            </VBox>
+                    <!-- Appointments List -->
+                    <VBox styleClass="appointments-list" spacing="15">
+                        <HBox spacing="10" alignment="CENTER">
+                            <Label text="Mes Rendez-vous" styleClass="list-title" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label text="Vue liste" styleClass="view-label" />
+                            <ToggleButton styleClass="view-toggle-switch" selected="true" />
+                            <Label text="Vue calendrier" styleClass="view-label" />
+                        </HBox>
+
+                        <VBox spacing="10">
+                            <!-- Appointment 1 -->
+                            <VBox styleClass="appointment-card">
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <VBox spacing="2">
+                                        <Label text="Consultation générale" styleClass="appointment-title" />
+                                        <Label text="Dr. Philippe Dubois" styleClass="appointment-doctor" />
+                                    </VBox>
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <VBox spacing="2" alignment="TOP_RIGHT">
+                                        <Label text="8 Mai 2025" styleClass="appointment-date" />
+                                        <Label text="10:30" styleClass="appointment-time" />
+                                    </VBox>
+                                </HBox>
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <Label text="Confirmé" styleClass="status-label confirmed" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button styleClass="icon-button" text="✏️">
+                                    </Button>
+                                    <Button styleClass="icon-button" text="🗑️">
+                                    </Button>
+                                </HBox>
+                            </VBox>
+
+                            <!-- Appointment 2 -->
+                            <VBox styleClass="appointment-card">
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <VBox spacing="2">
+                                        <Label text="Suivi cardiologique" styleClass="appointment-title" />
+                                        <Label text="Dr. Marie Laurent" styleClass="appointment-doctor" />
+                                    </VBox>
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <VBox spacing="2" alignment="TOP_RIGHT">
+                                        <Label text="17 Mai 2025" styleClass="appointment-date" />
+                                        <Label text="14:15" styleClass="appointment-time" />
+                                    </VBox>
+                                </HBox>
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <Label text="À venir" styleClass="status-label upcoming" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button styleClass="icon-button" text="✏️">
+                                    </Button>
+                                    <Button styleClass="icon-button" text="🗑️">
+                                    </Button>
+                                </HBox>
+                            </VBox>
+
+                            <!-- Appointment 3 -->
+                            <VBox styleClass="appointment-card completed">
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <VBox spacing="2">
+                                        <Label text="Consultation générale" styleClass="appointment-title" />
+                                        <Label text="Dr. Philippe Dubois" styleClass="appointment-doctor" />
+                                    </VBox>
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <VBox spacing="2" alignment="TOP_RIGHT">
+                                        <Label text="22 Avril 2025" styleClass="appointment-date" />
+                                        <Label text="11:00" styleClass="appointment-time" />
+                                    </VBox>
+                                </HBox>
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <Label text="Terminé" styleClass="status-label completed" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button styleClass="icon-button" text="📄">
+                                    </Button>
+                                </HBox>
+                            </VBox>
+                        </VBox>
+
+                        <Button text="Voir l'historique complet" styleClass="history-button" />
+                    </VBox>
+                </VBox>
+            </HBox>
+        </VBox>
+    </center>
+
+    <!-- Footer -->
+    <bottom>
+        <HBox styleClass="footer" alignment="CENTER" spacing="20">
+            <padding>
+                <Insets left="20" right="20" top="15" bottom="15" />
+            </padding>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="logo" styleClass="footer-logo" />
+                <Label text="© 2025 Centre Médical. Tous droits réservés." styleClass="footer-text" />
+            </HBox>
+
+            <Region HBox.hgrow="ALWAYS" />
+
+            <HBox spacing="15" alignment="CENTER">
+                <Button styleClass="social-button" text="f">
+                </Button>
+                <Button styleClass="social-button" text="t">
+                </Button>
+                <Button styleClass="social-button" text="i">
+                </Button>
+                <Button styleClass="social-button" text="in">
+                </Button>
+            </HBox>
+        </HBox>
+    </bottom>
+</BorderPane>

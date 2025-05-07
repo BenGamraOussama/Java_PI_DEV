@@ -1,0 +1,135 @@
+/* General Styles */
+.root {
+    -fx-font-family: "Arial";
+    -fx-base: #ecf0f1;
+    -fx-background: #dfe6e9;
+}
+
+/* RDV Card */
+.rdv-card {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1);
+    -fx-padding: 12px;
+    -fx-min-width: 280px;
+    -fx-max-width: 280px;
+}
+
+.rdv-card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 8, 0, 0, 2);
+}
+
+/* Card Elements */
+.card-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.card-date {
+    -fx-font-size: 14px;
+    -fx-text-fill: #3498db;
+    -fx-font-weight: bold;
+}
+
+.card-detail {
+    -fx-font-size: 13px;
+    -fx-text-fill: #34495e;
+}
+
+.calendar-indicator {
+    -fx-font-size: 10px;
+    -fx-text-fill: #4285F4;
+    -fx-background-color: #E8F0FE;
+    -fx-background-radius: 3px;
+    -fx-padding: 2px 5px;
+}
+
+/* Buttons */
+.button {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5px;
+    -fx-padding: 5 15;
+    -fx-min-width: 100px;
+    -fx-alignment: center;
+}
+
+.button-add {
+    -fx-background-color: #2ecc71;
+}
+
+.button-edit {
+    -fx-background-color: #3498db;
+}
+
+.button-delete {
+    -fx-background-color: #e74c3c;
+}
+
+.button-accept {
+    -fx-background-color: #4CAF50;
+}
+
+.button-reject {
+    -fx-background-color: #F44336;
+}
+
+.button-calendar {
+    -fx-background-color: #9b59b6;
+}
+
+.button-google {
+    -fx-background-color: #4285F4;
+}
+
+/* Labels */
+.header-label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.subheader-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 5 0;
+    -fx-text-fill: #34495e;
+}
+
+/* Form Fields */
+.text-field, .date-picker {
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-color: #bdc3c7;
+    -fx-min-height: 35px;
+    -fx-padding: 0 10;
+}
+
+/* Calendar */
+.web-view {
+    -fx-border-color: #ddd;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+}
+
+/* SplitPane */
+.split-pane {
+    -fx-background-color: transparent;
+}
+
+.split-pane-divider {
+    -fx-background-color: #ccc;
+    -fx-padding: 0 2;
+}
+
+.button-patient {
+    -fx-background-color: #6a5acd; /* Slate blue color */
+    -fx-text-fill: white;
+}
+
+.button-patient:hover {
+    -fx-background-color: #7b68ee; /* Lighter slate blue */
+}

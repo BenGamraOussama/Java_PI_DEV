@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox stylesheets="@rdv.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.pidev.gestion_rdv.RDVController">
+
+    <padding>
+        <Insets bottom="10" left="10" right="10" top="10" />
+    </padding>
+    <spacing>10</spacing>
+
+    <Label styleClass="header-label" text="Gestion des Rendez-vous" />
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="ID:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <TextField fx:id="idField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+        <Label text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <DatePicker fx:id="datePicker" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+        <Label text="Heure:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <TextField fx:id="heureField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+        <Label text="Priorité:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <TextField fx:id="prioriteField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
+    </GridPane>
+
+    <HBox spacing="10">
+        <Button onAction="#handleNewRDV" styleClass="button" text="Nouveau" />
+        <Button onAction="#handleAddRDV" stylesheets="@rdv.css" text="Ajouter">
+            <styleClass>
+                <String fx:value="button button-add" />
+                <String fx:value="button-add" />
+            </styleClass></Button>
+        <Button onAction="#handleUpdateRDV" text="Modifier">
+            <styleClass>
+                <String fx:value="button button-edit" />
+                <String fx:value="button-edit" />
+            </styleClass></Button>
+        <Button onAction="#handleDeleteRDV" text="Supprimer">
+            <styleClass>
+                <String fx:value="button button-delete" />
+                <String fx:value="button-delete" />
+            </styleClass></Button>
+        <Button onAction="#handleViewCalendar" text="Voir Calendrier">
+            <styleClass>
+                <String fx:value="button button-calendar" />
+                <String fx:value="button-calendar" />
+            </styleClass></Button>
+        <Button text="Ajouter au calendrier"
+                onAction="#onAjouterRDV"
+                fx:id="btnAjouterCalendrier"
+                GridPane.rowIndex="3" GridPane.columnIndex="1" />
+        <!-- New Patient RDV Button -->
+        <Button onAction="#handlePatientRDV" text="Patient RDV">
+            <styleClass>
+                <String fx:value="button button-patient" />
+                <String fx:value="button-patient" />
+            </styleClass>
+        </Button>
+
+    </HBox>
+
+    <Label styleClass="subheader-label" text="Liste des Rendez-vous:" />
+    <ScrollPane fitToWidth="true">
+        <FlowPane fx:id="rdvCardsContainer" hgap="15" style="-fx-padding: 5px;" vgap="15" />
+    </ScrollPane>
+</VBox>

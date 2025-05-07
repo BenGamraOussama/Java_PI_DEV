@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tn.esprit.pidev.gestion_rdv.MainController"
+      spacing="10" style="-fx-padding: 10;">
+
+    <HBox style="-fx-background-color: #336699; -fx-padding: 15;" alignment="CENTER">
+        <Label text="Système Médical" style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;"/>
+    </HBox>
+
+    <TabPane fx:id="mainTabPane" tabClosingPolicy="UNAVAILABLE">
+        <Tab text="Consultations">
+            <fx:include fx:id="consultationTab" source="ConsultationView.fxml"/>
+        </Tab>
+        <Tab text="Rendez-vous">
+            <fx:include fx:id="rdvTab" source="RendezVousView.fxml"/>
+        </Tab>
+        <Tab text="Traitements">
+            <fx:include fx:id="traitementTab" source="TraitementView.fxml"/>
+        </Tab>
+    </TabPane>
+
+    <HBox style="-fx-background-color: #336699; -fx-padding: 5;" alignment="CENTER">
+        <Label text="© 2025 Système Médical - Created By Idriss Ghofrane" style="-fx-text-fill: white;"/>
+    </HBox>
+</VBox>

@@ -37,12 +37,24 @@ module tn.esprit.pidev {
     requires java.instrument;
     requires javafx.media;
     requires okhttp3;
+    requires nylas;
+    requires com.fasterxml.jackson.core;
+    requires com.google.api.client;
+    requires google.http.client.jackson2;
+    requires google.api.services.calendar.v3.rev411;
+    requires google.api.client;
+    requires google.oauth.client.java6;
+    requires google.oauth.client.jetty;
+    requires com.google.api.client.auth;
 
     opens tn.esprit.pidev to javafx.fxml;
     opens tn.esprit.pidev.gestion_activite.gui to javafx.fxml;
     opens tn.esprit.pidev.gestion_commande.controllers to javafx.fxml;
     opens tn.esprit.pidev.gestion_ressource.Controllers to javafx.fxml;
     opens tn.esprit.pidev.gestion_produit.gui to javafx.fxml;
+    opens tn.esprit.pidev.gestion_rdv to javafx.fxml;
+    opens tn.esprit.pidev.gestion_rdv.enteties to javafx.fxml;
+    opens tn.esprit.pidev.gestion_rdv.services to javafx.fxml;
 
 
 
@@ -54,5 +66,9 @@ module tn.esprit.pidev {
     exports tn.esprit.pidev.gestion_ressource.Entities;
     exports tn.esprit.pidev.gestion_produit.entities;
     exports tn.esprit.pidev.gestion_produit.gui;
+    exports tn.esprit.pidev.gestion_rdv.enteties;
+    exports tn.esprit.pidev.gestion_rdv;
+    exports tn.esprit.pidev.gestion_rdv.services;
+    exports tn.esprit.pidev.gestion_rdv.dao;
 
 }

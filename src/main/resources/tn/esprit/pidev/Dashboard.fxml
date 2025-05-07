@@ -61,6 +61,30 @@
                             </HBox>
                         </graphic>
                     </Button>
+                    <Button onAction="#showRdv" styleClass="sidebar-menu-item">
+                        <graphic>
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label styleClass="menu-icon" text="👤" />
+                                <Label styleClass="menu-text" text="Rendez-vous" />
+                            </HBox>
+                        </graphic>
+                    </Button>
+                    <Button onAction="#showConsultation" styleClass="sidebar-menu-item">
+                        <graphic>
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label styleClass="menu-icon" text="👤" />
+                                <Label styleClass="menu-text" text="Consultation" />
+                            </HBox>
+                        </graphic>
+                    </Button>
+                    <Button onAction="#showTraitement" styleClass="sidebar-menu-item">
+                        <graphic>
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label styleClass="menu-icon" text="👤" />
+                                <Label styleClass="menu-text" text="Traitement" />
+                            </HBox>
+                        </graphic>
+                    </Button>
                     <Button onAction="#showActivite" styleClass="sidebar-menu-item">
                         <graphic>
                             <HBox alignment="CENTER_LEFT" spacing="10">
@@ -363,6 +387,24 @@
                             <Insets bottom="20" left="20" right="20" top="20" />
                         </padding>
                         <fx:include fx:id="userManagementContent" source="UserManagement.fxml" />
+                    </VBox>
+                    <VBox fx:id="rdvPane" spacing="20" visible="false">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <fx:include fx:id="rdvContent" source="gestion_rdv/RendezVousView.fxml" />
+                    </VBox>
+                    <VBox fx:id="consultationPane" spacing="20" visible="false">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <fx:include fx:id="consultationContent" source="gestion_rdv/ConsultationView.fxml" />
+                    </VBox>
+                    <VBox fx:id="traitementPane" spacing="20" visible="false">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <fx:include fx:id="traitementContent" source="gestion_rdv/TraitementView.fxml" />
                     </VBox>
                     <VBox fx:id="ActivitePane" spacing="20" visible="false">
                         <padding>

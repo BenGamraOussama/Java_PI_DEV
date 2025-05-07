@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tn.esprit.pidev.gestion_rdv.TraitementController"
+      stylesheets="@traittement.css"
+      spacing="10">
+
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <Label text="Gestion des Traitements" styleClass="header-label"/>
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="ID:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <TextField fx:id="idField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+        <Label text="Type:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <ComboBox fx:id="typeField" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                  promptText="Sélectionnez un type"/>
+
+        <Label text="Médicament:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <TextField fx:id="medicamentField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+        <Label text="Suivi:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <TextField fx:id="suiviField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+        <Label text="Consultation ID:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+        <TextField fx:id="consultationIdField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+    </GridPane>
+
+    <HBox spacing="10">
+        <Button text="Nouveau" onAction="#handleNewTraitement"/>
+        <Button text="Ajouter" onAction="#handleAddTraitement"/>
+        <Button text="Modifier" onAction="#handleUpdateTraitement"/>
+        <Button text="Supprimer" onAction="#handleDeleteTraitement"/>
+    </HBox>
+
+    <Label text="Liste des Traitements:" styleClass="subheader-label"/>
+    <TextField fx:id="searchField" promptText="Rechercher..."/>
+
+    <!-- Conteneur des cartes directement visible -->
+    <FlowPane fx:id="traitementCardsContainer"
+              hgap="10" vgap="10"
+              prefWrapLength="600"
+              style="-fx-padding: 5px;" />
+
+    <!-- Pagination sous les cartes -->
+    <Pagination fx:id="pagination" maxPageIndicatorCount="10"/>
+
+</VBox>

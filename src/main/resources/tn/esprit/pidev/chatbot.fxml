@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ScrollPane?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1000.0"
+            xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/21"
+            fx:controller="tn.esprit.pidev.gestion_activite.gui.ChatbotController"
+            style="-fx-background-color: #f4f6f9;">
+
+    <VBox spacing="20" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.bottomAnchor="20">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT">
+            <Label text="🤖ChatBot" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #0d6efd;"/>
+        </HBox>
+
+        <!-- Scrollable Chat Area -->
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background: transparent; -fx-background-color: transparent;">
+            <TextArea fx:id="chatArea" editable="false" wrapText="true"
+                      style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #ced4da; -fx-border-radius: 10;">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10" />
+                </padding>
+            </TextArea>
+        </ScrollPane>
+
+        <!-- Input Area -->
+        <HBox spacing="10">
+            <TextField fx:id="userInput" promptText="Entrez votre question..." HBox.hgrow="ALWAYS"
+                       style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-padding: 10; -fx-border-color: #ced4da;" />
+            <Button fx:id="sendButton" text="Envoyer" onAction="#sendMessage"
+                    style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-background-radius: 20; -fx-padding: 10 20; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 1);">
+                <HBox spacing="5" alignment="CENTER">
+                    <Label text="Envoyer" style="-fx-text-fill: white;"/>
+                </HBox>
+            </Button>
+        </HBox>
+    </VBox>
+</AnchorPane>

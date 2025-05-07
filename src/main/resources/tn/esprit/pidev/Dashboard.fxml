@@ -61,21 +61,37 @@
                             </HBox>
                         </graphic>
                     </Button>
-
-                    <Button onAction="#showUserManagement" styleClass="sidebar-menu-item">
+                    <Button onAction="#showActivite" styleClass="sidebar-menu-item">
                         <graphic>
                             <HBox alignment="CENTER_LEFT" spacing="10">
                                 <Label styleClass="menu-icon" text="👤" />
-                                <Label styleClass="menu-text" text="User Management" />
+                                <Label styleClass="menu-text" text="Activite" />
                             </HBox>
                         </graphic>
                     </Button>
 
-                    <Button onAction="#showUserManagement" styleClass="sidebar-menu-item">
+                    <Button onAction="#showCommande" styleClass="sidebar-menu-item">
                         <graphic>
                             <HBox alignment="CENTER_LEFT" spacing="10">
                                 <Label styleClass="menu-icon" text="👤" />
-                                <Label styleClass="menu-text" text="User Management" />
+                                <Label styleClass="menu-text" text="List Commande" />
+                            </HBox>
+                        </graphic>
+                    </Button>
+
+                    <Button onAction="#showArticle" styleClass="sidebar-menu-item">
+                        <graphic>
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label styleClass="menu-icon" text="👤" />
+                                <Label styleClass="menu-text" text="Article" />
+                            </HBox>
+                        </graphic>
+                    </Button>
+                    <Button onAction="#showCategory" styleClass="sidebar-menu-item">
+                        <graphic>
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label styleClass="menu-icon" text="👤" />
+                                <Label styleClass="menu-text" text="Category" />
                             </HBox>
                         </graphic>
                     </Button>
@@ -330,6 +346,31 @@
                             <Insets bottom="20" left="20" right="20" top="20" />
                         </padding>
                         <fx:include fx:id="userManagementContent" source="UserManagement.fxml" />
+                    </VBox>
+                    <VBox fx:id="ActivitePane" spacing="20" visible="false">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <fx:include fx:id="ActiviteContent" source="ListeActivites.fxml" />
+                    </VBox>
+
+                    <VBox fx:id="CommandePane" spacing="20" visible="false">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <fx:include fx:id="CommandeContent" source="FXML/commande/ListViewCommande.fxml" />
+                    </VBox>
+                    <VBox fx:id="ArticlePane" spacing="20" visible="false">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <fx:include fx:id="ArticleContent" source="FXML/articleList.fxml" />
+                    </VBox>
+                    <VBox fx:id="CategoryPane" spacing="20" visible="false">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <fx:include fx:id="CategoryContent" source="FXML/categoryList.fxml" />
                     </VBox>
 
                     <VBox fx:id="profilePane" spacing="20" visible="false">

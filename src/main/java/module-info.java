@@ -20,7 +20,33 @@ module tn.esprit.pidev {
     requires aerogear.otp.java;
     requires com.google.zxing;
     requires com.google.zxing.javase;
+    requires java.net.http;
+    requires com.google.gson;
+    requires itextpdf;
+    requires stripe.java;
+    requires jdk.jsobject;
+    requires org.json;
+    requires java.base;
+    requires java.prefs;
+    requires java.xml;
+    requires java.xml.bind;
+    requires java.management;
+    requires java.naming;
+    requires java.activation;
+    requires java.rmi;
+    requires java.instrument;
+    requires javafx.media;
 
     opens tn.esprit.pidev to javafx.fxml;
+    opens tn.esprit.pidev.gestion_activite.gui to javafx.fxml;
+    opens tn.esprit.pidev.gestion_commande.controllers to javafx.fxml;
+    opens tn.esprit.pidev.gestion_ressource.Controllers to javafx.fxml;
+
+
     exports tn.esprit.pidev;
+    exports tn.esprit.pidev.gestion_activite.gui;
+    exports tn.esprit.pidev.gestion_commande.controllers;
+    exports tn.esprit.pidev.gestion_commande.entities;
+    exports tn.esprit.pidev.gestion_ressource.Controllers;
+    exports tn.esprit.pidev.gestion_ressource.Entities;
 }

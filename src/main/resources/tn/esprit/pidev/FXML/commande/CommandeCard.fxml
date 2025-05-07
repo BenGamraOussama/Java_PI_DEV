@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+
+<HBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tn.esprit.pidev.gestion_commande.controllers.CommandeCardController"
+      spacing="15" alignment="CENTER_LEFT"
+      style="-fx-padding: 15; -fx-background-color: #ffffff; -fx-background-radius: 10;
+             -fx-border-radius: 10; -fx-border-color: #e0e0e0;
+             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);"
+      prefWidth="300" maxWidth="300">
+
+    <!-- Content Area -->
+    <VBox spacing="8" alignment="TOP_LEFT" HBox.hgrow="ALWAYS">
+        <Label fx:id="userLabel" text="Utilisateur">
+            <font>
+                <Font name="System Bold" size="16.0"/>
+            </font>
+            <style>-fx-text-fill: #333333;</style>
+        </Label>
+        <Label fx:id="dateLabel" text="Date">
+            <font>
+                <Font name="System Regular" size="14.0"/>
+            </font>
+            <style>-fx-text-fill: #666666;</style>
+        </Label>
+        <Label fx:id="montantLabel" text="Montant">
+            <font>
+                <Font name="System Regular" size="14.0"/>
+            </font>
+            <style>-fx-text-fill: #007bff;</style>
+        </Label>
+    </VBox>
+
+    <!-- Button Area -->
+    <VBox spacing="10" alignment="CENTER">
+        <Button fx:id="btnModifier" text="Modifier"
+                style="-fx-background-color: #007bff; -fx-text-fill: white;
+                       -fx-background-radius: 5; -fx-font-size: 12px;"
+                prefWidth="100"/>
+        <Button fx:id="btnSupprimer" text="Supprimer"
+                style="-fx-background-color: #dc3545; -fx-text-fill: white;
+                       -fx-background-radius: 5; -fx-font-size: 12px;"
+                prefWidth="100"/>
+        <Button fx:id="btnQRCode" text="QR Code"
+                style="-fx-background-color: #28a745; -fx-text-fill: white;
+                       -fx-background-radius: 5; -fx-font-size: 12px;"
+                prefWidth="100"/>
+    </VBox>
+</HBox>

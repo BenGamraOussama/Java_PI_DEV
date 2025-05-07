@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10" alignment="CENTER" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="tn.esprit.pidev.gestion_activite.gui.AjouterReponseController"
+      style="-fx-padding: 20;">
+
+    <Label text="Ajouter une réponse"/>
+    <Label fx:id="exerciceLabel" wrapText="true" style="-fx-font-weight: bold;"/>
+
+    <TextArea fx:id="contenuField" promptText="Votre réponse ici..." prefRowCount="4" prefWidth="300"/>
+
+    <Button text="Envoyer la réponse" onAction="#ajouterReponse"
+            style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 10 20; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 1);"/>
+
+</VBox>
+

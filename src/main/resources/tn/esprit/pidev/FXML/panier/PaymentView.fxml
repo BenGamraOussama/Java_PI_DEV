@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.web.WebView?>
+
+<VBox spacing="20" alignment="CENTER" style="-fx-padding: 20;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.pidev.gestion_commande.controllers.PaymentController">
+    <Label text="Paiement Sécurisé" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+    
+    <WebView fx:id="stripeWebView" prefHeight="400" prefWidth="600"/>
+    
+    <HBox spacing="10" alignment="CENTER">
+        <Button fx:id="cancelButton" text="Annuler" onAction="#handleCancel" 
+                style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+    </HBox>
+</VBox>

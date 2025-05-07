@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.esprit.pidev.gestion_commande.controllers.EditCommandeController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <VBox spacing="15" layoutX="50" layoutY="50">
+        <TextField fx:id="nomField" promptText="Nom client" />
+        <TextField fx:id="prenomField" promptText="Prénom client" />
+        <DatePicker fx:id="datePicker" />
+        <Button text="Enregistrer" onAction="#handleSave"/>
+    </VBox>
+</AnchorPane>

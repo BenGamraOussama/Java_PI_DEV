@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.pidev.gestion_ressource.Controllers.ArticleDetailController" stylesheets="@../css/detailStyle.css"
+            prefHeight="689.0" prefWidth="938.0">
+
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER" styleClass="fullpage-scroll">
+            <VBox alignment="TOP_CENTER" spacing="30" styleClass="fullpage-container">
+                <ComboBox fx:id="languageComboBox" promptText="Select Language" />
+                <Button fx:id="translateButton" text="Translate" onAction="#handleTranslate" />                <!-- Placeholder for media content (image, video, pdf) -->
+                <VBox fx:id="mediaContainer" alignment="CENTER" styleClass="fullpage-media-container"/>
+
+                <!-- Article Content -->
+                <VBox alignment="TOP_CENTER" spacing="30" styleClass="fullpage-container" VBox.vgrow="ALWAYS">
+                    <Label fx:id="title" styleClass="fullpage-title"/>
+
+                    <HBox alignment="CENTER" spacing="30" styleClass="meta-box">
+                        <Label fx:id="categoryLabel" styleClass="meta-label"/>
+                        <Label fx:id="publishedAt" styleClass="meta-label"/>
+                    </HBox>
+
+                    <TextArea fx:id="content" editable="false" wrapText="true" styleClass="fullpage-content"/>
+
+                    <HBox alignment="CENTER" spacing="20" styleClass="button-box">
+                        <Button text="Close" onAction="#handleClose" styleClass="action-button close-btn"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+
+        </ScrollPane>
+    </center>
+
+</BorderPane>

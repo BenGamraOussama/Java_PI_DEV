@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.image.*?>
+
+<HBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      stylesheets="@../../css/commande.css" fx:controller="tn.esprit.pidev.gestion_commande.controllers.ListViewCommande"
+      spacing="20" style="-fx-padding: 20;">
+
+    <!-- Left side: Commands list -->
+    <VBox spacing="10" HBox.hgrow="ALWAYS">
+        <!-- Header -->
+        <Label text="Liste des Commandes" styleClass="header-title"/>
+
+        <!-- Search, Sort and Stats Section -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <TextField fx:id="searchField" promptText="Rechercher une commande..." 
+                       style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-radius: 5;"
+                       prefWidth="300" HBox.hgrow="ALWAYS"/>
+            <Button fx:id="btnExportPDF" text="Exporter PDF"
+                    style="-fx-background-color: #17a2b8; -fx-text-fill: white;
+                           -fx-background-radius: 5; -fx-font-size: 12px;"
+                   />
+            <Button text="Tri ↑ Date" onAction="#handleSortAscending" 
+                    style="-fx-background-color: #6c757d; -fx-text-fill: white;
+                           -fx-background-radius: 5; -fx-font-size: 12px;"/>
+            <Button text="Tri ↓ Date" onAction="#handleSortDescending" 
+                    style="-fx-background-color: #6c757d; -fx-text-fill: white;
+                           -fx-background-radius: 5; -fx-font-size: 12px;"/>
+            <Button fx:id="toggleStatsButton" text="Statistiques des Commandes" onAction="#toggleStats" styleClass="button-primary"/>
+        </HBox>
+
+        <!-- Email Section -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <TextField fx:id="emailField" promptText="Entrez l'adresse e-mail..." styleClass="text-field" prefWidth="300"/>
+            <Button fx:id="sendEmailButton" text="Envoyer Email" onAction="#handleSendEmail" styleClass="button-primary"/>
+        </HBox>
+
+        <!-- Statistics Section -->
+        <VBox fx:id="statsContainer" visible="false" managed="false" spacing="10">
+            <Label text="Vue d'ensemble des Commandes" styleClass="section-title"/>
+            <Label text="Top 5 clients et commandes par mois" styleClass="section-subtitle"/>
+            <PieChart fx:id="productStatsChart" legendVisible="true" labelsVisible="true" 
+                      prefHeight="400" prefWidth="600" animated="true"/>
+        </VBox>
+
+        <!-- Commandes Container -->
+        <ScrollPane fitToWidth="true" styleClass="scroll-pane" VBox.vgrow="ALWAYS">
+            <content>
+                <VBox fx:id="commandesContainer" spacing="15" styleClass="commandes-container"/>
+            </content>
+        </ScrollPane>
+
+        <!-- Add to Cart Button -->
+        <Button fx:id="addToCartButton" text="Vers Produits" onAction="#handleAddToCart" styleClass="button-primary"/>
+    </VBox>
+
+    <!-- Right side: QR Code display -->
+    <VBox spacing="10" alignment="TOP_CENTER" style="-fx-padding: 20; -fx-min-width: 320;" styleClass="qr-container">
+        <Label text="QR Code" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+        <ImageView fx:id="qrCodeImageView" fitWidth="300" fitHeight="300" 
+                   style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"/>
+        <Label fx:id="qrCodeLabel" text="Sélectionnez une commande pour voir son QR code" 
+               wrapText="true" textAlignment="CENTER"/>
+    </VBox>
+
+</HBox>

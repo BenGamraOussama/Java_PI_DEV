@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.esprit.pidev.gestion_activite.gui.ListeActivitesController"
+            prefWidth="800" prefHeight="600">
+
+    <VBox spacing="15" AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.bottomAnchor="10">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <Label text="Liste des Activités" style="-fx-font-size: 22px; -fx-font-weight: bold;" />
+
+        <TitledPane text="Filtres et Recherche" expanded="true" collapsible="true">
+            <VBox spacing="10">  <padding>        <Insets top="10" right="10" bottom="10" left="10" />
+            </padding>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="🔍 Rechercher:" style="-fx-font-weight: bold; -fx-text-fill: #333333;"/>
+                    <TextField fx:id="searchField" promptText="Titre ou description..." prefWidth="300"
+                               style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #E0E0E0; -fx-padding: 8; -fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 1);"/>
+                </HBox>
+
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="📂 Filtrer par:" style="-fx-font-weight: bold; -fx-text-fill: #333333;"/>
+                    <ComboBox fx:id="typeFilter" promptText="Type" prefWidth="140"
+                              style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #E0E0E0; -fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 1);"/>
+                    <ComboBox fx:id="statusFilter" promptText="État" prefWidth="140"
+                              style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #E0E0E0; -fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 1);"/>
+                    <Button text="Réinitialiser" onAction="#resetFilters"
+                            style="-fx-background-color: #9E9E9E; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 8 15; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 1);"/>
+                </HBox>
+            </VBox>
+        </TitledPane>
+
+        <Separator />
+
+        <TableView fx:id="activiteTable" prefHeight="350">
+            <columns>
+                <TableColumn fx:id="titreColumn" text="Titre" prefWidth="150" />
+                <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="250" />
+                <TableColumn fx:id="questionColumn" text="Question" prefWidth="150" />
+                <TableColumn fx:id="statusColumn" text="État" prefWidth="100" />
+                <TableColumn fx:id="typeColumn" text="Type" prefWidth="100" />
+            </columns>
+        </TableView>
+
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="➕ Ajouter Activité" onAction="#openAjouterActivite"
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 8 15; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 1);"/>
+            <Button text="✏️ Modifier" onAction="#modifierActivite"
+                    style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 8 15; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 1);"/>
+            <Button text="🗑 Supprimer" onAction="#supprimerActivite"
+                    style="-fx-background-color: #F44336; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 8 15; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 1);"/>
+        </HBox>
+
+        <!-- Optional: show a loading spinner while data loads -->
+        <ProgressIndicator fx:id="loadingIndicator" visible="false" />
+
+    </VBox>
+</AnchorPane>

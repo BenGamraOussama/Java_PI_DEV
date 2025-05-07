@@ -30,6 +30,13 @@
                     </VBox>
                 </HBox>
 
+                <HBox onMouseClicked="#handleAvtiviteButtonClick" styleClass="bottom-nav-item" alignment="CENTER" HBox.hgrow="ALWAYS">
+                    <VBox alignment="CENTER">
+                        <Label styleClass="bottom-nav-icon" text="👤" />
+                        <Label styleClass="bottom-nav-text" text="Exercices" />
+                    </VBox>
+                </HBox>
+
                 <HBox styleClass="bottom-nav-item" alignment="CENTER" HBox.hgrow="ALWAYS">
                     <VBox alignment="CENTER">
                         <Label styleClass="bottom-nav-icon" text="💬" />

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="tn.esprit.pidev.gestion_commande.controllers.RechercheCommandeController"
+      spacing="20"
+      style="-fx-background-color: white;"
+      padding="20">
+
+    <Label text="Recherche de Commandes" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <GridPane vgap="10" hgap="10">
+        <Label text="ID Commande:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="idField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Montant:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="montantField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Utilisateur:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="userField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <Button text="Rechercher" onAction="#handleSearch" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+
+    <FlowPane fx:id="resultsContainer" hgap="10" vgap="10" prefWrapLength="800"/>
+
+</VBox> 

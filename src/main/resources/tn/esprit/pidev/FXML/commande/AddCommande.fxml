@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/8"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="tn.esprit.pidev.gestion_commande.controllers.AddCommandeController"
+      alignment="CENTER"
+      spacing="15">
+
+    <padding>
+        <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+    </padding>
+
+    <Label text="Gestion des Commandes" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="Date :" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <DatePicker fx:id="dateField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Montant :" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="montantField" promptText="Entrez le montant"
+                   GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="User ID :" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="userIdField" promptText="Entrez l'ID de l'utilisateur"
+                   GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <HBox spacing="10">
+        <Button text="Ajouter" onAction="#handleAddCommande" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        <Button text="Modifier" onAction="#handleUpdateCommande" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+        <Button text="Supprimer" onAction="#handleDeleteCommande" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+    </HBox>
+
+    <Separator/>
+
+    <Label text="Recherche de Commandes" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="ID Commande:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="searchIdField" promptText="ID de la commande"
+                   GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Montant:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="searchMontantField" promptText="Montant"
+                   GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Utilisateur:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="searchUserField" promptText="ID de l'utilisateur"
+                   GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <HBox spacing="10">
+        <Button text="Rechercher" onAction="#handleSearch" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        <Button text="Réinitialiser" onAction="#handleReset" style="-fx-background-color: #9E9E9E; -fx-text-fill: white;"/>
+    </HBox>
+
+    <TableView fx:id="commandeTable" prefHeight="300" prefWidth="600" style="-fx-background-color: white;">
+        <columns>
+            <TableColumn fx:id="idCol" text="ID" prefWidth="100"/>
+            <TableColumn fx:id="dateCol" text="Date" prefWidth="150"/>
+            <TableColumn fx:id="montantCol" text="Montant" prefWidth="150"/>
+            <TableColumn fx:id="userIdCol" text="User ID" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+</VBox>

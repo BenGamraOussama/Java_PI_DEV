@@ -1,0 +1,243 @@
+package tn.esprit.pidev.gestion_activite.services;
+
+import tn.esprit.pidev.gestion_activite.entities.Patient;
+import tn.esprit.pidev.gestion_activite.entities.Activite;
+import tn.esprit.pidev.gestion_activite.entities.Exercice;
+import tn.esprit.pidev.Database.Database;
+
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.io.IOException;
+
+public class PatientService {
+    private Connection connection;
+    private ActiviteService activiteService;
+    private ExerciceService exerciceService;
+    private EmailService emailService;
+    private SMSService smsService;
+
+    public PatientService() {
+        connection = Database.getConnection();
+        emailService = new EmailService();
+        smsService = new SMSService();
+    }
+
+    private ActiviteService getActiviteService() {
+        if (activiteService == null) {
+            activiteService = new ActiviteService();
+        }
+        return activiteService;
+    }
+
+    private ExerciceService getExerciceService() {
+        if (exerciceService == null) {
+            exerciceService = new ExerciceService();
+        }
+        return exerciceService;
+    }
+
+    public void ajouter(Patient patient) throws SQLException {
+        String sql = "INSERT INTO patient (nom, prenom, email) VALUES (?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, patient.getNom());
+            ps.setString(2, patient.getPrenom());
+            ps.setString(3, patient.getEmail());
+            ps.executeUpdate();
+
+            // Get the generated ID
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    patient.setId(rs.getInt(1));
+                }
+            }
+        }
+    }
+
+    public List<Patient> getAll() throws SQLException {
+        List<Patient> patients = new ArrayList<>();
+        String sql = "SELECT * FROM patient";
+        try (Statement st = connection.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                Patient patient = new Patient(
+                        rs.getInt("id"),
+                        rs.getString("nom"),
+                        rs.getString("prenom"),
+                        rs.getString("email"),
+                        rs.getString("phone")
+                );
+                // Load associated activities and exercises
+                loadPatientRelations(patient);
+                patients.add(patient);
+            }
+        }
+        return patients;
+    }
+
+    public void modifier(Patient patient) throws SQLException {
+        String sql = "UPDATE patient SET nom=?, prenom=?, email=? WHERE id=?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, patient.getNom());
+            ps.setString(2, patient.getPrenom());
+            ps.setString(3, patient.getEmail());
+            ps.setInt(4, patient.getId());
+            ps.executeUpdate();
+        }
+    }
+
+    public void supprimer(int id) throws SQLException {
+        // The ON DELETE CASCADE in the junction tables will handle the deletion of relationships
+        String sql = "DELETE FROM patient WHERE id=?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        }
+    }
+
+    public Patient findById(int id) throws SQLException {
+        String sql = "SELECT * FROM patient WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Patient patient = new Patient(
+                        rs.getInt("id"),
+                        rs.getString("nom"),
+                        rs.getString("prenom"),
+                        rs.getString("email"),
+                        rs.getString("phone")
+                );
+                loadPatientRelations(patient);
+                return patient;
+            }
+            return null;
+        }
+    }
+
+    public void assignerActivite(Patient patient, Activite activite) throws SQLException {
+        String sql = "INSERT INTO patient_activite (patient_id, activite_id) VALUES (?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, patient.getId());
+            ps.setInt(2, activite.getId());
+            ps.executeUpdate();
+
+            // Send email notification
+            try {
+                emailService.sendNewActivityEmail(patient, activite);
+            } catch (IOException e) {
+                System.err.println("Failed to send email notification: " + e.getMessage());
+                // Continue execution even if email fails
+            }
+
+            // Send SMS notification
+            smsService.sendNewActivitySMS(patient, activite);
+        }
+    }
+
+    public void assignerExercice(Patient patient, Exercice exercice) throws SQLException {
+        String sql = "INSERT INTO patient_exercice (patient_id, exercice_id) VALUES (?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, patient.getId());
+            ps.setInt(2, exercice.getId());
+            ps.executeUpdate();
+
+            // Send email notification
+            try {
+                emailService.sendNewExerciseEmail(patient, exercice);
+            } catch (IOException e) {
+                System.err.println("Failed to send email notification: " + e.getMessage());
+                // Continue execution even if email fails
+            }
+
+            // Send SMS notification
+            smsService.sendNewExerciseSMS(patient, exercice);
+        }
+    }
+
+    private void loadPatientRelations(Patient patient) throws SQLException {
+        // Load activities
+        String activiteReq = "SELECT a.* FROM activite a " +
+                "JOIN patient_activite pa ON a.id = pa.activite_id " +
+                "WHERE pa.patient_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(activiteReq)) {
+            ps.setInt(1, patient.getId());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Activite activite = new Activite(
+                        rs.getInt("id"),
+                        rs.getString("titre"),
+                        rs.getString("description"),
+                        rs.getString("status"),
+                        rs.getString("type")
+                );
+                patient.getActivites().add(activite);
+            }
+        }
+
+        // Load exercises
+        String exerciceReq = "SELECT e.*, a.titre as activite_titre FROM exercice e " +
+                "JOIN activite a ON e.activite_id = a.id " +
+                "JOIN patient_exercice pe ON e.id = pe.exercice_id " +
+                "WHERE pe.patient_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(exerciceReq)) {
+            ps.setInt(1, patient.getId());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Activite activite = new Activite(
+                        rs.getInt("activite_id"),
+                        rs.getString("activite_titre")
+                );
+                Exercice exercice = new Exercice(
+                        rs.getInt("id"),
+                        activite,
+                        rs.getString("question")
+                );
+                patient.getExercices().add(exercice);
+            }
+        }
+    }
+
+    public Patient getById(int id) throws SQLException {
+        String sql = "SELECT * FROM patient WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Patient patient = new Patient(
+                        rs.getInt("id"),
+                        rs.getString("nom"),
+                        rs.getString("prenom"),
+                        rs.getString("email"),
+                        rs.getString("phone")
+                );
+                // Set the new fields
+                patient.setBad_word_attempts(rs.getInt("bad_word_attempts"));
+                if (rs.getTimestamp("suspended_until") != null) {
+                    patient.setSuspended_until(rs.getTimestamp("suspended_until").toLocalDateTime());
+                }
+                loadPatientRelations(patient);
+                return patient;
+            }
+            return null;
+        }
+    }
+
+    public void update(Patient patient) throws SQLException {
+        String sql = "UPDATE patient SET nom=?, prenom=?, email=?, bad_word_attempts=?, suspended_until=? WHERE id=?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, patient.getNom());
+            ps.setString(2, patient.getPrenom());
+            ps.setString(3, patient.getEmail());
+            ps.setInt(4, patient.getBad_word_attempts());
+            if (patient.getSuspended_until() != null) {
+                ps.setTimestamp(5, Timestamp.valueOf(patient.getSuspended_until()));
+            } else {
+                ps.setNull(5, Types.TIMESTAMP);
+            }
+            ps.setInt(6, patient.getId());
+            ps.executeUpdate();
+        }
+    }
+} 

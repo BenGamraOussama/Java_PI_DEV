@@ -52,6 +52,13 @@ public class DashboardController implements Initializable {
     @FXML private VBox prescriptionsPane;
     @FXML private VBox medicalNotesPane;
     @FXML private VBox userManagementPane;
+    @FXML private VBox ActivitePane;
+    @FXML private VBox CommandePane;
+
+    @FXML private VBox ArticlePane;
+    @FXML private VBox CategoryPane;
+
+
     @FXML private VBox profilePane;
     @FXML private VBox settingsPane;
 
@@ -165,6 +172,10 @@ public class DashboardController implements Initializable {
         prescriptionsPane.setVisible(false);
         medicalNotesPane.setVisible(false);
         userManagementPane.setVisible(false);
+        ActivitePane.setVisible(false);
+        CommandePane.setVisible(false);
+        ArticlePane.setVisible(false);
+        CategoryPane.setVisible(false);
         profilePane.setVisible(false);
         settingsPane.setVisible(false);
     }
@@ -213,6 +224,27 @@ public class DashboardController implements Initializable {
 
         // Refresh the user statistics charts when showing user management
         initUserStatisticsCharts();
+    }
+
+    @FXML
+    private void showActivite(ActionEvent event) {
+        hideAllPanes();
+        ActivitePane.setVisible(true);
+    }
+    @FXML
+    private void showCommande(ActionEvent event) {
+        hideAllPanes();
+        CommandePane.setVisible(true);
+    }
+    @FXML
+    private void showArticle(ActionEvent event) {
+        hideAllPanes();
+        ArticlePane.setVisible(true);
+    }
+    @FXML
+    private void showCategory(ActionEvent event) {
+        hideAllPanes();
+        CategoryPane.setVisible(true);
     }
 
     @FXML

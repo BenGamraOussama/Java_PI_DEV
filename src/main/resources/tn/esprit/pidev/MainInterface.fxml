@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.effect.DropShadow?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.esprit.pidev.gestion_activite.gui.MainInterfaceController"
+            prefWidth="800" prefHeight="600">
+
+    <!-- Sidebar -->
+    <left>
+        <VBox style="-fx-background-color: #1a237e;" minWidth="200" maxWidth="200">
+            <padding>
+                <Insets top="20" right="10" bottom="20" left="10"/>
+            </padding>
+
+            <!-- Logo/Title -->
+            <Label text="PII Application"
+                   style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"
+                   alignment="CENTER"
+                   maxWidth="Infinity">
+                <padding>
+                    <Insets bottom="30"/>
+                </padding>
+                <effect>
+                    <DropShadow color="rgba(0,0,0,0.3)" radius="3" spread="0.2"/>
+                </effect>
+            </Label>
+
+            <!-- Navigation Buttons -->
+            <VBox spacing="15">
+                <Button fx:id="btnActivites"
+                        text="Activités"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-cursor: hand; -fx-background-radius: 5;"
+                        maxWidth="Infinity"
+                        onAction="#showActivites"
+                        alignment="CENTER_LEFT">
+                    <padding>
+                        <Insets left="15" top="10" bottom="10"/>
+                    </padding>
+                    <effect>
+                        <DropShadow color="#0d47a1" radius="5" spread="0.2"/>
+                    </effect>
+                </Button>
+
+                <Button fx:id="btnExercices"
+                        text="Exercices"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-cursor: hand; -fx-background-radius: 5;"
+                        maxWidth="Infinity"
+                        onAction="#showExercices"
+                        alignment="CENTER_LEFT">
+                    <padding>
+                        <Insets left="15" top="10" bottom="10"/>
+                    </padding>
+                    <effect>
+                        <DropShadow color="#0d47a1" radius="5" spread="0.2"/>
+                    </effect>
+                </Button>
+            </VBox>
+
+            <!-- Spacer to push buttons to top -->
+            <VBox VBox.vgrow="ALWAYS"/>
+        </VBox>
+    </left>
+
+    <!-- Content Area -->
+    <center>
+        <StackPane fx:id="contentArea" style="-fx-background-color: #f5f6fa;">
+            <!-- Content will be loaded here -->
+        </StackPane>
+    </center>
+
+</BorderPane> 

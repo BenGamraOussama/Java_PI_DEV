@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.esprit.pidev.gestion_activite.gui.ModifierActiviteController"
+            prefWidth="400" prefHeight="400">
+
+    <children>
+        <VBox spacing="10" alignment="CENTER" layoutX="50" layoutY="30">
+            <Label text="Modifier Activité" style="-fx-font-size: 20px;" />
+
+            <TextField fx:id="titreField" promptText="Titre" />
+            <TextArea fx:id="descriptionField" promptText="Description" prefRowCount="3" />
+
+            <ComboBox fx:id="statusComboBox" promptText="Status">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="pas commencé" />
+                        <String fx:value="en cours" />
+                        <String fx:value="complété" />
+                    </FXCollections>
+                </items>
+            </ComboBox>
+
+            <ComboBox fx:id="typeComboBox" promptText="Type">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="mentale" />
+                        <String fx:value="sociale" />
+                        <String fx:value="relaxation" />
+                        <String fx:value="exercice" />
+                    </FXCollections>
+                </items>
+            </ComboBox>
+            <Label fx:id="questionLabel" text="Question:" visible="false" />
+            <TextField fx:id="questionField" promptText="Question de l'exercice" visible="false" />
+            <Button text="Modifier" onAction="#modifierActivite" />
+        </VBox>
+    </children>
+</AnchorPane>

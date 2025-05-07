@@ -1,0 +1,151 @@
+package tn.esprit.pidev.gestion_activite.gui;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+import tn.esprit.pidev.gestion_activite.entities.Activite;
+import tn.esprit.pidev.gestion_activite.entities.Exercice;
+import tn.esprit.pidev.gestion_activite.entities.Patient;
+import tn.esprit.pidev.gestion_activite.services.ActiviteService;
+import tn.esprit.pidev.gestion_activite.services.ExerciceService;
+import tn.esprit.pidev.gestion_activite.services.PatientService;
+
+import java.sql.SQLException;
+
+public class AjouterActiviteController {
+
+    @FXML private VBox questionContainer;
+    @FXML private TextField questionField;
+    @FXML private TextField titreField;
+    @FXML private TextArea descriptionField;
+    @FXML private ComboBox<String> statusComboBox;
+    @FXML private ComboBox<String> typeComboBox;
+    @FXML private ComboBox<Patient> patientComboBox;
+
+    private final ActiviteService activiteService = new ActiviteService();
+    private final ExerciceService exerciceService = new ExerciceService();
+    private final PatientService patientService = new PatientService();
+    private ListeActivitesController listeActivitesController;
+
+    public void setListeActivitesController(ListeActivitesController controller) {
+        this.listeActivitesController = controller;
+    }
+
+    public void initialize() {
+        typeComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+            boolean isExercise = "exercice".equalsIgnoreCase(newVal);
+            questionContainer.setVisible(isExercise);
+        });
+
+        // Load patients into combobox
+        try {
+            patientComboBox.getItems().addAll(patientService.getAll());
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors du chargement des patients!");
+            e.printStackTrace();
+        }
+
+        // Set the display format for patients in the combobox
+        patientComboBox.setConverter(new javafx.util.StringConverter<Patient>() {
+            @Override
+            public String toString(Patient patient) {
+                return patient == null ? "" : patient.getNom() + " " + patient.getPrenom();
+            }
+
+            @Override
+            public Patient fromString(String string) {
+                return null;
+            }
+        });
+    }
+
+    @FXML
+    private void ajouterActivite() {
+        // Get all field values
+        String titre = titreField.getText().trim();
+        String description = descriptionField.getText().trim();
+        String status = statusComboBox.getValue();
+        String type = typeComboBox.getValue();
+        Patient selectedPatient = patientComboBox.getValue();
+        String question = questionField.getText().trim();
+
+        // Validate each field
+        StringBuilder errorMessage = new StringBuilder();
+
+        if (titre.isEmpty()) {
+            errorMessage.append("• Le titre est obligatoire\n");
+        }
+
+        if (description.isEmpty()) {
+            errorMessage.append("• La description est obligatoire\n");
+        }
+
+        if (status == null) {
+            errorMessage.append("• Le statut est obligatoire\n");
+        }
+
+        if (type == null) {
+            errorMessage.append("• Le type est obligatoire\n");
+        }
+
+        if (selectedPatient == null) {
+            errorMessage.append("• La sélection d'un patient est obligatoire\n");
+        }
+
+        if ("exercice".equalsIgnoreCase(type) && question.isEmpty()) {
+            errorMessage.append("• Une question est obligatoire pour les exercices\n");
+        }
+
+        // If there are any validation errors, show them and return
+        if (errorMessage.length() > 0) {
+            showAlert(Alert.AlertType.ERROR, "Erreur de validation", "Veuillez corriger les erreurs suivantes :\n\n" + errorMessage.toString());
+            return;
+        }
+
+        try {
+            // Create and add the activity
+            Activite activite = new Activite(0, titre, description, status, type, selectedPatient);
+            activiteService.ajouter(activite);
+
+            // Assign the activity to the patient
+            patientService.assignerActivite(selectedPatient, activite);
+
+            if ("exercice".equalsIgnoreCase(type)) {
+                Exercice exercice = new Exercice(0, activite, question);
+                exerciceService.ajouter(exercice);
+                patientService.assignerExercice(selectedPatient, exercice);
+
+                showAlert(Alert.AlertType.INFORMATION, "Succès", "Exercice ajouté et assigné avec succès!");
+            } else {
+                showAlert(Alert.AlertType.INFORMATION, "Succès", "Activité ajoutée et assignée avec succès!");
+            }
+
+            if (listeActivitesController != null) {
+                listeActivitesController.loadActivites();
+            }
+
+            clearFields();
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'ajout: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.show();
+    }
+
+    private void clearFields() {
+        titreField.clear();
+        descriptionField.clear();
+        statusComboBox.setValue(null);
+        typeComboBox.setValue(null);
+        patientComboBox.setValue(null);
+        questionField.clear();
+        questionContainer.setVisible(false);
+    }
+}

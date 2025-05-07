@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ListeProduitsController {
 
@@ -37,8 +38,23 @@ public class ListeProduitsController {
     @FXML
     private TableColumn<Produit, Void> colSupprimer;
 
+    @FXML
+    private Button prevPageButton;
+
+    @FXML
+    private Button nextPageButton;
+
+    @FXML
+    private Label pageInfoLabel;
+
     private final ObservableList<Produit> produits = FXCollections.observableArrayList();
     private ProduitServices produitService;
+
+    // Pagination variables
+    private int currentPage = 1;
+    private final int ITEMS_PER_PAGE = 5;
+    private int totalPages = 1;
+    private List<Produit> allProduits;
 
     @FXML
     public void initialize() throws SQLException {
@@ -55,7 +71,59 @@ public class ListeProduitsController {
         ajouterBoutonsModifier();
         ajouterBoutonsSupprimer();
 
+        // Initialize pagination
+        currentPage = 1;
+        prevPageButton.setDisable(true); // Initially disabled as we start at page 1
+
         rafraichirListeProduits();
+    }
+
+    /**
+     * Handles the previous page button click
+     */
+    @FXML
+    private void handlePreviousPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            displayCurrentPage();
+            updatePaginationControls();
+        }
+    }
+
+    /**
+     * Handles the next page button click
+     */
+    @FXML
+    private void handleNextPage() {
+        if (currentPage < totalPages) {
+            currentPage++;
+            displayCurrentPage();
+            updatePaginationControls();
+        }
+    }
+
+    /**
+     * Updates the pagination controls (button states and page info)
+     */
+    private void updatePaginationControls() {
+        // Update page info label
+        pageInfoLabel.setText("Page " + currentPage + " / " + totalPages);
+
+        // Enable/disable navigation buttons
+        prevPageButton.setDisable(currentPage <= 1);
+        nextPageButton.setDisable(currentPage >= totalPages);
+    }
+
+    /**
+     * Displays the current page of products
+     */
+    private void displayCurrentPage() {
+        int startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        int endIndex = Math.min(startIndex + ITEMS_PER_PAGE, allProduits.size());
+
+        List<Produit> currentPageItems = allProduits.subList(startIndex, endIndex);
+        produits.setAll(currentPageItems);
+        tableProduits.setItems(produits);
     }
 
     private void ajouterBoutonsModifier() {
@@ -107,7 +175,24 @@ public class ListeProduitsController {
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 produitService.supprimerProduit(produit.getId());
+
+                // Remove from both lists
                 produits.remove(produit);
+                allProduits.remove(produit);
+
+                // Recalculate pagination
+                totalPages = (int) Math.ceil((double) allProduits.size() / ITEMS_PER_PAGE);
+                if (totalPages == 0) totalPages = 1;
+
+                // Adjust current page if needed
+                if (currentPage > totalPages) {
+                    currentPage = totalPages;
+                }
+
+                // Update UI
+                updatePaginationControls();
+                displayCurrentPage();
+
                 afficherConfirmation("Succès", "Le produit a été supprimé avec succès.");
             }
         });
@@ -115,11 +200,23 @@ public class ListeProduitsController {
 
     @FXML
     private void rafraichirListeProduits() {
-        List<Produit> produitsBD = produitService.readList();
-        produits.setAll(produitsBD);
-        tableProduits.setItems(produits);
+        // Get all products from database
+        allProduits = produitService.readList();
 
-        if (produitsBD.isEmpty()) {
+        // Reset to first page when refreshing
+        currentPage = 1;
+
+        // Calculate total pages
+        totalPages = (int) Math.ceil((double) allProduits.size() / ITEMS_PER_PAGE);
+        if (totalPages == 0) totalPages = 1;
+
+        // Update pagination controls
+        updatePaginationControls();
+
+        // Display first page
+        displayCurrentPage();
+
+        if (allProduits.isEmpty()) {
             afficherConfirmation("Information", "Aucun produit trouvé dans la base de données.");
         }
     }
@@ -135,7 +232,15 @@ public class ListeProduitsController {
             stage.setTitle("Ajouter un produit");
             stage.showAndWait(); // Attendre la fermeture de la fenêtre
 
+            // After adding a product, refresh and go to the last page to see the new product
             rafraichirListeProduits(); // Rafraîchir après la fermeture
+
+            // Navigate to the last page to show the newly added product
+            if (totalPages > 0) {
+                currentPage = totalPages;
+                displayCurrentPage();
+                updatePaginationControls();
+            }
         } catch (IOException e) {
             afficherErreur("Erreur", "Impossible d'ouvrir la fenêtre d'ajout", e);
         }
@@ -172,7 +277,17 @@ public class ListeProduitsController {
             stage.setTitle("Modifier le produit");
             stage.showAndWait(); // Utilisation de showAndWait pour attendre la fermeture
 
+            // Store current page before refreshing
+            int previousPage = currentPage;
+
             rafraichirListeProduits(); // Rafraîchir après la fermeture
+
+            // Try to restore previous page if possible
+            if (previousPage <= totalPages) {
+                currentPage = previousPage;
+                displayCurrentPage();
+                updatePaginationControls();
+            }
         } catch (IOException e) {
             afficherErreur("Erreur", "Impossible d'ouvrir la fenêtre de modification", e);
         }

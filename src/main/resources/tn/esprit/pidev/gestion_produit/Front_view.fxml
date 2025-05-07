@@ -61,13 +61,28 @@
 
     <!-- Contenu principal -->
     <center>
-        <ScrollPane fitToWidth="true" styleClass="main-scroll">
-            <FlowPane fx:id="productsContainer"
-                      hgap="20"
-                      vgap="20"
-                      alignment="TOP_CENTER"
-                      styleClass="products-flow"/>
-        </ScrollPane>
+        <VBox alignment="CENTER" spacing="10">
+            <ScrollPane fitToWidth="true" styleClass="main-scroll">
+                <FlowPane fx:id="productsContainer"
+                          hgap="20"
+                          vgap="20"
+                          alignment="TOP_CENTER"
+                          styleClass="products-flow"/>
+            </ScrollPane>
+
+            <!-- Pagination Controls -->
+            <HBox alignment="CENTER" spacing="15" 
+                  style="-fx-padding: 15 0 15 0; -fx-background-color: white; -fx-border-radius: 5; -fx-background-radius: 5;">
+                <Button fx:id="prevPageButton" text="Précédent"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"
+                        onAction="#handlePreviousPage" />
+                <Label fx:id="pageInfoLabel" text="Page 1"
+                       style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+                <Button fx:id="nextPageButton" text="Suivant"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"
+                        onAction="#handleNextPage" />
+            </HBox>
+        </VBox>
     </center>
 
     <!-- Pied de page -->

@@ -36,12 +36,23 @@ public class FrontController implements Initializable {
     @FXML private ComboBox<String> priceFilterCombo;
     @FXML private Label cartCountLabel;
     @FXML private Button cartButton;
+    @FXML private Button prevPageButton;
+    @FXML private Button nextPageButton;
+    @FXML private Label pageInfoLabel;
+
     private RatingDAO ratingService;
     private ProduitServices produitService;
     private TranslationService translationService;
     private final List<Produit> panier = new ArrayList<>();
     private int currentUserRating = 0;
     private Produit selectedProductForRating;
+
+    // Pagination variables
+    private int currentPage = 1;
+    private final int ITEMS_PER_PAGE = 6;
+    private int totalPages = 1;
+    private List<Produit> allProduits = new ArrayList<>();
+    private List<Produit> filteredProduits = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -66,6 +77,10 @@ public class FrontController implements Initializable {
         priceFilterCombo.setValue("Tous les prix");
         priceFilterCombo.setOnAction(e -> filtrerProduits());
 
+        // Initialize pagination
+        currentPage = 1;
+        prevPageButton.setDisable(true); // Initially disabled as we start at page 1
+
         try {
             chargerProduits();
         } catch (SQLException e) {
@@ -73,18 +88,90 @@ public class FrontController implements Initializable {
         }
     }
 
-    private void chargerProduits() throws SQLException {
+    /**
+     * Handles the previous page button click
+     */
+    @FXML
+    private void handlePreviousPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            displayCurrentPage();
+            updatePaginationControls();
+        }
+    }
+
+    /**
+     * Handles the next page button click
+     */
+    @FXML
+    private void handleNextPage() {
+        if (currentPage < totalPages) {
+            currentPage++;
+            displayCurrentPage();
+            updatePaginationControls();
+        }
+    }
+
+    /**
+     * Updates the pagination controls (button states and page info)
+     */
+    private void updatePaginationControls() {
+        // Update page info label
+        pageInfoLabel.setText("Page " + currentPage + " / " + totalPages);
+
+        // Enable/disable navigation buttons
+        prevPageButton.setDisable(currentPage <= 1);
+        nextPageButton.setDisable(currentPage >= totalPages);
+    }
+
+    /**
+     * Displays the current page of products
+     */
+    private void displayCurrentPage() {
         productsContainer.getChildren().clear();
-        List<Produit> produits = produitService.getAllProduits();
-        if (produits.isEmpty()) {
+
+        List<Produit> currentPageItems;
+        if (filteredProduits.isEmpty()) {
+            // If no filter is applied, use all products
+            int startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            int endIndex = Math.min(startIndex + ITEMS_PER_PAGE, allProduits.size());
+            currentPageItems = allProduits.subList(startIndex, endIndex);
+        } else {
+            // If filter is applied, use filtered products
+            int startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            int endIndex = Math.min(startIndex + ITEMS_PER_PAGE, filteredProduits.size());
+            currentPageItems = filteredProduits.subList(startIndex, endIndex);
+        }
+
+        for (Produit produit : currentPageItems) {
+            Node productNode = createProductNode(produit);
+            productsContainer.getChildren().add(productNode);
+        }
+    }
+
+    private void chargerProduits() throws SQLException {
+        // Get all products from database
+        allProduits = produitService.getAllProduits();
+        filteredProduits.clear();
+
+        if (allProduits.isEmpty()) {
+            productsContainer.getChildren().clear();
             productsContainer.getChildren().add(new Label("Aucun produit disponible"));
             return;
         }
 
-        for (Produit produit : produits) {
-            Node productNode = createProductNode(produit);
-            productsContainer.getChildren().add(productNode);
-        }
+        // Reset to first page when loading products
+        currentPage = 1;
+
+        // Calculate total pages
+        totalPages = (int) Math.ceil((double) allProduits.size() / ITEMS_PER_PAGE);
+        if (totalPages == 0) totalPages = 1;
+
+        // Update pagination controls
+        updatePaginationControls();
+
+        // Display first page
+        displayCurrentPage();
     }
 
     private VBox creerCarteProduit(Produit produit) {
@@ -192,10 +279,10 @@ public class FrontController implements Initializable {
         String searchText = searchField.getText().toLowerCase();
         String selectedRange = priceFilterCombo.getValue();
 
-        List<Produit> produits = produitService.getAllProduits();
-        List<Produit> filtered = new ArrayList<>();
+        // Filter products based on search text and price range
+        filteredProduits.clear();
 
-        for (Produit produit : produits) {
+        for (Produit produit : allProduits) {
             boolean matchNom = produit.getNom().toLowerCase().contains(searchText);
             boolean matchPrix = switch (selectedRange) {
                 case "Moins de 50 TND" -> produit.getPrix() < 50;
@@ -205,15 +292,22 @@ public class FrontController implements Initializable {
             };
 
             if (matchNom && matchPrix) {
-                filtered.add(produit);
+                filteredProduits.add(produit);
             }
         }
 
-        ObservableList<Node> productCards = FXCollections.observableArrayList();
-        for (Produit p : filtered) {
-            productCards.add(createProductNode(p));
-        }
-        productsContainer.getChildren().setAll(productCards);
+        // Reset to first page when filtering
+        currentPage = 1;
+
+        // Calculate total pages based on filtered products
+        totalPages = (int) Math.ceil((double) filteredProduits.size() / ITEMS_PER_PAGE);
+        if (totalPages == 0) totalPages = 1;
+
+        // Update pagination controls
+        updatePaginationControls();
+
+        // Display first page of filtered products
+        displayCurrentPage();
     }
 
     private void afficherErreur(String message) {
@@ -280,12 +374,22 @@ public class FrontController implements Initializable {
                 ratingService.addRating(selectedProductForRating.getId(), 1, currentUserRating);
                 showAlert(Alert.AlertType.INFORMATION, "Succès", "Merci pour votre évaluation !");
 
+                // Store current page before refreshing
+                int previousPage = currentPage;
+
                 // Réinitialiser après soumission
                 currentUserRating = 0;
                 selectedProductForRating = null;
 
                 // Recharger les produits pour mettre à jour les ratings
                 chargerProduits();
+
+                // Restore previous page if possible
+                if (previousPage <= totalPages) {
+                    currentPage = previousPage;
+                    displayCurrentPage();
+                    updatePaginationControls();
+                }
             } else {
                 showAlert(Alert.AlertType.WARNING, "Avertissement", "Veuillez sélectionner un produit et une évaluation.");
             }

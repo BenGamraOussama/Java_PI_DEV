@@ -21,15 +21,9 @@ public class ExerciceService {
         }
     }
 
-    private void ensureConnection() throws SQLException {
-        if (connection == null || connection.isClosed()) {
-            connection = Database.getConnection();
-            connection.setAutoCommit(true);
-        }
-    }
 
     public void ajouter(Exercice ex) throws SQLException {
-        ensureConnection();
+        connection = Database.getConnection();
         String req = "INSERT INTO exercice (activite_id, question) VALUES (?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, ex.getActivite().getId());
@@ -46,7 +40,7 @@ public class ExerciceService {
     }
 
     public List<Exercice> afficher() throws SQLException {
-        ensureConnection();
+        connection = Database.getConnection();
         String req = "SELECT e.*, a.titre as activite_titre, a.description as activite_description, " +
                 "a.status as activite_status, a.type as activite_type " +
                 "FROM exercice e " +
@@ -75,7 +69,7 @@ public class ExerciceService {
     }
 
     public void modifier(Exercice ex) throws SQLException {
-        ensureConnection();
+        connection = Database.getConnection();
         String req = "UPDATE exercice SET question = ? WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(req)) {
             ps.setString(1, ex.getQuestion());
@@ -85,7 +79,7 @@ public class ExerciceService {
     }
 
     public void supprimer(int id) throws SQLException {
-        ensureConnection();
+        connection = Database.getConnection();
         String req = "DELETE FROM exercice WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(req)) {
             ps.setInt(1, id);
@@ -94,7 +88,7 @@ public class ExerciceService {
     }
 
     public Exercice findByActiviteId(int activiteId) throws SQLException {
-        ensureConnection();
+        connection = Database.getConnection();
         String req = "SELECT e.*, a.titre as activite_titre, a.description as activite_description, " +
                 "a.status as activite_status, a.type as activite_type " +
                 "FROM exercice e " +
@@ -126,7 +120,7 @@ public class ExerciceService {
     }
 
     public boolean hasAnswer(int exerciceId) throws SQLException {
-        ensureConnection();
+        connection = Database.getConnection();
         String query = "SELECT COUNT(*) FROM reponse WHERE exercice_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, exerciceId);

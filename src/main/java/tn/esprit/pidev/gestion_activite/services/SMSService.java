@@ -9,9 +9,9 @@ import com.twilio.type.PhoneNumber;
 
 public class SMSService {
     // Your Twilio credentials
-    private static final String ACCOUNT_SID = "AC3f14d012025432f63a67f72dd629db60";
-    private static final String AUTH_TOKEN = "cdee68c3bc15ae02851d55a7246aef4b";
-    private static final String TWILIO_PHONE_NUMBER = "+17404802130";
+    private static final String ACCOUNT_SID = "ACce91a8a591a0c431c46543e8afc43c5c";
+    private static final String AUTH_TOKEN = "ee0d9e720fe8e03490cfb37bf5204b25";
+    private static final String TWILIO_PHONE_NUMBER = "+17602798381";
 
     public SMSService() {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
@@ -24,14 +24,13 @@ public class SMSService {
 
         String formattedPhone = formatPhoneNumber(patient.getPhone());
         if (formattedPhone == null) {
-            System.err.println("Invalid phone number format for patient: " + patient.getNom() + " " + patient.getPrenom());
+            System.err.println("Invalid phone number format for patient: " + patient.getName());
             return;
         }
 
         String message = String.format(
-                "Bonjour %s %s,\n\nUne nouvelle activité vous a été assignée :\n%s\n\nDescription : %s\nType : %s\n\nConnectez-vous à votre compte pour commencer cette activité.\n\nCordialement,\nL'équipe de suivi",
-                patient.getPrenom(),
-                patient.getNom(),
+                "Bonjour %s,\n\nUne nouvelle activité vous a été assignée :\n%s\n\nDescription : %s\nType : %s\n\nConnectez-vous à votre compte pour commencer cette activité.\n\nCordialement,\nL'équipe de suivi",
+                patient.getName(),
                 activite.getTitre(),
                 activite.getDescription(),
                 activite.getType()
@@ -47,14 +46,13 @@ public class SMSService {
 
         String formattedPhone = formatPhoneNumber(patient.getPhone());
         if (formattedPhone == null) {
-            System.err.println("Invalid phone number format for patient: " + patient.getNom() + " " + patient.getPrenom());
+            System.err.println("Invalid phone number format for patient: " + patient.getName());
             return;
         }
 
         String message = String.format(
-                "Bonjour %s %s,\n\nUn nouvel exercice vous a été assigné :\n%s\n\nQuestion : %s\n\nConnectez-vous à votre compte pour répondre à cet exercice.\n\nCordialement,\nL'équipe de suivi",
-                patient.getPrenom(),
-                patient.getNom(),
+                "Bonjour %s,\n\nUn nouvel exercice vous a été assigné :\n%s\n\nQuestion : %s\n\nConnectez-vous à votre compte pour répondre à cet exercice.\n\nCordialement,\nL'équipe de suivi",
+                patient.getName(),
                 exercice.getActivite().getTitre(),
                 exercice.getQuestion()
         );
@@ -107,4 +105,4 @@ public class SMSService {
             System.err.println("Failed to send SMS: " + e.getMessage());
         }
     }
-} 
+}

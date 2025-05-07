@@ -6,14 +6,14 @@ import java.time.LocalDateTime;
 //oooooooooooooooooooooooooooooooo
 public class Patient {
     private int id;
-    private String nom;
-    private String prenom;
-    private String email;
+    private String name;
+    private String adresse;
     private String phone;
     private List<Activite> activites;
     private List<Exercice> exercices;
     private int bad_word_attempts;
     private LocalDateTime suspended_until;
+    private int user_id;
 
     public Patient() {
         this.activites = new ArrayList<>();
@@ -22,12 +22,12 @@ public class Patient {
         this.suspended_until = null;
     }
 
-    public Patient(int id, String nom, String prenom, String email, String phone) {
+    public Patient(int id, String name, String adresse, String phone, int user_id) {
         this.id = id;
-        this.nom = nom;
-        this.prenom = prenom;
-        this.email = email;
+        this.name = name;
+        this.adresse = adresse;
         this.phone = phone;
+        this.user_id = user_id;
         this.activites = new ArrayList<>();
         this.exercices = new ArrayList<>();
         this.bad_word_attempts = 0;
@@ -43,28 +43,20 @@ public class Patient {
         this.id = id;
     }
 
-    public String getNom() {
-        return nom;
+    public String getName() {
+        return name;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getPrenom() {
-        return prenom;
+    public String getAdresse() {
+        return adresse;
     }
 
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setAdresse(String adresse) {
+        this.adresse = adresse;
     }
 
     public String getPhone() {
@@ -107,6 +99,14 @@ public class Patient {
         this.suspended_until = suspended_until;
     }
 
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+
     public void addActivite(Activite activite) {
         this.activites.add(activite);
     }
@@ -119,12 +119,11 @@ public class Patient {
     public String toString() {
         return "Patient{" +
                 "id=" + id +
-                ", nom='" + nom + '\'' +
-                ", prenom='" + prenom + '\'' +
-                ", email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                ", adresse='" + adresse + '\'' +
                 ", phone='" + phone + '\'' +
                 ", bad_word_attempts=" + bad_word_attempts +
                 ", suspended_until=" + suspended_until +
                 '}';
     }
-} 
+}

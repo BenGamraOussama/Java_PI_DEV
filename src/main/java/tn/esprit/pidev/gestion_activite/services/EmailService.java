@@ -15,29 +15,27 @@ public class EmailService {
     private static final String SMTP_SERVER = "smtp.gmail.com";
     private static final int SMTP_PORT = 465;
 
-    public void sendNewActivityEmail(Patient patient, Activite activite) throws IOException {
+    public void sendNewActivityEmail(String email, Patient patient, Activite activite) throws IOException {
         String subject = "Nouvelle activité assignée";
-        String content = "<h2>Bonjour " + patient.getPrenom() + " " + patient.getNom() + ",</h2>" +
+        String content = "<h2>Bonjour " + patient.getName() + ",</h2>" +
                 "<p>Une nouvelle activité vous a été assignée :</p>" +
                 "<h3>" + activite.getTitre() + "</h3>" +
                 "<p>Description : " + activite.getDescription() + "</p>" +
                 "<p>Type : " + activite.getType() + "</p>" +
                 "<p>Connectez-vous à votre compte pour commencer cette activité.</p>" +
                 "<p>Cordialement,<br>L'équipe de suivi</p>";
-
-        sendEmail(patient.getEmail(), subject, content);
+        sendEmail(email, subject, content);
     }
 
-    public void sendNewExerciseEmail(Patient patient, Exercice exercice) throws IOException {
+    public void sendNewExerciseEmail(String email, Patient patient, Exercice exercice) throws IOException {
         String subject = "Nouvel exercice assigné";
-        String content = "<h2>Bonjour " + patient.getPrenom() + " " + patient.getNom() + ",</h2>" +
+        String content = "<h2>Bonjour " + patient.getName() + ",</h2>" +
                 "<p>Un nouvel exercice vous a été assigné :</p>" +
                 "<h3>" + exercice.getActivite().getTitre() + "</h3>" +
                 "<p>Question : " + exercice.getQuestion() + "</p>" +
                 "<p>Connectez-vous à votre compte pour répondre à cet exercice.</p>" +
                 "<p>Cordialement,<br>L'équipe de suivi</p>";
-
-        sendEmail(patient.getEmail(), subject, content);
+        sendEmail(email, subject, content);
     }
 
     private void sendEmail(String toEmail, String subject, String content) throws IOException {
@@ -106,4 +104,4 @@ public class EmailService {
             }
         } while (line.charAt(3) == '-');
     }
-} 
+}

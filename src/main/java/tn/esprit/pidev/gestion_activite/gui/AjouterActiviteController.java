@@ -49,7 +49,7 @@ public class AjouterActiviteController {
         patientComboBox.setConverter(new javafx.util.StringConverter<Patient>() {
             @Override
             public String toString(Patient patient) {
-                return patient == null ? "" : patient.getNom() + " " + patient.getPrenom();
+                return patient == null ? "" : patient.getName();
             }
 
             @Override

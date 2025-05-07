@@ -3,6 +3,7 @@ package tn.esprit.pidev.gestion_activite.services;
 import tn.esprit.pidev.gestion_activite.entities.Patient;
 import tn.esprit.pidev.gestion_activite.entities.Activite;
 import tn.esprit.pidev.gestion_activite.entities.Exercice;
+import tn.esprit.pidev.gestion_activite.entities.User;
 import tn.esprit.pidev.Database.Database;
 
 import java.sql.*;
@@ -17,6 +18,7 @@ public class PatientService {
     private ExerciceService exerciceService;
     private EmailService emailService;
     private SMSService smsService;
+    private UserService userService = new UserService();
 
     public PatientService() {
         connection = Database.getConnection();
@@ -39,11 +41,11 @@ public class PatientService {
     }
 
     public void ajouter(Patient patient) throws SQLException {
-        String sql = "INSERT INTO patient (nom, prenom, email) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO patient (name, adresse, phone) VALUES (?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, patient.getNom());
-            ps.setString(2, patient.getPrenom());
-            ps.setString(3, patient.getEmail());
+            ps.setString(1, patient.getName());
+            ps.setString(2, patient.getAdresse());
+            ps.setString(3, patient.getPhone());
             ps.executeUpdate();
 
             // Get the generated ID
@@ -63,10 +65,10 @@ public class PatientService {
             while (rs.next()) {
                 Patient patient = new Patient(
                         rs.getInt("id"),
-                        rs.getString("nom"),
-                        rs.getString("prenom"),
-                        rs.getString("email"),
-                        rs.getString("phone")
+                        rs.getString("name"),
+                        rs.getString("adresse"),
+                        rs.getString("phone"),
+                        rs.getInt("user_id")
                 );
                 // Load associated activities and exercises
                 loadPatientRelations(patient);
@@ -77,11 +79,11 @@ public class PatientService {
     }
 
     public void modifier(Patient patient) throws SQLException {
-        String sql = "UPDATE patient SET nom=?, prenom=?, email=? WHERE id=?";
+        String sql = "UPDATE patient SET name=?, adresse=?, phone=? WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, patient.getNom());
-            ps.setString(2, patient.getPrenom());
-            ps.setString(3, patient.getEmail());
+            ps.setString(1, patient.getName());
+            ps.setString(2, patient.getAdresse());
+            ps.setString(3, patient.getPhone());
             ps.setInt(4, patient.getId());
             ps.executeUpdate();
         }
@@ -104,10 +106,10 @@ public class PatientService {
             if (rs.next()) {
                 Patient patient = new Patient(
                         rs.getInt("id"),
-                        rs.getString("nom"),
-                        rs.getString("prenom"),
-                        rs.getString("email"),
-                        rs.getString("phone")
+                        rs.getString("name"),
+                        rs.getString("adresse"),
+                        rs.getString("phone"),
+                        rs.getInt("user_id")
                 );
                 loadPatientRelations(patient);
                 return patient;
@@ -125,7 +127,14 @@ public class PatientService {
 
             // Send email notification
             try {
-                emailService.sendNewActivityEmail(patient, activite);
+                String email = null;
+                User user = userService.findById(patient.getUser_id());
+                if (user != null) {
+                    email = user.getEmail();
+                }
+                if (email != null && !email.isEmpty()) {
+                    emailService.sendNewActivityEmail(email, patient, activite);
+                }
             } catch (IOException e) {
                 System.err.println("Failed to send email notification: " + e.getMessage());
                 // Continue execution even if email fails
@@ -145,7 +154,14 @@ public class PatientService {
 
             // Send email notification
             try {
-                emailService.sendNewExerciseEmail(patient, exercice);
+                String email = null;
+                User user = userService.findById(patient.getUser_id());
+                if (user != null) {
+                    email = user.getEmail();
+                }
+                if (email != null && !email.isEmpty()) {
+                    emailService.sendNewExerciseEmail(email, patient, exercice);
+                }
             } catch (IOException e) {
                 System.err.println("Failed to send email notification: " + e.getMessage());
                 // Continue execution even if email fails
@@ -207,10 +223,10 @@ public class PatientService {
             if (rs.next()) {
                 Patient patient = new Patient(
                         rs.getInt("id"),
-                        rs.getString("nom"),
-                        rs.getString("prenom"),
-                        rs.getString("email"),
-                        rs.getString("phone")
+                        rs.getString("name"),
+                        rs.getString("adresse"),
+                        rs.getString("phone"),
+                        rs.getInt("user_id")
                 );
                 // Set the new fields
                 patient.setBad_word_attempts(rs.getInt("bad_word_attempts"));
@@ -225,11 +241,11 @@ public class PatientService {
     }
 
     public void update(Patient patient) throws SQLException {
-        String sql = "UPDATE patient SET nom=?, prenom=?, email=?, bad_word_attempts=?, suspended_until=? WHERE id=?";
+        String sql = "UPDATE patient SET name=?, adresse=?, phone=?, bad_word_attempts=?, suspended_until=? WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, patient.getNom());
-            ps.setString(2, patient.getPrenom());
-            ps.setString(3, patient.getEmail());
+            ps.setString(1, patient.getName());
+            ps.setString(2, patient.getAdresse());
+            ps.setString(3, patient.getPhone());
             ps.setInt(4, patient.getBad_word_attempts());
             if (patient.getSuspended_until() != null) {
                 ps.setTimestamp(5, Timestamp.valueOf(patient.getSuspended_until()));
@@ -240,4 +256,4 @@ public class PatientService {
             ps.executeUpdate();
         }
     }
-} 
+}

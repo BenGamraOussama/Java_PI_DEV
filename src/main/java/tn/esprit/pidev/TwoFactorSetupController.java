@@ -118,7 +118,7 @@ public class TwoFactorSetupController {
             // Set the static connected user before navigating back
             User.connecte = user;
 
-            Parent root = FXMLLoader.load(getClass().getResource("profile.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/tn/esprit/pidev/Dashboard.fxml"));
             Scene scene = new Scene(root);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
@@ -126,7 +126,7 @@ public class TwoFactorSetupController {
             stage.show();
 
         } catch (IOException e) {
-            messageLabel.setText("Error loading profile page");
+            messageLabel.setText("Error loading dashboard");
             messageLabel.setStyle("-fx-text-fill: red;");
             e.printStackTrace();
         }

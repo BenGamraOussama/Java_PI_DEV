@@ -144,7 +144,7 @@ public class ListeExerciceController implements Initializable {
         // Default activity image
         ImageView imageView = new ImageView();
         try {
-            Image image = new Image(getClass().getResourceAsStream("tn/esprit/pidev/gestion_activite/images/default_image.png"));
+            Image image = new Image(getClass().getResourceAsStream("/tn/esprit/pidev/images/default_image.png"));
             imageView.setImage(image);
         } catch (Exception e) {
             System.err.println("Image not found: " + e.getMessage());
@@ -269,7 +269,7 @@ public class ListeExerciceController implements Initializable {
         // Default exercise image
         ImageView imageView = new ImageView();
         try {
-            Image image = new Image(getClass().getResourceAsStream("/images/default_image.png"));
+            Image image = new Image(getClass().getResourceAsStream("/tn/esprit/pidev/images/default_image.png"));
             imageView.setImage(image);
         } catch (Exception e) {
             System.err.println("Image not found: " + e.getMessage());

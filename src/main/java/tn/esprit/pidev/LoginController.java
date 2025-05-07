@@ -104,16 +104,16 @@ public class LoginController {
 
                     switch (role) {
                         case "ROLE_PSYCHIATRE":
-                            fxmlFile = "PsychiatreDashboard.fxml";
+                            fxmlFile = "Dashboard.fxml";
                             break;
                         case "ROLE_FOURNISSEUR":
-                            fxmlFile = "FournisseurDashboard.fxml";
+                            fxmlFile = "Dashboard.fxml";
                             break;
                         case "ROLE_ADMIN":
-                            fxmlFile = "Dashboard.fxml"; // ou "AdminDashboard.fxml" selon votre convention
+                            fxmlFile = "Dashboard.fxml";
                             break;
                         case "ROLE_PATIENT":
-                            fxmlFile = "ClientHome.fxml"; // ou "AdminDashboard.fxml" selon votre convention
+                            fxmlFile = "ClientHome.fxml";
                             break;
                         default:
                             // Rôle non reconnu, rediriger vers une page par défaut ou afficher une erreur

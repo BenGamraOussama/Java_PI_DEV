@@ -455,14 +455,12 @@
 /* Bottom Navigation */
 .bottom-nav {
     -fx-background-color: white;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, -2);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
     -fx-padding: 10px 0;
     -fx-alignment: center;
-
-    -fx-position: fixed;
-    -fx-bottom: 0;
-    -fx-left: 0;
-    -fx-right: 0;
+    -fx-pref-width: 100%;
+    -fx-min-height: 60px;
+    -fx-z-index: 1000;
 }
 
 .bottom-nav-item {

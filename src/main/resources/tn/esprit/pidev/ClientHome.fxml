@@ -8,14 +8,14 @@
 <?import javafx.geometry.*?>
 <?import java.net.*?>
 
-<ScrollPane fitToWidth="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="tn.esprit.pidev.ClientHomeController">
+<ScrollPane fx:id="scrollPane" fitToWidth="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="tn.esprit.pidev.ClientHomeController">
     <stylesheets>
         <URL value="@styles/clientHome.css" />
     </stylesheets>
     <content>
         <VBox spacing="0">
             <!-- Header -->
-            <HBox styleClass="bottom-nav" style="-fx-position: fixed;">
+            <HBox fx:id="headerNav" styleClass="bottom-nav">
                 <HBox styleClass="bottom-nav-item, active" alignment="CENTER" HBox.hgrow="ALWAYS">
                     <VBox alignment="CENTER">
                         <Label styleClass="bottom-nav-icon" text="🏠" />
@@ -54,6 +54,13 @@
                     <VBox alignment="CENTER">
                         <Label styleClass="bottom-nav-icon" text="👤" />
                         <Label styleClass="bottom-nav-text" text="Profil" />
+                    </VBox>
+                </HBox>
+
+                <HBox fx:id="logoutContainer" onMouseClicked="#handleLogoutButtonClick" styleClass="bottom-nav-item" alignment="CENTER" HBox.hgrow="ALWAYS" visible="false">
+                    <VBox alignment="CENTER">
+                        <Label styleClass="bottom-nav-icon" text="🚪" />
+                        <Label styleClass="bottom-nav-text" text="Déconnexion" />
                     </VBox>
                 </HBox>
             </HBox>

@@ -9,6 +9,7 @@
     -error-color: #EF4444;
     -success-color: #10B981;
     -warning-color: #F59E0B;
+    -mycolor : #b54ac6;
     -info-color: #3B82F6;
     -hover : #f1edf7;
 }
@@ -427,7 +428,7 @@
 }
 
 .task-item.in-progress {
-    -fx-border-color: -warning-color;
+    -fx-border-color: -mycolor;
     -fx-border-width: 0 0 0 3px;
 }
 
@@ -473,8 +474,8 @@
 }
 
 .status-in-progress {
-    -fx-text-fill: -warning-color;
-    -fx-background-color: derive(-warning-color, 70%);
+    -fx-text-fill: -mycolor;
+    -fx-background-color: derive(-mycolor, 70%);
 }
 
 .status-completed {
@@ -817,8 +818,8 @@
 }
 
 .badge-warning {
-    -fx-background-color: derive(-warning-color, 70%);
-    -fx-text-fill: -warning-color;
+    -fx-background-color: derive(-mycolor, 70%);
+    -fx-text-fill: -mycolor;
 }
 
 .badge-error {

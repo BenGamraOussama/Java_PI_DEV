@@ -9,6 +9,7 @@ import tn.esprit.pidev.gestion_activite.entities.Reponse;
 import tn.esprit.pidev.gestion_activite.entities.Patient;
 import tn.esprit.pidev.gestion_activite.services.ReponseService;
 import tn.esprit.pidev.gestion_activite.services.PatientService;
+import tn.esprit.pidev.Model.User;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +17,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 public class AjouterReponseController {
-    private static final int DEFAULT_PATIENT_ID = 1; // Default patient ID for testing
     private static final int MAX_BAD_WORD_ATTEMPTS = 3;
     private static final int SUSPENSION_HOURS = 24;
 
@@ -57,6 +57,21 @@ public class AjouterReponseController {
     }
 
     @FXML
+    private boolean isPatient(User user) {
+        if (user == null || user.getRole() == null) return false;
+        return Arrays.stream(user.getRole())
+                .anyMatch(role -> role != null && role.contains("ROLE_PATIENT"));
+    }
+
+    private Patient createPatientFromUser(User user) {
+        Patient patient = new Patient();
+        patient.setId(user.getId());
+        patient.setName(user.getLastName());
+        patient.setPhone(user.getPhoneNumber());
+        return patient;
+    }
+
+    @FXML
     private void ajouterReponse() {
         String contenu = contenuField.getText().trim();
 
@@ -66,8 +81,31 @@ public class AjouterReponseController {
         }
 
         try {
-            // Get the current patient
-            Patient patient = patientService.getById(DEFAULT_PATIENT_ID);
+            // Vérifier si un utilisateur est connecté
+            if (User.connecte == null) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Aucun utilisateur connecté.");
+                return;
+            }
+
+            // Vérifier si l'utilisateur est un patient
+            if (!isPatient(User.connecte)) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Seuls les patients peuvent soumettre des réponses.");
+                return;
+            }
+
+            // Get the current patient using the connected user's ID
+            Patient patient = patientService.getById(User.connecte.getId());
+
+            // Si le patient n'existe pas dans la table patient, le créer
+            if (patient == null) {
+                patient = createPatientFromUser(User.connecte);
+                try {
+                    patientService.ajouter(patient);
+                } catch (Exception e) {
+                    showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de la création du profil patient: " + e.getMessage());
+                    return;
+                }
+            }
 
             // Check if patient is suspended
             if (patient.getSuspended_until() != null &&
@@ -106,7 +144,7 @@ public class AjouterReponseController {
             }
 
             // Create and save the response
-            Reponse reponse = new Reponse(0, exercice, contenu, DEFAULT_PATIENT_ID);
+            Reponse reponse = new Reponse(0, exercice, contenu, User.connecte.getId());
             ReponseService reponseService = new ReponseService();
             reponseService.ajouter(reponse);
 

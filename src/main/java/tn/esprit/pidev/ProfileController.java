@@ -125,9 +125,6 @@ public class ProfileController implements Initializable {
             addressField.setText(User.connecte.getAddress());
 
             // Set area of interest if available
-            if (User.connecte.getSpecialite() != null && !User.connecte.getSpecialite().isEmpty()) {
-                specialiteField.setText(User.connecte.getSpecialite());
-            }
 
             // Update 2FA button based on current status
             if (User.connecte.isTwoFactorEnabled()) {

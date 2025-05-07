@@ -169,6 +169,9 @@ public class UserDAO {
 
         // Requête pour insérer dans la table patient (si c'est un patient)
         String patientQuery = "INSERT INTO patient (id, adresse, name) VALUES (?, ?, ?)";
+        String psychiatreQuery = "INSERT INTO psychiatre (id, specialite, adresse, phone) VALUES (?, ?, ?, ?)";
+        String fournisseurQuery = "INSERT INTO fournisseur (id, adresse, phone) VALUES (?, ?, ?)";
+
 
         try {
             // Hash du mot de passe
@@ -221,6 +224,46 @@ public class UserDAO {
                     }
                 }
             }
+            if (rowsAffected > 0 && discr.equals("psychiatre")) {
+                // Récupérer l'ID généré
+                ResultSet generatedKeys = pst.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    long userId = generatedKeys.getLong(1);
+
+                    // Insertion dans la table patient
+                    PreparedStatement pstPatient = connection.prepareStatement(psychiatreQuery);
+                    pstPatient.setLong(1, userId);
+                    pstPatient.setString(2, user.getSpecialite()); // Remplacez par le champ supplémentaire du patient
+                    pstPatient.setString(3, user.getAddress());
+                    pstPatient.setString(4, user.getPhoneNumber());
+
+                    int patientRowsAffected = pstPatient.executeUpdate();
+                    if (patientRowsAffected <= 0) {
+                        // Rollback si l'insertion dans patient échoue ?
+                        return false;
+                    }
+                }
+            }
+            if (rowsAffected > 0 && discr.equals("fournisseur")) {
+                // Récupérer l'ID généré
+                ResultSet generatedKeys = pst.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    long userId = generatedKeys.getLong(1);
+
+                    // Insertion dans la table patient
+                    PreparedStatement pstPatient = connection.prepareStatement(fournisseurQuery);
+                    pstPatient.setLong(1, userId);
+                    pstPatient.setString(2, user.getAddress()); // Remplacez par le champ supplémentaire du patient
+                    pstPatient.setString(3, user.getPhoneNumber());
+
+                    int patientRowsAffected = pstPatient.executeUpdate();
+                    if (patientRowsAffected <= 0) {
+                        // Rollback si l'insertion dans patient échoue ?
+                        return false;
+                    }
+                }
+            }
+
 
             return rowsAffected > 0;
         } catch (SQLException ex) {

@@ -1,6 +1,7 @@
 package tn.esprit.pidev.gestion_produit.gui;
 
 import javafx.stage.Stage;
+import tn.esprit.pidev.gestion_commande.services.ProduitService;
 import tn.esprit.pidev.gestion_produit.entities.Produit;
 import tn.esprit.pidev.gestion_produit.entities.Produit_categorie;
 import tn.esprit.pidev.gestion_produit.services.ProduitServices;
@@ -76,12 +77,16 @@ public class ModifierProduitController {
         produit.setPrix((float) prix);
         produit.setCategorie(categorie);
 
+        // 🔽 Appel du service pour mettre à jour en base
+        ProduitService produitService = new ProduitService(); // ou injecte-le si déjà instancié
+        boolean success = produitServices.updateProduit(produit);
 
-        showConfirmation("Produit mis à jour avec succès.");
-
-        // ✅ Fermer la fenêtre actuelle
-        ((Stage) nomTextField.getScene().getWindow()).close();
-
+        if (success) {
+            showConfirmation("Produit mis à jour avec succès.");
+            ((Stage) nomTextField.getScene().getWindow()).close(); // ✅ Fermer la fenêtre
+        } else {
+            showError("Échec de la mise à jour du produit.");
+        }
     }
 
 

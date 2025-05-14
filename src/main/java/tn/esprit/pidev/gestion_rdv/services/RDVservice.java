@@ -1,6 +1,7 @@
 package tn.esprit.pidev.gestion_rdv.services;
 
 
+import tn.esprit.pidev.gestion_rdv.dao.DatabaseConnection;
 import tn.esprit.pidev.gestion_rdv.enteties.Etat;
 import tn.esprit.pidev.gestion_rdv.enteties.Patient;
 import tn.esprit.pidev.gestion_rdv.enteties.Psychiatre;
@@ -17,13 +18,17 @@ public class RDVservice implements Iservice<RDV> {
     private Connection con;
     private boolean syncWithGoogleCalendar = true;
 
-    public RDVservice(Connection con) {
+    public RDVservice(Connection con) throws SQLException {
         this.con = Database.getConnection();
     }
 
-    public RDVservice(Connection con, boolean syncWithGoogleCalendar) {
+    public RDVservice(Connection con, boolean syncWithGoogleCalendar) throws SQLException {
         this.con = Database.getConnection();
         this.syncWithGoogleCalendar = syncWithGoogleCalendar;
+    }
+
+    public RDVservice() {
+
     }
 
     @Override
@@ -232,7 +237,7 @@ public class RDVservice implements Iservice<RDV> {
     public RDV getRDVById(int id) throws SQLException {
         String query = "SELECT * FROM rdv WHERE id = ?";
 
-        try (Connection connection = Database.getConnection();
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(query)) {
 
             pstmt.setInt(1, id);
@@ -259,7 +264,7 @@ public class RDVservice implements Iservice<RDV> {
 
         List<RDV> rdvs = new ArrayList<>();
 
-        try (Connection conn = Database.getConnection();
+        try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 
@@ -370,4 +375,29 @@ public class RDVservice implements Iservice<RDV> {
             }
         }
     }
+    public List<RDV> getAcceptedRDVsForPatient(int patientId) throws SQLException {
+        List<RDV> acceptedRDVs = new ArrayList<>();
+        String query = "SELECT * FROM `rdv` WHERE `patient_id` = ? AND `etat` = ? ORDER BY `date`, `heure`";
+
+        try (PreparedStatement pstmt = con.prepareStatement(query)) {
+            pstmt.setInt(1, patientId);
+            pstmt.setString(2, Etat.VALIDEE.name());
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                RDV rdv = new RDV();
+                rdv.setId(rs.getInt("id"));
+                rdv.setHeure(rs.getTime("heure"));
+                rdv.setDate(rs.getDate("date"));
+                rdv.setPriorite(rs.getString("priorite"));
+                rdv.setEtat(Etat.valueOf(rs.getString("etat")));
+
+                acceptedRDVs.add(rdv);
+            }
+        }
+
+        return acceptedRDVs;
+    }
+
 }

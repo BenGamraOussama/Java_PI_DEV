@@ -39,7 +39,7 @@ public class CalendarController {
             currentlyShownDate = LocalDate.now();
 
             // Load CSS if it exists
-            String cssResource = getClass().getResource("Calendar.css").toExternalForm();
+            String cssResource = getClass().getResource("/tn/esprit/pidev/gestion_rdv/Calendar.css").toExternalForm();
             calendar.getStylesheets().add(cssResource);
 
             this.rdvs = rdVservice.readList();

@@ -23,7 +23,7 @@
                     </VBox>
                 </HBox>
 
-                <HBox styleClass="bottom-nav-item" alignment="CENTER" HBox.hgrow="ALWAYS">
+                <HBox onMouseClicked="#handleConsultationButtonClick" styleClass="bottom-nav-item" alignment="CENTER" HBox.hgrow="ALWAYS">
                     <VBox alignment="CENTER">
                         <Label styleClass="bottom-nav-icon" text="📅" />
                         <Label styleClass="bottom-nav-text" text="Rendez-vous" />
@@ -74,7 +74,7 @@
                     <Label styleClass="hero-subtitle" text="Votre espace de bien-être mental où chaque étape vers la guérison est accueillie avec bienveillance et professionnalisme." wrapText="true" />
                     <Button styleClass="primary-button">
                         <graphic>
-                            <HBox spacing="10" alignment="CENTER">
+                            <HBox onMouseClicked="#handleConsultationButtonClick" spacing="10" alignment="CENTER">
                                 <Label text="📅" />
                                 <Label text="Prendre Rendez-vous" />
                             </HBox>

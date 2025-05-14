@@ -14,12 +14,12 @@ public class Consultation {
     private double prix;
     private String modeconsultation;
     private Etat etatenum;
-    private String zoomLink;
-    private Patient patient_id;
+    private Patient patient;  // Référence directe au patient
+    private String meet_link;
 
 
     public Consultation(Date date, Time heure, double prix,
-                        String modeconsultation, Etat etatenum, String zoomLink, Patient patient_id) {
+                        String modeconsultation, Etat etatenum,Patient patient, String zoomLink) {
         this.date = Objects.requireNonNull(date, "Date cannot be null");
         this.heure = Objects.requireNonNull(heure, "Time cannot be null");
         this.etatenum = Objects.requireNonNull(etatenum, "Etat cannot be null");
@@ -28,12 +28,15 @@ public class Consultation {
 
         this.prix = prix;
         this.modeconsultation = modeconsultation != null ? modeconsultation : "";
-        this.zoomLink = zoomLink != null ? zoomLink : "";
-        this.patient_id = patient_id;
+        this.patient = patient;
+        this.meet_link = meet_link != null ? meet_link : "";
     }
 
     public Consultation() {
 
+    }
+
+    public Consultation(Date date, Time time, double v, String text, Etat value, String meet_link, Patient patient) {
     }
 
     public LocalDate getLocalDate() {
@@ -100,19 +103,19 @@ public class Consultation {
         this.etatenum = Objects.requireNonNull(etatenum, "Etat cannot be null");
     }
 
-    public String getZoomLink() {
-        return zoomLink;
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
-    public void setZoomLink(String zoomLink) {
-        this.zoomLink = zoomLink != null ? zoomLink : "";
+    public String getMeetLink() {
+        return meet_link;
     }
-    public Patient getPatient_id() {
-        return patient_id;
+
+    public void setMeetLink(String zoomLink) {
+        this.meet_link = meet_link != null ? zoomLink : "";
     }
-    public void setPatient_id(Patient patient_id) {
-        this.patient_id = patient_id;
-    }
+
 
     @Override
     public String toString() {
@@ -122,9 +125,13 @@ public class Consultation {
                 ", heure=" + (heure != null ? heure.toString() : "null") +
                 ", prix=" + prix +
                 ", modeconsultation='" + modeconsultation + '\'' +
+                ", patient_id=" + patient +
                 ", etatenum=" + etatenum +
-                ", zoomLink='" + zoomLink + '\'' +
-                ", patient_id=" + patient_id +
+                ", zoomLink='" + meet_link + '\'' +
                 '}';
+    }
+
+    public Patient getPatient() {
+        return patient;
     }
 }

@@ -46,6 +46,7 @@ module tn.esprit.pidev {
     requires google.oauth.client.java6;
     requires google.oauth.client.jetty;
     requires com.google.api.client.auth;
+    requires mysql.connector.j;
 
     opens tn.esprit.pidev to javafx.fxml;
     opens tn.esprit.pidev.gestion_activite.gui to javafx.fxml;
@@ -55,6 +56,7 @@ module tn.esprit.pidev {
     opens tn.esprit.pidev.gestion_rdv to javafx.fxml;
     opens tn.esprit.pidev.gestion_rdv.enteties to javafx.fxml;
     opens tn.esprit.pidev.gestion_rdv.services to javafx.fxml;
+    opens tn.esprit.pidev.gestion_rdv.Controller to javafx.fxml;
 
 
 
@@ -70,5 +72,6 @@ module tn.esprit.pidev {
     exports tn.esprit.pidev.gestion_rdv;
     exports tn.esprit.pidev.gestion_rdv.services;
     exports tn.esprit.pidev.gestion_rdv.dao;
+    exports tn.esprit.pidev.gestion_rdv.Controller;
 
 }

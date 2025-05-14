@@ -112,6 +112,35 @@ public class ClientHomeController {
             }
         }
     }
+    @FXML
+    public void handleConsultationButtonClick(javafx.scene.input.MouseEvent event) {
+        if (User.connecte != null) {
+            // Rediriger vers la page de profil
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("gestion_rdv/PatientrdvView.fxml"));
+                Scene scene = new Scene(root);
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                // Gérer l'erreur (peut-être afficher un message à l'utilisateur)
+            }
+        } else {
+            // Rediriger vers la page de login
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
+                Scene scene = new Scene(root);
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                // Gérer l'erreur
+            }
+        }
+    }
+
 
     @FXML
     public void handleAvtiviteButtonClick(javafx.scene.input.MouseEvent event) {

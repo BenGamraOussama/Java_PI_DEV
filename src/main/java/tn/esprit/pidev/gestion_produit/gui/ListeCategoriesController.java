@@ -90,7 +90,28 @@ public class ListeCategoriesController {
         alert.showAndWait();
     }
 
+    @FXML
     public void handleModifierCategorie(ActionEvent actionEvent) {
-        // À implémenter si tu veux la modification
+        Produit_categorie selected = tableCategories.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            TextInputDialog dialog = new TextInputDialog(selected.getNom());
+            dialog.setTitle("Modifier une catégorie");
+            dialog.setHeaderText(null);
+            dialog.setContentText("Nouveau nom de la catégorie :");
+
+            dialog.showAndWait().ifPresent(nouveauNom -> {
+                if (nouveauNom != null && !nouveauNom.trim().isEmpty()) {
+                    selected.setNom(nouveauNom);
+                    categorieService.modifier(selected); // Assurez-vous que cette méthode met à jour la catégorie dans la base de données
+                    tableCategories.refresh(); // Rafraîchit le TableView pour afficher le nouveau nom
+                    showAlert("Succès", "Catégorie modifiée.", Alert.AlertType.INFORMATION);
+                } else {
+                    showAlert("Erreur", "Le nom de la catégorie ne peut pas être vide.", Alert.AlertType.ERROR);
+                }
+            });
+        } else {
+            showAlert("Erreur", "Veuillez sélectionner une catégorie à modifier.", Alert.AlertType.ERROR);
+        }
     }
+
 }

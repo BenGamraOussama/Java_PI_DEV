@@ -162,8 +162,6 @@ public class ProfileController implements Initializable {
             User.connecte.setEmail(emailField.getText().trim());
             User.connecte.setPhoneNumber(phoneNumberField.getText().trim());
             User.connecte.setAddress(addressField.getText().trim());
-            User.connecte.setSpecialite(specialiteField.getText().trim());
-
             // Update user in database
             boolean updated = userDAO.updateUser(User.connecte);
 

@@ -55,10 +55,6 @@ public class CategoryCardController {
                 service.supprimer(category.getId());
 
                 // Refresh the main view (reloading categories)
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/tn/esprit/pidev/FXML/categoryList.fxml"));
-                Stage stage = (Stage) delete.getScene().getWindow();
-                stage.setScene(new Scene(loader.load()));
-                stage.show();
 
             } catch (Exception e) {
                 e.printStackTrace();

@@ -398,7 +398,7 @@
                         <padding>
                             <Insets bottom="20" left="20" right="20" top="20" />
                         </padding>
-                        <fx:include fx:id="consultationContent" source="gestion_rdv/ConsultationView.fxml" />
+                        <fx:include fx:id="consultationContent" source="gestion_rdv/Consultation.fxml" />
                     </VBox>
                     <VBox fx:id="traitementPane" spacing="20" visible="false">
                         <padding>

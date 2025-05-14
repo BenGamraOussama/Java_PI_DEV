@@ -1,7 +1,7 @@
 package tn.esprit.pidev.gestion_rdv.dao;
 
 
-import tn.esprit.pidev.Database.Database;
+
 import tn.esprit.pidev.gestion_rdv.enteties.RDV;
 
 import java.sql.*;
@@ -10,9 +10,10 @@ import java.util.List;
 
 public class RDVDAO {
     private Connection connection;
+    PatientDAO patientDAO = new PatientDAO();
 
     public RDVDAO() {
-        this.connection = Database.getConnection();
+        this.connection = DatabaseConnection.getConnection();
     }
 
     public void addRDV(RDV rdv) throws SQLException {
@@ -90,6 +91,7 @@ public class RDVDAO {
                         rs.getTime("heure"),
                         rs.getDate("date"),
                         rs.getString("priorite")
+
                 );
                 rdv.setId(rs.getInt("id"));
                 return rdv;

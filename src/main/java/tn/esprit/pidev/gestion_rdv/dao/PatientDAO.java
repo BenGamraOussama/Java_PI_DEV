@@ -1,7 +1,6 @@
 package tn.esprit.pidev.gestion_rdv.dao;
 
 import tn.esprit.pidev.gestion_rdv.enteties.Patient;
-import tn.esprit.pidev.Database.Database;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ public class PatientDAO {
     private Connection connection;
 
     public PatientDAO() {
-        this.connection = Database.getConnection();
+        this.connection = DatabaseConnection.getConnection();
     }
 
     public void addPatient(Patient patient) {
@@ -56,27 +55,26 @@ public class PatientDAO {
         return patients;
     }
 
+
     public Patient getPatientById(int id) {
         String query = "SELECT * FROM patient WHERE id = ?";
-
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
-
             if (rs.next()) {
-                return new Patient(
-                        rs.getInt("id"),
-                        rs.getString("dossier_medical"),
-                        rs.getString("firstName"),
-                        rs.getString("lastName"),
-                        rs.getString("email")
-                );
+                Patient patient = new Patient();
+                patient.setId(rs.getInt("id"));
+                patient.setFirstName(rs.getString("nom"));
+                patient.setLastName(rs.getString("prenom"));
+                patient.setEmail(rs.getString("email"));
+                return patient;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
+
 
     public void updatePatient(Patient patient) {
         String query = "UPDATE patient SET dossier_medical = ?, firstName = ?, lastName = ?, email = ? WHERE id = ?";

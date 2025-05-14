@@ -54,7 +54,6 @@
         </ScrollPane>
 
         <!-- Add to Cart Button -->
-        <Button fx:id="addToCartButton" text="Vers Produits" onAction="#handleAddToCart" styleClass="button-primary"/>
     </VBox>
 
     <!-- Right side: QR Code display -->

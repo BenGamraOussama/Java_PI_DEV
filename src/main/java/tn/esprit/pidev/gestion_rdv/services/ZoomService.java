@@ -11,8 +11,8 @@ import java.util.logging.Level;
  * Service for creating and managing Zoom meetings for consultations.
  */
 public class ZoomService {
-    private static final String ZOOM_API_KEY = "your_zoom_api_key";
-    private static final String ZOOM_API_SECRET = "your_zoom_api_secret";
+    private static final String ZOOM_API_KEY = "mn5tDyAITWVTkZli9Qc8Q";
+    private static final String ZOOM_API_SECRET = "nNtc65jzALUkRCSJAiV8QVw9xk20nKi8";
     private static final Logger logger = Logger.getLogger(ZoomService.class.getName());
 
     private final ConsultationDAO consultationDAO = new ConsultationDAO();
@@ -87,7 +87,7 @@ public class ZoomService {
 
             // Update the consultation with the Zoom link (ensure it's not null)
             String safeUrl = meetingUrl != null ? meetingUrl : "";
-            consultation.setZoomLink(safeUrl);
+            consultation.setMeetLink(safeUrl);
             consultationDAO.updateConsultation(consultation);
 
             // Send invitation to patient

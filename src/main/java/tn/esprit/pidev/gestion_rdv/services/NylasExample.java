@@ -7,7 +7,7 @@ import com.nylas.models.ListResponse;
 public class NylasExample {
     public static void main(String[] args) {
         String apiKey = "nyk_v0_jGwIBZX88Lp0Zme1dfufxVJ4FnRiY8jKt0IshJPnSWq7GCdx2jNKdZb1YWH8vCVj";
-        String grantId = "7206a16f-8649-49a7-80cc-c365c665ae26";  // Remplacez par le grant ID de votre application
+        String grantId = "59d82409-f607-4944-a05f-f2c0fbcf9f94";  // Remplacez par le grant ID de votre application
 
         NylasClient client = new NylasClient.Builder(apiKey).build();
 

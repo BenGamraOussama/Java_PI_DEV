@@ -34,6 +34,11 @@
         <Label text="État:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
         <ComboBox fx:id="etatComboBox" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
 
+        <Label text="Patient:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+        <ComboBox fx:id="patientCombo" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="6">
+            <!-- Les items seront chargés dynamiquement -->
+        </ComboBox>
+
 
     </GridPane>
 
@@ -69,6 +74,9 @@
                     <TableColumn text="État" prefWidth="100">
                         <cellValueFactory><PropertyValueFactory property="etatenum"/></cellValueFactory>
                     </TableColumn>
+                    <TableColumn text="Patient" prefWidth="100">
+                        <cellValueFactory><PropertyValueFactory property="patient"/></cellValueFactory>
+                    </TableColumn>
                     <TableColumn text="Zoom link " prefWidth="80">
                         <cellValueFactory><PropertyValueFactory property="zoomLink"/></cellValueFactory>
                     </TableColumn>
@@ -102,10 +110,6 @@
             <TableColumn text="Suivi" prefWidth="200">
                 <cellValueFactory><PropertyValueFactory property="suivi"/></cellValueFactory>
             </TableColumn>
-            <TableColumn text="zoomLink" prefWidth="200">
-                <cellValueFactory><PropertyValueFactory property="zoomLink"/></cellValueFactory>
-            </TableColumn>
-
         </columns>
     </TableView>
     <!-- Removed duplicate zoomButton declaration -->

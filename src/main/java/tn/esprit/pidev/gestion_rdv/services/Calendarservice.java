@@ -1,8 +1,7 @@
 package tn.esprit.pidev.gestion_rdv.services;
 
-
-
 import com.nylas.NylasClient;
+import com.nylas.models.Event;
 import com.nylas.resources.Events;
 
 import java.util.HashMap;

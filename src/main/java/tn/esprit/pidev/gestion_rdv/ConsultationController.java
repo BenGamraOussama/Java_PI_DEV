@@ -12,23 +12,29 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.util.StringConverter;
 import tn.esprit.pidev.gestion_rdv.dao.ConsultationDAO;
 import tn.esprit.pidev.gestion_rdv.enteties.Consultation;
 import tn.esprit.pidev.gestion_rdv.enteties.Etat;
 import tn.esprit.pidev.gestion_rdv.enteties.Patient;
+import tn.esprit.pidev.gestion_rdv.services.Patientservice;
 import tn.esprit.pidev.gestion_rdv.services.TodoistAPI;
 import tn.esprit.pidev.gestion_rdv.services.ZoomService;
 
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.awt.Desktop;
 import java.net.URI;
 
 public class ConsultationController {
+    @FXML private ComboBox<Patient> patientCombo;
     @FXML private TextField idField;
     @FXML private DatePicker datePicker;
     @FXML private TextField heureField;
@@ -49,19 +55,31 @@ public class ConsultationController {
 
     @FXML
     public void initialize() {
-        etatComboBox.setItems(etats);
         configureHeureField();
         loadConsultations();
         setupZoomButton();
+        loadPatients(); // Ensure this is called within the initialize method
 
-        consultationTable.getSelectionModel().selectedItemProperty().addListener(
-                (obs, oldSelection, newSelection) -> {
-                    if (newSelection != null) {
-                        fillFormWithConsultation(newSelection);
-                    }
-                });
+        patientCombo.setCellFactory(lv -> new ListCell<Patient>() {
+            @Override
+            protected void updateItem(Patient patient, boolean empty) {
+                super.updateItem(patient, empty);
+                setText(empty || patient == null ? "" : patient.getFirstName() + " (" + patient.getId() + ")");
+            }
+        });
+
+        patientCombo.setConverter(new StringConverter<Patient>() {
+            @Override
+            public String toString(Patient patient) {
+                return patient != null ? patient.getFirstName() + " (" + patient.getId() + ")" : "";
+            }
+
+            @Override
+            public Patient fromString(String string) {
+                return null; // Not needed for our case
+            }
+        });
     }
-
     @FXML
     public void saveConsultation() {
         try {
@@ -190,11 +208,11 @@ public class ConsultationController {
 
         // Add Zoom link if available
         VBox zoomBox = new VBox(5);
-        if (consultation.getZoomLink() != null && !consultation.getZoomLink().isEmpty()) {
+        if (consultation.getMeetLink() != null && !consultation.getMeetLink().isEmpty()) {
             Label zoomLabel = new Label("🔗 Lien Zoom:");
             zoomLabel.getStyleClass().add("zoom-label");
 
-            TextField zoomLinkField = new TextField(consultation.getZoomLink());
+            TextField zoomLinkField = new TextField(consultation.getMeetLink());
             zoomLinkField.setEditable(false);
             zoomLinkField.setPrefWidth(250);
             zoomLinkField.getStyleClass().add("zoom-link-field");
@@ -203,7 +221,7 @@ public class ConsultationController {
             openZoomButton.getStyleClass().addAll("button", "button-zoom");
             openZoomButton.setOnAction(e -> {
                 try {
-                    String zoomLink = consultation.getZoomLink();
+                    String zoomLink = consultation.getMeetLink();
                     if (zoomLink != null && !zoomLink.isEmpty()) {
                         Desktop.getDesktop().browse(new URI(zoomLink));
                     } else {
@@ -276,46 +294,65 @@ public class ConsultationController {
         prixField.setText(String.valueOf(consultation.getPrix()));
         modeConsultationField.setText(consultation.getModeconsultation());
         etatComboBox.setValue(consultation.getEtatenum());
+        patientCombo.setValue(consultation.getPatient());
     }
 
     private Consultation getConsultationFromForm() {
         try {
-            // Validate date
+            // Validation des champs
             if (datePicker.getValue() == null) {
                 showAlert("Erreur", "Veuillez sélectionner une date", Alert.AlertType.ERROR);
                 return null;
             }
 
-            // Validate time format
             if (heureField.getText().isEmpty()) {
                 showAlert("Erreur", "Veuillez entrer une heure", Alert.AlertType.ERROR);
                 return null;
             }
 
-            // Validate etat
-            if (etatComboBox.getValue() == null) {
+            Etat selectedEtat = etatComboBox.getValue();
+            if (selectedEtat == null) {
                 showAlert("Erreur", "Veuillez sélectionner un état", Alert.AlertType.ERROR);
                 return null;
             }
 
+            Patient selectedPatient = patientCombo.getValue();
+            if (selectedPatient == null) {
+                showAlert("Erreur", "Veuillez sélectionner un patient", Alert.AlertType.ERROR);
+                return null;
+            }
+
+            if (prixField.getText().isEmpty()) {
+                showAlert("Erreur", "Veuillez entrer un prix", Alert.AlertType.ERROR);
+                return null;
+            }
+
+            if (modeConsultationField.getText().isEmpty()) {
+                showAlert("Erreur", "Veuillez entrer un mode de consultation", Alert.AlertType.ERROR);
+                return null;
+            }
+
+            // Création de la consultation
             return new Consultation(
                     Date.valueOf(datePicker.getValue()),
                     Time.valueOf(heureField.getText()),
                     Double.parseDouble(prixField.getText()),
                     modeConsultationField.getText(),
-                    etatComboBox.getValue(),
-                    "", // Empty string for zoomLink, will be set later when creating a Zoom meeting
-                    null // No patient selected in this form
+                    selectedEtat,  // Etat sélectionné
+                    selectedPatient,
+                    "" // Lien de rencontre vide par défaut
             );
         } catch (NumberFormatException e) {
-            showAlert("Erreur", "Format de nombre invalide: " + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Erreur", "Format numérique invalide", Alert.AlertType.ERROR);
             return null;
         } catch (IllegalArgumentException e) {
-            showAlert("Erreur", "Données invalides: " + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Erreur", "Format de date/heure invalide", Alert.AlertType.ERROR);
+            return null;
+        } catch (Exception e) {
+            showAlert("Erreur", "Erreur inattendue: " + e.getMessage(), Alert.AlertType.ERROR);
             return null;
         }
-    }
-    @FXML
+    }    @FXML
     private void handleNewConsultation() {
         clearForm();
     }
@@ -385,6 +422,62 @@ public class ConsultationController {
             e.printStackTrace();
         }
     }
+    private void loadPatients() {
+        try {
+            List<Patient> patients = Patientservice.getAllPatients();
+            patientCombo.setItems(FXCollections.observableArrayList(patients));
+        } catch (SQLException e) {
+            showAlert("Erreur", "Impossible de charger la liste des patients", Alert.AlertType.ERROR);
+        }
+    }
 
+    private void setupPatientSearch() {
+        patientCombo.getEditor().textProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null && !newVal.isEmpty()) {
+                patientCombo.getItems().setAll(searchPatients(newVal));
+            } else {
+                loadPatients();
+            }
+        });
+    }
+
+    private List<Patient> searchPatients(String searchText) {
+        try {
+            return Patientservice.searchPatients(searchText);
+        } catch (SQLException e) {
+            showAlert("Erreur", "Erreur lors de la recherche: " + e.getMessage(), Alert.AlertType.ERROR);
+            return new ArrayList<>();
+        }
+    }
+    private void setupEtatComboBox() {
+        // Convertir les valeurs de l'énumération en liste observable
+        ObservableList<Etat> etatList = FXCollections.observableArrayList(Etat.values());
+        etatComboBox.setItems(etatList);
+
+        // Configurer l'affichage dans la liste déroulante
+        etatComboBox.setCellFactory(lv -> new ListCell<Etat>() {
+            @Override
+            protected void updateItem(Etat etat, boolean empty) {
+                super.updateItem(etat, empty);
+                setText(empty || etat == null ? "" : etat.getDisplayName());
+            }
+        });
+
+        // Configurer la conversion entre l'affichage et la valeur
+        etatComboBox.setConverter(new StringConverter<Etat>() {
+            @Override
+            public String toString(Etat etat) {
+                return etat == null ? "" : etat.getDisplayName();
+            }
+
+            @Override
+            public Etat fromString(String string) {
+                return Etat.fromDisplayName(string);
+            }
+        });
+
+        // Définir la valeur par défaut
+        etatComboBox.getSelectionModel().select(Etat.EN_ATTENTE);
+    }
 
 }

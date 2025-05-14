@@ -64,13 +64,6 @@
                 onAction="#onAjouterRDV"
                 fx:id="btnAjouterCalendrier"
                 GridPane.rowIndex="3" GridPane.columnIndex="1" />
-        <!-- New Patient RDV Button -->
-        <Button onAction="#handlePatientRDV" text="Patient RDV">
-            <styleClass>
-                <String fx:value="button button-patient" />
-                <String fx:value="button-patient" />
-            </styleClass>
-        </Button>
 
     </HBox>
 

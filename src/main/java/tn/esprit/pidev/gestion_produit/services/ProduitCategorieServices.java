@@ -113,4 +113,8 @@ public class ProduitCategorieServices {
             connection.close();
         }
     }
+
+    public void modifier(Produit_categorie selected) {
+
+    }
 }

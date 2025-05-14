@@ -244,6 +244,7 @@ public class ListeProduitsController {
         } catch (IOException e) {
             afficherErreur("Erreur", "Impossible d'ouvrir la fenêtre d'ajout", e);
         }
+
     }
 
     private void afficherErreur(String titre, String message, Exception e) {

@@ -15,13 +15,16 @@
 
     <TabPane fx:id="mainTabPane" tabClosingPolicy="UNAVAILABLE">
         <Tab text="Consultations">
-            <fx:include fx:id="consultationTab" source="ConsultationView.fxml"/>
+            <fx:include fx:id="consultationTab" source="Consultation.fxml"/>
         </Tab>
         <Tab text="Rendez-vous">
             <fx:include fx:id="rdvTab" source="RendezVousView.fxml"/>
         </Tab>
         <Tab text="Traitements">
             <fx:include fx:id="traitementTab" source="TraitementView.fxml"/>
+        </Tab>
+        <Tab text="patient">
+            <fx:include fx:id="patientTab" source="PatientrdvView.fxml"/>
         </Tab>
     </TabPane>
 

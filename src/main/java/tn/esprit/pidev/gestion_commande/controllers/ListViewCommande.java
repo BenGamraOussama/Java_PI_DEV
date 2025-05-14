@@ -286,7 +286,7 @@ public class ListViewCommande {
 
     public void handleAddToCart(ActionEvent actionEvent) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/tn/esprit/pidev/FXML/commande/AddToCart.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/tn/esprit/pidev/gestion_produit/listeProduits.fxml"));
             Parent root = loader.load(); // No cast to VBox
 
             Scene scene = new Scene(root);

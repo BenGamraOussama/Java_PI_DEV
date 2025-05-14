@@ -5,7 +5,6 @@ package tn.esprit.pidev.gestion_rdv.dao;
 import tn.esprit.pidev.gestion_rdv.enteties.Consultation;
 import tn.esprit.pidev.gestion_rdv.enteties.Etat;
 import tn.esprit.pidev.gestion_rdv.enteties.Patient;
-import tn.esprit.pidev.Database.Database;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,35 +14,26 @@ public class ConsultationDAO {
     private Connection connection;
 
     public ConsultationDAO() {
-        this.connection = Database.getConnection();
+        this.connection = DatabaseConnection.getConnection();
     }
 
     public void addConsultation(Consultation consultation) {
-        String query = "INSERT INTO `consultation`(`patient_id`, `date`, `heure`, `prix`, `modeconsultation`, `etat`, `zoom_link`)" +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO consultation(date, heure, prix, modeconsultation, etat, patient_id, meet_link) " +
+                "VALUES (?, ?, ?, ?, ?, ?,?)";
         try (PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            // Get patient ID from the Patient object
-            int patientId = consultation.getPatient_id() != null ? consultation.getPatient_id().getId() : 0;
-            stmt.setInt(1, patientId);
-            stmt.setDate(2, consultation.getDate());
-            stmt.setTime(3, consultation.getHeure());
-            stmt.setDouble(4, consultation.getPrix());
-            stmt.setString(5, consultation.getModeconsultation());
-            stmt.setString(6, consultation.getEtatenum().name());
-            // Handle null zoomLink by using empty string
-            String zoomLink = consultation.getZoomLink();
-            stmt.setString(7, zoomLink != null ? zoomLink : "");
-            stmt.executeUpdate();
+            stmt.setDate(1, consultation.getDate());
+            stmt.setTime(2, consultation.getHeure());
+            stmt.setDouble(3, consultation.getPrix());
+            stmt.setString(4, consultation.getModeconsultation());
+            stmt.setString(5, consultation.getEtatenum().name());
+            stmt.setInt(6, consultation.getPatient().getId());
+            stmt.setString(7, consultation.getMeetLink());
 
-            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    consultation.setId(generatedKeys.getInt(1));
-                }
+            stmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-    }
 
     public List<Consultation> getAllConsultations() {
         List<Consultation> consultations = new ArrayList<>();
@@ -110,9 +100,8 @@ public class ConsultationDAO {
                             rs.getDouble("prix"), // Assuming prix can't be null
                             rs.getString("modeconsultation"), // Handle null if needed
                             etat,
-                            rs.getString("zoom_link") != null ? rs.getString("zoom_link") : "",
-                            patient
-                    );
+                            patient,
+                            rs.getString("meet_link") != null ? rs.getString("meet_link") : "");
 
                     consultation.setId(rs.getInt("id"));
                     consultations.add(consultation);
@@ -131,18 +120,18 @@ public class ConsultationDAO {
         return consultations;
     }
     public void updateConsultation(Consultation consultation) {
-        String query =  "UPDATE consultation SET " + "patient_id = ?, " + "date = ?, " + "heure = ?, " + "prix = ?, " + "modeconsultation = ?, " + "etat = ?, " + "zoom_link = ? " + "WHERE id = ?";
+        String query =  "UPDATE consultation SET "  + "date = ?, " + "heure = ?, " + "prix = ?, " + "modeconsultation = ?, " + "etat = ?, " +"patient_id = ?, " + "meetLink = ? " + "WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             // Get patient ID from the Patient object
-            int patientId = consultation.getPatient_id() != null ? consultation.getPatient_id().getId() : 0;
-            stmt.setInt(1, patientId);
-            stmt.setDate(2, consultation.getDate());
-            stmt.setTime(3, consultation.getHeure());
-            stmt.setDouble(4, consultation.getPrix());
-            stmt.setString(5, consultation.getModeconsultation());
-            stmt.setString(6, consultation.getEtatenum().name());
+            
+            stmt.setDate(1, consultation.getDate());
+            stmt.setTime(2, consultation.getHeure());
+            stmt.setDouble(3, consultation.getPrix());
+            stmt.setString(4, consultation.getModeconsultation());
+            stmt.setString(5, consultation.getEtatenum().name());
+            stmt.setInt(6, consultation.getPatient().getId());
             // Handle null zoomLink by using empty string
-            String zoomLink = consultation.getZoomLink();
+            String zoomLink = consultation.getMeetLink();
             stmt.setString(7, zoomLink != null ? zoomLink : "");
             stmt.setInt(8, consultation.getId());
 
@@ -168,7 +157,7 @@ public class ConsultationDAO {
     }
 
     public Consultation getConsultationById(int id) {
-        String query = "SELECT c.*, p.id as p_id, p.dossier_medical, p.firstName, p.lastName, p.email " +
+        String query = "SELECT c.*, p.dossier_medical, p.firstName, p.lastName, p.email " +
                        "FROM consultation c " +
                        "LEFT JOIN patient p ON c.patient_id = p.id " +
                        "WHERE c.id = ?";
@@ -220,8 +209,8 @@ public class ConsultationDAO {
                         rs.getDouble("prix"),
                         rs.getString("modeconsultation"),
                         etat,
-                        rs.getString("zoom_link") != null ? rs.getString("zoom_link") : "",
-                        patient
+                        patient,
+                        rs.getString("zoom_link") != null ? rs.getString("zoom_link") : ""
                 );
 
                 consultation.setId(rs.getInt("id"));
@@ -233,6 +222,37 @@ public class ConsultationDAO {
         }
         return null;
     }
+    private Consultation mapResultSetToConsultation(ResultSet rs) throws SQLException {
+        Consultation consultation = new Consultation();
+        consultation.setId(rs.getInt("id"));
+        consultation.setDate(rs.getDate("date"));
+        consultation.setHeure(rs.getTime("heure"));
+        consultation.setPrix(rs.getDouble("prix"));
+        consultation.setModeconsultation(rs.getString("modeconsultation"));
 
+        // Gestion de l'état
+        try {
+            String etatStr = rs.getString("etat");
+            consultation.setEtatenum(etatStr != null ? Etat.valueOf(etatStr) : Etat.EN_ATTENTE);
+        } catch (IllegalArgumentException e) {
+            consultation.setEtatenum(Etat.EN_ATTENTE);
+        }
+
+        // Gestion du patient
+        int patientId = rs.getInt("patient_id");
+        if (!rs.wasNull()) {
+            Patient patient = new Patient();
+            patient.setId(patientId);
+            patient.setDossier_medical(rs.getString("dossier_medical"));
+            patient.setFirstName(rs.getString("firstName"));
+            patient.setLastName(rs.getString("lastName"));
+            patient.setEmail(rs.getString("email"));
+            consultation.setPatient(patient);
+        }
+
+        consultation.setMeetLink(rs.getString("meet_link"));
+
+        return consultation;
+    }
 
 }

@@ -1,6 +1,6 @@
 package tn.esprit.pidev.gestion_rdv.services;
 
-import tn.esprit.pidev.Database.Database;
+import tn.esprit.pidev.gestion_rdv.dao.DatabaseConnection;
 import tn.esprit.pidev.gestion_rdv.enteties.Psychiatre;
 
 import java.sql.Connection;
@@ -15,7 +15,7 @@ public class Psychiatreservice {
             List<Psychiatre> psychiatres = new ArrayList<>();
             String query = "SELECT * FROM `psychiatre`";
 
-            try (Connection conn = Database.getConnection();
+            try (Connection conn = DatabaseConnection.getConnection();
                  Statement stmt = conn.createStatement();
                  ResultSet rs = stmt.executeQuery(query)) {
 

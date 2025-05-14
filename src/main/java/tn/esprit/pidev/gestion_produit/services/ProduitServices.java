@@ -179,7 +179,19 @@ public class ProduitServices {
     }
 
     public void ajouter(Produit p) {
+        String sql = "INSERT INTO produit (nom, prix, description) VALUES (?, ?, ?)";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, p.getNom());
+            stmt.setDouble(2, p.getPrix());
+            stmt.setString(3, p.getDescription());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace(); // Ou meilleure gestion d'erreur
+        }
     }
+
 
     public Produit findById(int id) {
         return null;
@@ -201,8 +213,8 @@ public class ProduitServices {
     }
     public void ajouterProduitAuPanier(Produit produit, int quantite) throws SQLException {
         // Utiliser l'ID de l'utilisateur connecté
-        int utilisateurId = tn.esprit.pidev.Model.User.connecte != null ? 
-                            tn.esprit.pidev.Model.User.connecte.getId() : 
+        int utilisateurId = tn.esprit.pidev.Model.User.connecte != null ?
+                            tn.esprit.pidev.Model.User.connecte.getId() :
                             1; // Fallback à 1 si aucun utilisateur n'est connecté
 
         // Vérifie si le produit est déjà dans le panier de cet utilisateur
@@ -229,6 +241,18 @@ public class ProduitServices {
             System.out.println("✅ Produit ajouté au panier avec succès !");
         }
     }
+    public void modifierProduit(Produit produit) throws SQLException {
+        String query = "UPDATE produit SET nom = ?, description = ?, quantite = ?, disponible = ? WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, produit.getNom());
+            stmt.setString(2, produit.getDescription());
+            stmt.setInt(3, produit.getQuantite());
+            stmt.setBoolean(4, produit.isDisponible());
+            stmt.setInt(5, produit.getId());
+            stmt.executeUpdate();
+        }
+    }
+
 
 
 }

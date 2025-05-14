@@ -4,7 +4,6 @@ package tn.esprit.pidev.gestion_rdv.dao;
 
 
 import tn.esprit.pidev.gestion_rdv.enteties.Traitement;
-import tn.esprit.pidev.Database.Database;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ public class TraitementDAO {
     private Connection connection;
 
     public TraitementDAO() {
-        this.connection = Database.getConnection();
+        this.connection = DatabaseConnection.getConnection();
     }
 
     /**

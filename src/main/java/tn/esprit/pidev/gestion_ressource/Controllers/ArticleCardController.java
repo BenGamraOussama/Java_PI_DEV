@@ -1,5 +1,6 @@
 package tn.esprit.pidev.gestion_ressource.Controllers;
 
+import javafx.scene.Node;
 import tn.esprit.pidev.gestion_ressource.Entities.Article;
 import tn.esprit.pidev.gestion_ressource.Entities.Category;
 import tn.esprit.pidev.gestion_ressource.Services.ArticleService;
@@ -57,19 +58,26 @@ public class ArticleCardController {
 
     @FXML
     void handleDelete(ActionEvent event) {
+        if (article == null) {
+            showAlert("Erreur", "Aucun article sélectionné.", Alert.AlertType.WARNING);
+            return;
+        }
+
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Delete Article");
-        alert.setHeaderText(null);
-        alert.setContentText("Are you sure you want to delete '" + article.getTitle() + "'?");
+        alert.setTitle("Suppression de l'article");
+        alert.setHeaderText("Confirmation de suppression");
+        alert.setContentText("Voulez-vous vraiment supprimer l'article : '" + article.getTitle() + "' ?");
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
-                new ArticleService().supprimer(article.getId());
-                // Close the card after deletion
-                ((Stage) delete.getScene().getWindow()).close();
+                ArticleService articleService = new ArticleService();
+                articleService.supprimer(article.getId());
+
+                showAlert("Succès", "Article supprimé avec succès.", Alert.AlertType.INFORMATION);
             } catch (SQLException e) {
-                showAlert("Error", "Failed to delete article", Alert.AlertType.ERROR);
+                e.printStackTrace();
+                showAlert("Erreur", "Impossible de supprimer l'article : " + e.getMessage(), Alert.AlertType.ERROR);
             }
         }
     }

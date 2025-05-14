@@ -19,8 +19,11 @@ import tn.esprit.pidev.gestion_rdv.services.RDVservice;
 import java.awt.Desktop;
 import javafx.event.ActionEvent;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Time;
@@ -30,6 +33,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RDVController {
     @FXML private TextField idField;
@@ -46,7 +51,7 @@ public class RDVController {
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
     @FXML
-    public void initialize() {
+    public void initialize() throws SQLException {
         rdvDAO = new RDVDAO();
         rdvService = new RDVservice(null); // The constructor will get the connection from Pidev
         emailService = new EmailService(); // Initialize the email service
@@ -189,18 +194,19 @@ public class RDVController {
     private void handleAddRDV() {
         try {
             RDV rdv = getRDVFromForm();
-            rdvService.add(rdv);
-            loadRDVs();
-            clearForm();
-            showAlert("Succès", "RDV ajouté avec succès et synchronisé avec Google Calendar", Alert.AlertType.INFORMATION);
+            rdvService.add(rdv);  // Ajout uniquement à la base locale
+            loadRDVs();           // Rafraîchir la liste
+            clearForm();          // Réinitialiser le formulaire
+            showAlert("Succès", "RDV ajouté avec succès.", Alert.AlertType.INFORMATION);
         } catch (DateTimeParseException e) {
             showAlert("Erreur", "Format d'heure invalide. Utilisez HH:mm", Alert.AlertType.ERROR);
         } catch (SQLException e) {
-            showAlert("Erreur", "Erreur de base de données lors de l'ajout: " + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Erreur", "Erreur de base de données lors de l'ajout : " + e.getMessage(), Alert.AlertType.ERROR);
         } catch (Exception e) {
-            showAlert("Erreur", "Erreur lors de l'ajout: " + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Erreur", "Erreur inattendue lors de l'ajout : " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
+
 
     @FXML
     private void handleUpdateRDV() {
@@ -302,7 +308,7 @@ public class RDVController {
     @FXML
     private void handleViewCalendar() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Calendar.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/tn/esprit/pidev/gestion_rdv/Calendar.fxml"));
             Parent root = loader.load();
 
             Stage stage = new Stage();
@@ -364,31 +370,34 @@ public class RDVController {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 // Accept the appointment
-                RDV updatedRDV = rdvService.acceptRDV(rdv.getId());
-
-                if (updatedRDV != null) {
-                    // Send email notification
-                    boolean emailSent = emailService.sendAppointmentAcceptedEmail(updatedRDV);
-
-                    // Reload the RDVs to update the UI
-                    loadRDVs();
-
-                    // Show success message
-                    String message = "Rendez-vous accepté avec succès.";
-                    if (emailSent) {
-                        message += " Notification envoyée au patient.";
-                    }
-                    showAlert("Succès", message, Alert.AlertType.INFORMATION);
-                } else {
-                    showAlert("Erreur", "Échec de l'acceptation du rendez-vous.", Alert.AlertType.ERROR);
-                }
+                acceptAppointment(rdv);
             }
-        } catch (SQLException e) {
-            showAlert("Erreur", "Erreur de base de données: " + e.getMessage(), Alert.AlertType.ERROR);
-            e.printStackTrace();
         } catch (Exception e) {
-            showAlert("Erreur", "Une erreur est survenue: " + e.getMessage(), Alert.AlertType.ERROR);
             e.printStackTrace();
+            showAlert("Erreur", "Une erreur est survenue: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+    /**
+     * Accepts an appointment and sends an email notification
+     * 
+     * @param rdv The appointment to accept
+     */
+    private void acceptAppointment(RDV rdv) {
+        try {
+            // Update RDV status in the database
+            rdv.setEtat(Etat.VALIDEE);
+            RDVDAO rdvDao = new RDVDAO();
+            rdvDao.updateRDV(rdv);
+
+            // Send email notification
+            EmailService emailService = new EmailService();
+            emailService.sendAppointmentAcceptedEmail(rdv); // Pass the RDV object directly
+
+            showAlert("Succès", "Rendez-vous accepté et notification envoyée.", Alert.AlertType.INFORMATION);
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Échec de l'acceptation du rendez-vous: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -398,69 +407,43 @@ public class RDVController {
      * @param rdv The appointment to refuse
      */
     private void handleRefuseRDV(RDV rdv) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Refuser le rendez-vous");
+        alert.setContentText("Êtes-vous sûr de vouloir refuser ce rendez-vous ?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            refuseAppointment(rdv);
+        }
+    }
+
+
+    /**
+     * Refuses an appointment and sends an email notification
+     *
+     * @param rdv The appointment to refuse
+     */
+    private void refuseAppointment(RDV rdv) {
         try {
-            // Confirm with the user
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation");
-            alert.setHeaderText("Refuser le rendez-vous");
-            alert.setContentText("Êtes-vous sûr de vouloir refuser ce rendez-vous ?");
+            // Mise à jour de l'état du RDV
+            rdv.setEtat(Etat.ANNULEE);
+            RDVDAO rdvDao = new RDVDAO();
+            rdvDao.updateRDV(rdv);
 
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                // Refuse the appointment
-                RDV updatedRDV = rdvService.refuseRDV(rdv.getId());
+            // Envoi d'une notification par email
+            EmailService emailService = new EmailService();
+            emailService.sendAppointmentRefusedEmail(rdv); // cette méthode doit exister dans EmailService
 
-                if (updatedRDV != null) {
-                    // Send email notification
-                    boolean emailSent = emailService.sendAppointmentRefusedEmail(updatedRDV);
+            showAlert("Succès", "Rendez-vous refusé et notification envoyée.", Alert.AlertType.INFORMATION);
 
-                    // Reload the RDVs to update the UI
-                    loadRDVs();
+            // Rafraîchir la liste
+            loadRDVs();
 
-                    // Show success message
-                    String message = "Rendez-vous refusé avec succès.";
-                    if (emailSent) {
-                        message += " Notification envoyée au patient.";
-                    }
-                    showAlert("Succès", message, Alert.AlertType.INFORMATION);
-                } else {
-                    showAlert("Erreur", "Échec du refus du rendez-vous.", Alert.AlertType.ERROR);
-                }
-            }
-        } catch (SQLException e) {
-            showAlert("Erreur", "Erreur de base de données: " + e.getMessage(), Alert.AlertType.ERROR);
-            e.printStackTrace();
         } catch (Exception e) {
-            showAlert("Erreur", "Une erreur est survenue: " + e.getMessage(), Alert.AlertType.ERROR);
             e.printStackTrace();
+            showAlert("Erreur", "Échec du refus du rendez-vous: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
-
-
-
-    @FXML
-    private void handlePatientRDV() {
-        try {
-            // Load the patient RDV FXML file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("PatientrdvView.fxml"));
-            Parent root = loader.load();
-
-            // Get the current stage
-            Stage stage = (Stage) idField.getScene().getWindow();
-
-            // Set the new scene
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Show error message
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur de navigation");
-            alert.setHeaderText("Impossible d'ouvrir la page Patient RDV");
-            alert.setContentText("Une erreur s'est produite lors du chargement de la page.");
-            alert.showAndWait();
-        }
-    }
 }

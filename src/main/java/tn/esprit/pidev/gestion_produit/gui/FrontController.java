@@ -17,6 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import tn.esprit.pidev.Model.User;
 import tn.esprit.pidev.gestion_produit.entities.Produit;
 import tn.esprit.pidev.gestion_produit.services.ProduitServices;
 import tn.esprit.pidev.gestion_produit.services.RatingDAO;
@@ -437,5 +438,43 @@ public class FrontController implements Initializable {
 
         productBox.getChildren().addAll(imageView, nameLabel, priceLabel, ratingTitle, ratingBox, addToCartBtn);
         return productBox;
+    }
+
+    @FXML
+    private void handleGoBack(ActionEvent event) {
+        try {
+            String fxmlPath;
+            String title;
+            // Determine the destination based on user role
+            if (User.connecte.getRole().equals("[\"ROLE_PATIENT\"]")) {
+                fxmlPath = "/tn/esprit/pidev/ClientHome.fxml";
+                title = "HopeNest / Client Home";
+            } else if (User.connecte.getRole().equals("[\"ROLE_ADMIN\"]")) {
+                fxmlPath = "/tn/esprit/pidev/Dashboard.fxml";
+                title = "HopeNest / Dashboard";
+            } else {
+                // Default case (optional)
+                fxmlPath = "/tn/esprit/pidev/ClientHome.fxml";
+                title = "HopeNest";
+            }
+
+            // Load the appropriate view
+            Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
+            Scene scene = new Scene(root);
+
+            // Get the current stage
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            // Set the new scene
+            stage.setScene(scene);
+            stage.setTitle(title);
+            stage.show();
+        } catch (IOException e) {
+            showError("Error navigating back: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void showError(String s) {
     }
 }

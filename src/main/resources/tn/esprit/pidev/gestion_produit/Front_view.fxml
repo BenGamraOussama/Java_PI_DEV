@@ -5,6 +5,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.image.ImageView?>
 
+<?import javafx.scene.text.Font?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.171"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="tn.esprit.pidev.gestion_produit.gui.FrontController"
@@ -24,6 +25,21 @@
                 <Region HBox.hgrow="ALWAYS"/>
                 <TextField fx:id="searchField" promptText="Rechercher..." styleClass="search-field"/>
                 <Button text="Rechercher" onAction="#handleSearch" styleClass="search-button"/>
+            </HBox>
+            <HBox alignment="CENTER" spacing="20.0">
+                <children>
+                    <Button fx:id="goBackButton" mnemonicParsing="false" onAction="#handleGoBack" style="-fx-background-color: #E0E0E0; -fx-background-radius: 22;" text="Go Back">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                        <padding>
+                            <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                        </padding>
+                    </Button>
+                </children>
+                <VBox.margin>
+                    <Insets top="20.0" />
+                </VBox.margin>
             </HBox>
 
             <!-- Ligne 2 : Panier et filtres -->

@@ -1,8 +1,10 @@
 package tn.esprit.pidev.gestion_activite.gui;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -13,11 +15,13 @@ import javafx.geometry.Pos;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import tn.esprit.pidev.Model.User;
 import tn.esprit.pidev.gestion_activite.entities.Exercice;
 import tn.esprit.pidev.gestion_activite.entities.Activite;
 import tn.esprit.pidev.gestion_activite.services.ExerciceService;
 import tn.esprit.pidev.gestion_activite.services.ActiviteService;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -540,5 +544,13 @@ public class ListeExerciceController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void handleGoBack(ActionEvent event) {
+
+    }
+
+    private void showError(String s) {
     }
 }

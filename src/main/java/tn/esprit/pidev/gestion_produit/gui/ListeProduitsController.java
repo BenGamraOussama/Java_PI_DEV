@@ -174,7 +174,11 @@ public class ListeProduitsController {
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                produitService.supprimerProduit(produit.getId());
+                try {
+                    produitService.supprimerProduit(produit.getId());
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
 
                 // Remove from both lists
                 produits.remove(produit);

@@ -2,12 +2,14 @@ package tn.esprit.pidev.gestion_rdv;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.geometry.*;
 import javafx.stage.Stage;
+import tn.esprit.pidev.Model.User;
 import tn.esprit.pidev.gestion_rdv.dao.RDVDAO;
 import tn.esprit.pidev.gestion_rdv.enteties.Etat;
 import tn.esprit.pidev.gestion_rdv.enteties.RDV;
@@ -80,6 +82,14 @@ public class RDVController {
         } catch (SQLException e) {
             showAlert("Erreur", "Erreur lors du chargement des RDVs: " + e.getMessage(), Alert.AlertType.ERROR);
         }
+    }
+
+    @FXML
+    private void handleGoBack(ActionEvent event) {
+
+    }
+
+    private void showError(String s) {
     }
 
     private VBox createRDVCard(RDV rdv) {

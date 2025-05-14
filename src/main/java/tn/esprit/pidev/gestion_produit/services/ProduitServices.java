@@ -169,9 +169,15 @@ public class ProduitServices {
             System.err.println("Erreur lors de la fermeture de la connexion: " + e.getMessage());
         }
     }
-
-    public boolean supprimerProduit(int id) {
-        return false;
+    public void supprimerProduit(int id) throws SQLException {
+        String query = "DELETE FROM produit WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new SQLException("Échec de la suppression de produit.");
+            }
+        }
     }
 
     public List<Produit> readList() {
